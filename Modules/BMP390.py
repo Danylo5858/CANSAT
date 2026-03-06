@@ -1,4 +1,5 @@
 import adafruit_bmp3xx
+import threading
 from csv import writer
 from datetime import datetime
 import time
@@ -12,7 +13,7 @@ def init(i2c, address):
     bmp.pressure_oversampling = 8
     bmp.temperature_oversampling = 2
     bmp.sea_level_pressure = 1013.25
-    start()
+    threading.Thread(target=start, daemon=True).start()
 
 def start():
     while True:

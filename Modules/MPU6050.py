@@ -1,4 +1,5 @@
 import adafruit_mpu6050
+import threading
 from csv import writer
 from datetime import datetime
 import time
@@ -9,7 +10,7 @@ SleepTime = 1
 def init(i2c, address):
     global mpu
     mpu = adafruit_mpu6050.MPU6050(i2c, address=address)
-    start()
+    threading.Thread(target=start, daemon=True).start()
 
 def start():
     while True:

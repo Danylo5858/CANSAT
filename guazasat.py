@@ -23,12 +23,9 @@ gps.SleepTime = GlobalSleepTime
 gps.log = True
 gps.init(i2c, 0x10)
 
-mpu_thread = threading.Thread(target=mpu.SaveData, args=(GlobalSleepTime), daemon=True)
-bmp_thread = threading.Thread(target=bmp.SaveData, args=(GlobalSleepTime), daemon=True)
-gps_thread = threading.Thread(target=gps.SaveData, args=(GlobalSleepTime), daemon=True)
-mpu_thread.start()
-bmp_thread.start()
-gps_thread.start()
+threading.Thread(target=mpu.SaveData, args=(GlobalSleepTime), daemon=True).start()
+threading.Thread(target=bmp.SaveData, args=(GlobalSleepTime), daemon=True).start()
+threading.Thread(target=gps.SaveData, args=(GlobalSleepTime), daemon=True).start()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT) # LED

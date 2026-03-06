@@ -1,4 +1,5 @@
 import adafruit_gps
+import threading
 from csv import writer
 from datetime import datetime
 import time
@@ -11,7 +12,7 @@ def init(i2c, address):
     gps = adafruit_gps.GPS_GtopI2C(i2c, address=address)
     gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
     gps.send_command(b"PMTK220,1000")
-    start()
+    threading.Thread(target=start, daemon=True).start()
 
 def start():
     while True:
