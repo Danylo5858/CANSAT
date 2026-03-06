@@ -18,9 +18,9 @@ def init(i2c, address):
 def start():
     while True:
         if log:
-            print("Temperature:", bmp.temperature)
-            print("Pressure:", bmp.pressure)
-            print("Altitude:", bmp.altitude)
+            print("Temperature:", f"{bmp.temperature:.2f}")
+            print("Pressure:", f"{bmp.pressure:.2f}")
+            print("Altitude:", f"{bmp.altitude:.2f}")
         time.sleep(SleepTime)
 
 def SaveData(frequency):

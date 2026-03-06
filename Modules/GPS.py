@@ -18,11 +18,10 @@ def start():
     while True:
         gps.update()
         if gps.has_fix:
-            print("Fix encontrado (GPS)")
             if log:
-                print("Lat:", gps.latitude)
-                print("Lon:", gps.longitude)
-                print("Satelites:", gps.satellites)
+                print("Lat:", f"{gps.latitude:.4f}")
+                print("Lon:", f"{gps.longitude:.4f}")
+                print("Satelites:", f"{gps.satellites:.4f}")
         else:
             print("Buscando fix (GPS)...")
         time.sleep(SleepTime)
@@ -40,9 +39,9 @@ def GetData():
     data.append(datetime.now().strftime("%d-%m-%Y"))
     data.append(datetime.now().strftime("%H:%M:%S"))
     if gps.has_fix:
-        data.append(gps.latitude)
-        data.append(gps.longitude)
-        data.append(gps.satellites)
+        data.append(f"{gps.latitude:.4f}")
+        data.append(f"{gps.longitude:.4f}")
+        data.append(f"{gps.satellites:.4f}")
     else:
         data.append("Waiting for fix...")
     return data
