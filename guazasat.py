@@ -11,13 +11,13 @@ i2c = busio.I2C(board.SCL, board.SDA)
 print("Devices: ", [hex(device_address) for device_address in i2c.scan()])
 
 mpu.init(i2c, 0x68)
-gps.SleepTime = GlobalSleepTime
-gps.log = True
+mpu.SleepTime = GlobalSleepTime
+mpu.log = True
 mpu.SaveData(GlobalSleepTime)
 
 bmp.init(i2c, 0x76)
-gps.SleepTime = GlobalSleepTime
-gps.log = True
+bmp.SleepTime = GlobalSleepTime
+bmp.log = True
 bmp.SaveData(GlobalSleepTime)
 
 gps.init(i2c, 0x10, True)
