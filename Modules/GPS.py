@@ -21,7 +21,7 @@ def start():
             if log:
                 print("Lat:", f"{gps.latitude:.4f}")
                 print("Lon:", f"{gps.longitude:.4f}")
-                print("Satelites:", f"{gps.satellites:.4f}")
+                print("Satelites:", gps.satellites)
         else:
             print("Buscando fix (GPS)...")
         time.sleep(SleepTime)
@@ -41,7 +41,7 @@ def GetData():
     if gps.has_fix:
         data.append(f"{gps.latitude:.4f}")
         data.append(f"{gps.longitude:.4f}")
-        data.append(f"{gps.satellites:.4f}")
+        data.append(gps.satellites)
     else:
         data.append("Waiting for fix...")
     return data
