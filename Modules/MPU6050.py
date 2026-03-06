@@ -15,7 +15,7 @@ def init(i2c, address):
 def start():
     while True:
         if log:
-            print("Giroscopio:", f"{mpu.gyro:.4f}")
+            print("Giroscopio:", mpu.gyro)
         time.sleep(SleepTime)
 
 def SaveData(frequency):
@@ -30,5 +30,5 @@ def GetData():
     data = []
     data.append(datetime.now().strftime("%d-%m-%Y"))
     data.append(datetime.now().strftime("%H:%M:%S"))
-    data.append(f"{mpu.gyro:.4f}")
+    data.append(mpu.gyro)
     return data
