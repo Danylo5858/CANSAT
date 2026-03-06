@@ -39,7 +39,10 @@ def GetData():
     data = []
     data.append(datetime.now().strftime("%d-%m-%Y"))
     data.append(datetime.now().strftime("%H:%M:%S"))
-    data.append(gps.latitude)
-    data.append(gps.longitude)
-    data.append(gps.satellites)
+    if gps.has_fix:
+        data.append(gps.latitude)
+        data.append(gps.longitude)
+        data.append(gps.satellites)
+    else:
+        data.append("Waiting for fix...")
     return data

@@ -35,7 +35,7 @@ def GetData():
     data = []
     data.append(datetime.now().strftime("%d-%m-%Y"))
     data.append(datetime.now().strftime("%H:%M:%S"))
-    data.append(bmp.temperature)
-    data.append(bmp.pressure)
-    data.append(bmp.altitude)
+    data.append(f"{bmp.temperature:.2f}")
+    data.append(f"{bmp.pressure:.2f}")
+    data.append(f"{bmp.altitude:.2f}")
     return data
