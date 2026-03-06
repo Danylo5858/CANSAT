@@ -24,7 +24,7 @@ def start():
         time.sleep(SleepTime)
 
 def SaveData(frequency):
-    with open('../Data/BMP390_data.csv', 'a', buffering=1, newline='') as f:
+    with open('./Data/BMP390_data.csv', 'a', buffering=1, newline='') as f:
         data_writer = writer(f)
         while True:
             data = GetData()
