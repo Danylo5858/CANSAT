@@ -26,8 +26,9 @@ def start():
                     print("Lon:", f"{gps.longitude:.4f}")
                     print("Satelites:", gps.satellites)
         else:
-            with print_lock:
-                print("Buscando fix (GPS)...")
+            if log:
+                with print_lock:
+                    print("Buscando fix (GPS)...")
         time.sleep(SleepTime)
 
 def SaveData(frequency):
