@@ -21,9 +21,9 @@ def start():
     while True:
         if log:
             with print_lock:
-                print("Temperature:", f"{bmp.temperature:.2f}")
-                print("Pressure:", f"{bmp.pressure:.2f}")
-                print("Altitude:", f"{bmp.altitude:.2f}")
+                print("Temperature:", f"{bmp.temperature:.2f}\nPressure:", f"{bmp.pressure:.2f}\nAltitude:", f"{bmp.altitude:.2f}")
+                # print("Pressure:", f"{bmp.pressure:.2f}")
+                # print("Altitude:", f"{bmp.altitude:.2f}")
         time.sleep(SleepTime)
 
 def SaveData(frequency):
