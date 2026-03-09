@@ -2,7 +2,7 @@ import time
 import requests
 import threading
 
-air_quality, temperature, humidity, altitude_cansat, temperature_cansat, pressure_cansat = None
+air_quality = temperature = humidity = altitude_cansat = temperature_cansat = pressure_cansat = None
 log = False
 SleepTime = 10
 
