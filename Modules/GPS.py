@@ -1,8 +1,8 @@
-import adafruit_gps
-import threading
-from csv import writer
-from datetime import datetime
 import time
+from datetime import datetime
+from csv import writer
+import threading
+import adafruit_gps
 
 log = False
 SleepTime = 1

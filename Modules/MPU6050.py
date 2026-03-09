@@ -1,8 +1,8 @@
-import adafruit_mpu6050
-import threading
-from csv import writer
-from datetime import datetime
 import time
+from datetime import datetime
+from csv import writer
+import threading
+import adafruit_mpu6050
 
 log = False
 SleepTime = 1

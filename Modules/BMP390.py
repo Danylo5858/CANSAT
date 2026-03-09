@@ -1,9 +1,8 @@
-import adafruit_bmp3xx
-from GroundStation import graph_manager as gm
-import threading
-from csv import writer
-from datetime import datetime
 import time
+from datetime import datetime
+from csv import writer
+import threading
+import adafruit_bmp3xx
 
 log = False
 SleepTime = 1
@@ -23,9 +22,6 @@ def start():
         t = round(bmp.temperature, 2)
         p = round(bmp.pressure, 2)
         a = round(bmp.altitude, 2)
-        gm.temperature_cansat = t
-        gm.pressure_cansat = p
-        gm.altitude_cansat = a
         if log:
             with print_lock:
                 print("Temperature:", f"{t}\nPressure:", f"{p}\nAltitude:", f"{a}")
