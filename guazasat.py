@@ -6,10 +6,13 @@ import board
 import busio
 import RPi.GPIO as GPIO
 import time
+import os
 
 GlobalSleepTime = 1
 i2c = busio.I2C(board.SCL, board.SDA)
 print("Devices: ", [hex(device_address) for device_address in i2c.scan()])
+
+os.makedirs("Data", exist_ok=True)
 
 mpu.SleepTime = GlobalSleepTime
 mpu.log = True
