@@ -1,4 +1,5 @@
 import adafruit_bmp3xx
+from GroundStation import graph_manager as gm
 import threading
 from csv import writer
 from datetime import datetime
@@ -19,9 +20,15 @@ def init(i2c, address):
 
 def start():
     while True:
+        t = round(bmp.temperature, 2)
+        p = round(bmp.pressure, 2)
+        a = round(bmp.altitude, 2)
+        gm.temperature_cansat = t
+        gm.pressure_cansat = p
+        gm.altitude_cansat = a
         if log:
             with print_lock:
-                print("Temperature:", f"{bmp.temperature:.2f}\nPressure:", f"{bmp.pressure:.2f}\nAltitude:", f"{bmp.altitude:.2f}")
+                print("Temperature:", f"{t}\nPressure:", f"{p}\nAltitude:", f"{a}")
                 # print("Pressure:", f"{bmp.pressure:.2f}")
                 # print("Altitude:", f"{bmp.altitude:.2f}")
         time.sleep(SleepTime)
