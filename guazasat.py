@@ -1,6 +1,7 @@
-import Modules.BMP390 as bmp
-import Modules.MPU6050 as mpu
-import Modules.GPS as gps
+from Modules import BMP390 as bmp
+from Modules import MPU6050 as mpu
+from Modules import GPS as gps
+from GroundStation import graph_manager as gm
 import threading
 import board
 import busio
@@ -29,6 +30,9 @@ gps.init(i2c, 0x10)
 threading.Thread(target=mpu.SaveData, args=(GlobalSleepTime,), daemon=True).start()
 threading.Thread(target=bmp.SaveData, args=(GlobalSleepTime,), daemon=True).start()
 threading.Thread(target=gps.SaveData, args=(GlobalSleepTime,), daemon=True).start()
+
+gm.SleepTime = 10
+threading.Thread(target=gm.start, daemon=True).start()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT) # LED
