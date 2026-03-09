@@ -7,6 +7,8 @@ import time
 log = False
 SleepTime = 1
 
+print_lock = threading.Lock()
+
 def init(i2c, address):
     global mpu
     mpu = adafruit_mpu6050.MPU6050(i2c, address=address)
@@ -15,7 +17,8 @@ def init(i2c, address):
 def start():
     while True:
         if log:
-            print("Giroscopio:", mpu.gyro)
+            with print_lock:
+                print("Giroscopio:", mpu.gyro)
         time.sleep(SleepTime)
 
 def SaveData(frequency):

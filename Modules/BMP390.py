@@ -7,6 +7,8 @@ import time
 log = False
 SleepTime = 1
 
+print_lock = threading.Lock()
+
 def init(i2c, address):
     global bmp
     bmp = adafruit_bmp3xx.BMP3XX_I2C(i2c, address=address)
@@ -18,9 +20,10 @@ def init(i2c, address):
 def start():
     while True:
         if log:
-            print("Temperature:", f"{bmp.temperature:.2f}")
-            print("Pressure:", f"{bmp.pressure:.2f}")
-            print("Altitude:", f"{bmp.altitude:.2f}")
+            with print_lock:
+                print("Temperature:", f"{bmp.temperature:.2f}")
+                print("Pressure:", f"{bmp.pressure:.2f}")
+                print("Altitude:", f"{bmp.altitude:.2f}")
         time.sleep(SleepTime)
 
 def SaveData(frequency):

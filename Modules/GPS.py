@@ -7,6 +7,8 @@ import time
 log = False
 SleepTime = 1
 
+print_lock = threading.Lock()
+
 def init(i2c, address):
     global gps
     gps = adafruit_gps.GPS_GtopI2C(i2c, address=address)
@@ -19,11 +21,13 @@ def start():
         gps.update()
         if gps.has_fix:
             if log:
-                print("Lat:", f"{gps.latitude:.4f}")
-                print("Lon:", f"{gps.longitude:.4f}")
-                print("Satelites:", gps.satellites)
+                with print_lock:
+                    print("Lat:", f"{gps.latitude:.4f}")
+                    print("Lon:", f"{gps.longitude:.4f}")
+                    print("Satelites:", gps.satellites)
         else:
-            print("Buscando fix (GPS)...")
+            with print_lock:
+                print("Buscando fix (GPS)...")
         time.sleep(SleepTime)
 
 def SaveData(frequency):
