@@ -1,0 +1,7 @@
+adafruit-blinka
+adafruit-circuitpython-bmp3xx
+adafruit-circuitpython-gps
+adafruit-circuitpython-mpu6050
+openmeteo-requests
+requests
+RPi.GPIO
