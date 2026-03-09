@@ -5,3 +5,5 @@ adafruit-circuitpython-mpu6050
 openmeteo-requests
 requests
 RPi.GPIO
+numpy
+plotly
