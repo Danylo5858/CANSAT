@@ -6,8 +6,8 @@ GlobalSleepTime = 5
 
 wdf.SleepTime = GlobalSleepTime
 wdf.log = True
-threading.Thread(target=wdf.start, daemon=True).start()
+threading.Thread(target=wdf.start, daemon=False).start()
 
 gm.SleepTime = GlobalSleepTime
 gm.log = True
-threading.Thread(target=gm.start, daemon=True).start()
+threading.Thread(target=gm.start, daemon=False).start()
