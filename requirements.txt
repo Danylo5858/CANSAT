@@ -7,3 +7,4 @@ requests
 RPi.GPIO
 numpy
 plotly
+sx126x

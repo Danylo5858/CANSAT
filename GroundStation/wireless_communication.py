@@ -1,13 +1,16 @@
-import asyncio
+import threading
 from sx126x import SX126X, Address
 
+log = False
+
+print_lock = threading.Lock()
+
 def start():
-    asyncio.run(main())
-
-async def main():
-    await recieve()
-
-async def receive():
-    lora = SX126X(Address(6, 9))
-    address, data = await lora.rx()
-    print(f"Recibido de {address}: {data.decode()}")
+    print("init")
+    lora = SX126X(Address(1, 1))
+    while True:
+        print("TEST")
+        addr, data = lora.rx()
+        if log:
+            with print_lock:
+                print(f"Recibido de {addr}: {data}")
