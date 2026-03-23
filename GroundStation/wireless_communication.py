@@ -10,7 +10,9 @@ def start():
     lora = SX126X(Address(1, 1))
     while True:
         print("TEST")
-        addr, data = lora.rx()
+        #addr, data = lora.rx()
         if log:
             with print_lock:
                 print(f"Recibido de {addr}: {data}")
+
+start()
