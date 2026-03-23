@@ -3,6 +3,7 @@ from datetime import datetime
 from csv import writer
 import threading
 import adafruit_bmp3xx
+import wireless_communication_cansat as wcom_c
 
 log = False
 SleepTime = 1
@@ -18,13 +19,17 @@ def init(i2c, address):
     threading.Thread(target=start, daemon=True).start()
 
 def start():
+    print("started")
     while True:
         t = round(bmp.temperature, 2)
         p = round(bmp.pressure, 2)
         a = round(bmp.altitude, 2)
+        result = wcom_c.send({"temperature": t, "pressure": p, "altitude": a})
+        print(f"done, {SleepTime}, {log}")
         if log:
             with print_lock:
                 print("Temperature:", f"{t}\nPressure:", f"{p}\nAltitude:", f"{a}")
+                print(result)
                 # print("Pressure:", f"{bmp.pressure:.2f}")
                 # print("Altitude:", f"{bmp.altitude:.2f}")
         time.sleep(SleepTime)
