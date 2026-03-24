@@ -3,7 +3,7 @@ from datetime import datetime
 from csv import writer
 import threading
 import adafruit_bmp3xx
-import wireless_communication_cansat as wcom_c
+import Cansat.wireless_communication_cansat as wcom_c
 
 log = False
 SleepTime = 1

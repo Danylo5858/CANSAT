@@ -17,7 +17,7 @@
 
 #start()
 
-import sx126x
+import sx126x as sx126x
 import time
 
 lora = sx126x.sx126x("/dev/ttyS0", freq=868, addr=2, power=22)
