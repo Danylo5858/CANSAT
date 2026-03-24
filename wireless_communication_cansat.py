@@ -21,6 +21,6 @@ import time
 lora = sx126x.sx126x("/dev/ttyS0", freq=868, addr=1, power=22)
 
 while True:
-    lora.send("2,868,CANSAT")
+    lora.send("CANSAT")
     print("Enviado")
     time.sleep(3)
