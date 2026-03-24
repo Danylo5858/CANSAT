@@ -1,7 +1,7 @@
 import threading
 import graph_manager as gm
 import weather_data_fetcher as wdf
-import wireless_communication as wcom
+import GroundStation.wireless_communication_gs as wcom
 
 GlobalSleepTime = 5
 
