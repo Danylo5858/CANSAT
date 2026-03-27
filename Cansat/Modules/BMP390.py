@@ -4,7 +4,7 @@ from csv import writer
 import threading
 from queue import Queue
 import adafruit_bmp3xx
-import Cansat.wireless_communication_cansat as wcom_c
+import wireless_communication_cansat as wcom_c
 
 log = False
 save_data = False
