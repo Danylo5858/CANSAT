@@ -37,7 +37,7 @@ def start():
             "pressure": p,
             "altitude": a
         }
-        result = wcom_c.send(data)
+        #result = wcom_c.send(data)
         data_queue.put(data)
         if log:
             with print_lock:

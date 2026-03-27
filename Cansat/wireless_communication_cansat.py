@@ -15,12 +15,12 @@
 #    print("SENT")
 #    return f"Enviado a {receiver}: {data.decode()}"
 
-import sx126x as sx126x
-import time
+#import sx126x as sx126x
+#import time
 
-lora = sx126x.sx126x("/dev/ttyS0", freq=868, addr=1, power=22)
+#lora = sx126x.sx126x("/dev/ttyS0", freq=868, addr=1, power=22)
 
-while True:
-    lora.send("CANSAT")
-    print("Enviado")
-    time.sleep(3)
+#while True:
+#    lora.send("CANSAT")
+#    print("Enviado")
+#    time.sleep(3)
