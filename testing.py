@@ -1,22 +1,18 @@
-import RPi.GPIO as GPIO
+from sx126x import sx126x
 import time
 
-M0 = 22
-M1 = 27
+print("Inicializando módulo...")
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(M0, GPIO.OUT)
-GPIO.setup(M1, GPIO.OUT)
+device = sx126x(
+    serial_num="/dev/serial0",
+    freq=868,
+    addr=0x0001,
+    power=22,
+    rssi=True
+)
 
-print("Modo normal")
-GPIO.output(M0, 0)
-GPIO.output(M1, 0)
-time.sleep(2)
+print("Configurado correctamente")
 
-print("Modo config")
-GPIO.output(M0, 0)
-GPIO.output(M1, 1)
-time.sleep(2)
-
-print("Modo sleep/config test terminado")
-GPIO.cleanup()
+while True:
+    device.receive()
+    time.sleep(1)
