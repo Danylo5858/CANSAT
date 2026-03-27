@@ -6,11 +6,10 @@ from queue import Queue
 import adafruit_bmp3xx
 import wireless_communication_cansat as wcom_c
 
-log = False
+log = None
 save_data = False
 SleepTime = 1
 
-print_lock = threading.Lock()
 data_queue = Queue()
 
 def init(i2c, address, lock):
@@ -39,10 +38,9 @@ def start():
         }
         #result = wcom_c.send(data)
         data_queue.put(data)
-        if log:
-            with print_lock:
-                print("Temperature:", f"{t}\nPressure:", f"{p}\nAltitude:", f"{a}")
-                #print(f"[RADIO] {result}")
+        if log is not None:
+            log.put(f"Temperature: {t}\nPressure: {p}\nAltitude: {a}")
+            #log.put(f"[RADIO] {result}")
         time.sleep(SleepTime)
 
 def SaveData():

@@ -5,11 +5,10 @@ import threading
 from queue import Queue
 import adafruit_mpu6050
 
-log = False
+log = None
 save_data = False
 SleepTime = 1
 
-print_lock = threading.Lock()
 data_queue = Queue()
 
 def init(i2c, address, lock):
@@ -30,9 +29,8 @@ def start():
             "gyro": gyro
         }
         data_queue.put(data)
-        if log:
-            with print_lock:
-                print("Giroscopio:", gyro)
+        if log is not None:
+            log.put(f"Giroscopio: {gyro}")
         time.sleep(SleepTime)
 
 def SaveData():

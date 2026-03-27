@@ -5,11 +5,10 @@ import threading
 from queue import Queue
 import adafruit_gps
 
-log = False
+log = None
 dave_data = False
 SleepTime = 1
 
-print_lock = threading.Lock()
 data_queue = Queue()
 
 def init(i2c, address, lock):
@@ -38,15 +37,11 @@ def start():
                 "satellites": sat
             }
             data_queue.put(data)
-            if log:
-                with print_lock:
-                    print("Lat:", f"{lan:.4f}")
-                    print("Lon:", f"{lon:.4f}")
-                    print("Satelites:", sat)
+            if log is not None:
+                log.put(f"Lat: {lan:.4f}\nLon: {lon:.4f}\nSatelites: {sat}")
         else:
-            if log:
-                with print_lock:
-                    print("Buscando fix (GPS)...")
+            if log is not None:
+                log.put("Buscando fix (GPS)...")
         time.sleep(SleepTime)
 
 def SaveData():
