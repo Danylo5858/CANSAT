@@ -9,26 +9,33 @@ from Modules import MPU6050 as mpu
 from Modules import GPS as gps
 
 GlobalSleepTime = 1
+
+i2c_lock = threading.Lock()
+
 i2c = busio.I2C(board.SCL, board.SDA)
-print("Devices: ", [hex(device_address) for device_address in i2c.scan()])
+ẃith i2c_lock:
+    print("Devices: ", [hex(device_address) for device_address in i2c.scan()])
 
 os.makedirs("Data", exist_ok=True)
 
-mpu.SleepTime = GlobalSleepTime
-mpu.log = True
-mpu.init(i2c, 0x68)
-
-bmp.SleepTime = GlobalSleepTime
 bmp.log = True
-bmp.init(i2c, 0x76)
+bmp.save_data = True
+bmp.SleepTime = GlobalSleepTime
+bmp.init(i2c, 0x76, i2c_lock)
 
-gps.SleepTime = GlobalSleepTime
+mpu.log = True
+mpu.save_data = True
+mpu.SleepTime = GlobalSleepTime
+mpu.init(i2c, 0x68, i2c_lock)
+
 gps.log = True
-gps.init(i2c, 0x10)
+gps.save_data = True
+gps.SleepTime = GlobalSleepTime
+gps.init(i2c, 0x10, i2c_lock)
 
-threading.Thread(target=mpu.SaveData, args=(GlobalSleepTime,), daemon=True).start()
-threading.Thread(target=bmp.SaveData, args=(GlobalSleepTime,), daemon=True).start()
-threading.Thread(target=gps.SaveData, args=(GlobalSleepTime,), daemon=True).start()
+#threading.Thread(target=mpu.SaveData, args=(GlobalSleepTime,), daemon=True).start()
+#threading.Thread(target=bmp.SaveData, args=(GlobalSleepTime,), daemon=True).start()
+#threading.Thread(target=gps.SaveData, args=(GlobalSleepTime,), daemon=True).start()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(17, GPIO.OUT) # LED

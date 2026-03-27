@@ -2,51 +2,62 @@ import time
 from datetime import datetime
 from csv import writer
 import threading
+from queue import Queue
 import adafruit_gps
 
 log = False
+dave_data = False
 SleepTime = 1
 
 print_lock = threading.Lock()
+data_queue = Queue()
 
-def init(i2c, address):
-    global gps
+def init(i2c, address, lock):
+    global gps, i2c_lock
+    i2c_lock = lock
     gps = adafruit_gps.GPS_GtopI2C(i2c, address=address)
     gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
     gps.send_command(b"PMTK220,1000")
-    threading.Thread(target=start, daemon=True).start()
+    threading.Thread(target=start).start()
+    if save_data:
+        threading.Thread(target=SaveData).start()
 
 def start():
     while True:
         gps.update()
         if gps.has_fix:
+            with i2c_lock:
+                lan = gps.latitude
+                lon = gps.longitude
+                sat = gps.satellites
+            timestamp = datetime.now()
+            data = {
+                "time": timestamp,
+                "latitude": lan,
+                "longitude": lon,
+                "satellites": sat
+            }
+            data_queue.put(data)
             if log:
                 with print_lock:
-                    print("Lat:", f"{gps.latitude:.4f}")
-                    print("Lon:", f"{gps.longitude:.4f}")
-                    print("Satelites:", gps.satellites)
+                    print("Lat:", f"{lan:.4f}")
+                    print("Lon:", f"{lon:.4f}")
+                    print("Satelites:", sat)
         else:
             if log:
                 with print_lock:
                     print("Buscando fix (GPS)...")
         time.sleep(SleepTime)
 
-def SaveData(frequency):
+def SaveData():
     with open('./Data/GPS_data.csv', 'a', buffering=1, newline='') as f:
         data_writer = writer(f)
         while True:
-            data = GetData()
-            data_writer.writerow(data)
-            time.sleep(frequency)
-
-def GetData():
-    data = []
-    data.append(datetime.now().strftime("%d-%m-%Y"))
-    data.append(datetime.now().strftime("%H:%M:%S"))
-    if gps.has_fix:
-        data.append(f"{gps.latitude:.4f}")
-        data.append(f"{gps.longitude:.4f}")
-        data.append(gps.satellites)
-    else:
-        data.append("Waiting for fix...")
-    return data
+            data = data_queue.get()
+            data_writer.writerow([
+                data["time"].strftime("%d-%m-%Y"),
+                data["time"].strftime("%H:%M:%S"),
+                data["latitude"],
+                data["longitude"],
+                data["satellites"]
+            ])
