@@ -4,6 +4,7 @@ import time
 RESET = 25
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setup(22, 	GPIO.IN)
 GPIO.setup(RESET, GPIO.OUT)
 
 print("FORZANDO RESET LOW (10s)...")
