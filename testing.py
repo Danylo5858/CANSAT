@@ -1,16 +1,22 @@
-import serial
+import RPi.GPIO as GPIO
 import time
 
-ports = ["/dev/serial0", "/dev/ttyS0", "/dev/ttyAMA0"]
+M0 = 22
+M1 = 27
 
-for p in ports:
-    try:
-        print("\nTesting", p)
-        ser = serial.Serial(p, 9600, timeout=1)
-        ser.write(b'\xC1\x00\x09')
-        time.sleep(0.5)
-        data = ser.read(100)
-        print("Response:", data)
-        ser.close()
-    except Exception as e:
-        print("Fail:", p, e)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(M0, GPIO.OUT)
+GPIO.setup(M1, GPIO.OUT)
+
+print("Modo normal")
+GPIO.output(M0, 0)
+GPIO.output(M1, 0)
+time.sleep(2)
+
+print("Modo config")
+GPIO.output(M0, 0)
+GPIO.output(M1, 1)
+time.sleep(2)
+
+print("Modo sleep/config test terminado")
+GPIO.cleanup()
