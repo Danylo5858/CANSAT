@@ -12,11 +12,11 @@ from Modules import GPS as gps
 os.makedirs("Data", exist_ok=True)
 
 log_queue = Queue()
-threading.Thread(target=logger, daemon=True).start()
 def logger():
     while True:
         msg = log_queue.get()
         print(msg)
+threading.Thread(target=logger, daemon=True).start()
 
 i2c_lock = threading.Lock()
 i2c = busio.I2C(board.SCL, board.SDA)
