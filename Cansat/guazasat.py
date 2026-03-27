@@ -4,19 +4,16 @@ import threading
 import board
 import busio
 import RPi.GPIO as GPIO
-from queue import Queue
 from Modules import BMP390 as bmp
 from Modules import MPU6050 as mpu
 from Modules import GPS as gps
+import log_manager as lm
+import wireless_communication_cansat as wcom_c
 
 os.makedirs("Data", exist_ok=True)
 
-log_queue = Queue()
-def logger():
-    while True:
-        msg = log_queue.get()
-        print(msg)
-threading.Thread(target=logger, daemon=True).start()
+threading.Thread(target=wcom_c.sender, daemon=True).start()
+threading.Thread(target=lm.logger, daemon=True).start()
 
 i2c_lock = threading.Lock()
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -25,18 +22,21 @@ with i2c_lock:
 
 GlobalSleepTime = 1
 
+bmp.log = True
+bmp.send_data = True
 bmp.save_data = True
-bmp.log = log_queue
 bmp.SleepTime = GlobalSleepTime
 bmp.init(i2c, 0x76, i2c_lock)
 
+mpu.log = False
+mpu.send_data = False
 mpu.save_data = True
-#mpu.log = log_queue
 mpu.SleepTime = GlobalSleepTime
 mpu.init(i2c, 0x68, i2c_lock)
 
+gps.log = False
+gps.send_data = False
 gps.save_data = True
-#gps.log = log_queue
 gps.SleepTime = GlobalSleepTime
 gps.init(i2c, 0x10, i2c_lock)
 

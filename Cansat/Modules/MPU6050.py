@@ -4,9 +4,12 @@ from csv import writer
 import threading
 from queue import Queue
 import adafruit_mpu6050
+from log_manager import log_queue
+from wireless_communication_cansat import msg_queue
 
-log = None
+log = False
 save_data = False
+send_data = False
 SleepTime = 1
 
 data_queue = Queue()
@@ -29,8 +32,10 @@ def start():
             "gyro": gyro
         }
         data_queue.put(data)
-        if log is not None:
-            log.put(f"Giroscopio: {gyro}")
+        if send_data:
+            msg_queue.put(data)
+        if log:
+            log_queue.put(f"Giroscopio: {gyro}")
         time.sleep(SleepTime)
 
 def SaveData():

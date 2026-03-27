@@ -4,9 +4,12 @@ from csv import writer
 import threading
 from queue import Queue
 import adafruit_gps
+from log_manager import log_queue
+from wireless_communication_cansat import msg_queue
 
-log = None
-dave_data = False
+log = False
+save_data = False
+send_data = False
 SleepTime = 1
 
 data_queue = Queue()
@@ -37,11 +40,13 @@ def start():
                 "satellites": sat
             }
             data_queue.put(data)
-            if log is not None:
-                log.put(f"Lat: {lan:.4f}\nLon: {lon:.4f}\nSatelites: {sat}")
+            if send_data:
+                msg_queue.put(data)
+            if log:
+                log_queue.put(f"Lat: {lan:.4f}\nLon: {lon:.4f}\nSatelites: {sat}")
         else:
-            if log is not None:
-                log.put("Buscando fix (GPS)...")
+            if log:
+                log_queue.put("Buscando fix (GPS)...")
         time.sleep(SleepTime)
 
 def SaveData():
