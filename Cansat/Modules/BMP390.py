@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+import json
 from csv import writer
 import threading
 from queue import Queue
@@ -40,7 +41,7 @@ def start():
         }
         data_queue.put(data)
         if send_data:
-            msg_queue.put(data)
+            msg_queue.put(json.dumps(data))
         if log:
             log_queue.put(f"Temperature: {t}\nPressure: {p}\nAltitude: {a}")
         time.sleep(SleepTime)
