@@ -11,9 +11,6 @@ from Modules import GPS as gps
 
 os.makedirs("Data", exist_ok=True)
 
-log_queue = Queue()
-threading.Thread(target=logger, daemon=True).start()
-
 i2c_lock = threading.Lock()
 i2c = busio.I2C(board.SCL, board.SDA)
 with i2c_lock:
@@ -45,6 +42,9 @@ while True:
     GPIO.output(15, GPIO.HIGH)
     time.sleep(GlobalSleepTime)
     GPIO.output(15, GPIO.LOW)
+
+log_queue = Queue()
+threading.Thread(target=logger, daemon=True).start()
 
 def logger():
     while True:
