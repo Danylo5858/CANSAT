@@ -13,7 +13,7 @@ GlobalSleepTime = 1
 i2c_lock = threading.Lock()
 
 i2c = busio.I2C(board.SCL, board.SDA)
-ẃith i2c_lock:
+with i2c_lock:
     print("Devices: ", [hex(device_address) for device_address in i2c.scan()])
 
 os.makedirs("Data", exist_ok=True)
