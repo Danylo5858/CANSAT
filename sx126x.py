@@ -183,6 +183,7 @@ class sx126x:
             if self.ser.inWaiting() > 0:
                 time.sleep(0.1)
                 r_buff = self.ser.read(self.ser.inWaiting())
+                print("RAW RESPONSE:", r_buff)
                 if r_buff[0] == 0xC1:
                     pass
                     # print("parameters setting is :",end='')
@@ -214,7 +215,7 @@ class sx126x:
 
     def get_settings(self):
         # the pin M1 of lora HAT must be high when enter setting mode and get parameters
-        GPIO.output(M1,GPIO.HIGH)
+        GPIO.output(self.M1,GPIO.HIGH)
         time.sleep(0.1)
         
         # send command to get setting parameters
