@@ -1,13 +1,16 @@
 import serial
 import time
 
-ser = serial.Serial("/dev/serial0", 9600, timeout=1)
+ports = ["/dev/serial0", "/dev/ttyS0", "/dev/ttyAMA0"]
 
-print("Probando UART...")
-
-ser.write(bytes([0xC1, 0x00, 0x09]))  # get config
-time.sleep(0.5)
-
-data = ser.read(ser.in_waiting or 1)
-
-print("Respuesta:", data)
+for p in ports:
+    try:
+        print("\nTesting", p)
+        ser = serial.Serial(p, 9600, timeout=1)
+        ser.write(b'\xC1\x00\x09')
+        time.sleep(0.5)
+        data = ser.read(100)
+        print("Response:", data)
+        ser.close()
+    except Exception as e:
+        print("Fail:", p, e)
