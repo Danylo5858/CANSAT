@@ -18,9 +18,9 @@ def init(i2c, address, lock):
     gps = adafruit_gps.GPS_GtopI2C(i2c, address=address)
     gps.send_command(b"PMTK314,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0")
     gps.send_command(b"PMTK220,1000")
-    threading.Thread(target=start).start()
+    threading.Thread(target=start, daemon=True).start()
     if save_data:
-        threading.Thread(target=SaveData).start()
+        threading.Thread(target=SaveData, daemon=True).start()
 
 def start():
     while True:

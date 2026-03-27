@@ -20,9 +20,9 @@ def init(i2c, address, lock):
     bmp.pressure_oversampling = 8
     bmp.temperature_oversampling = 2
     bmp.sea_level_pressure = 1013.25
-    threading.Thread(target=start).start()
+    threading.Thread(target=start, daemon=True).start()
     if save_data:
-        threading.Thread(target=SaveData).start()
+        threading.Thread(target=SaveData, daemon=True).start()
 
 def start():
     while True:
@@ -41,8 +41,8 @@ def start():
         data_queue.put(data)
         if log:
             with print_lock:
-                print("[BMP390] Temperature:", f"{t}\nPressure:", f"{p}\nAltitude:", f"{a}")
-                print(f"[RADIO] {result}")
+                print("Temperature:", f"{t}\nPressure:", f"{p}\nAltitude:", f"{a}")
+                #print(f"[RADIO] {result}")
         time.sleep(SleepTime)
 
 def SaveData():

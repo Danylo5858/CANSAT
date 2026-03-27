@@ -16,9 +16,9 @@ def init(i2c, address, lock):
     global mpu, i2c_lock
     i2c_lock = lock
     mpu = adafruit_mpu6050.MPU6050(i2c, address=address)
-    threading.Thread(target=start).start()
+    threading.Thread(target=start, daemon=True).start()
     if save_data:
-        threading.Thread(target=SaveData).start()
+        threading.Thread(target=SaveData, daemon=True).start()
 
 def start():
     while True:
