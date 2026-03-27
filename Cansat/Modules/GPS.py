@@ -33,16 +33,16 @@ def start():
                 lan = gps.latitude
                 lon = gps.longitude
                 sat = gps.satellites
-            timestamp = datetime.now()
             data = {
-                "time": timestamp,
                 "latitude": lan,
                 "longitude": lon,
                 "satellites": sat
             }
-            data_queue.put(data)
             if send_data:
                 msg_queue.put(json.dumps(data))
+            timestamp = datetime.now()
+            data["time"] = timestamp
+            data_queue.put(data)
             if log:
                 log_queue.put(f"Lat: {lan:.4f}\nLon: {lon:.4f}\nSatelites: {sat}")
         else:

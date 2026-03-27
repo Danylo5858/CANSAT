@@ -32,16 +32,16 @@ def start():
             t = round(bmp.temperature, 2)
             p = round(bmp.pressure, 2)
             a = round(bmp.altitude, 2)
-        timestamp = datetime.now()
         data = {
-            "time": timestamp,
             "temperature": t,
             "pressure": p,
             "altitude": a
         }
-        data_queue.put(data)
         if send_data:
             msg_queue.put(json.dumps(data))
+        timestamp = datetime.now()
+        data["time"] = timestamp
+        data_queue.put(data)
         if log:
             log_queue.put(f"Temperature: {t}\nPressure: {p}\nAltitude: {a}")
         time.sleep(SleepTime)

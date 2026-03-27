@@ -27,14 +27,14 @@ def start():
     while True:
         with i2c_lock:
             gyro = mpu.gyro
-        timestamp = datetime.now()
         data = {
-            "time": timestamp,
             "gyro": gyro
         }
-        data_queue.put(data)
         if send_data:
             msg_queue.put(json.dumps(data))
+        timestamp = datetime.now()
+        data["time"] = timestamp
+        data_queue.put(data)
         if log:
             log_queue.put(f"Giroscopio: {gyro}")
         time.sleep(SleepTime)
