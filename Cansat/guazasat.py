@@ -31,12 +31,12 @@ bmp.SleepTime = GlobalSleepTime
 bmp.init(i2c, 0x76, i2c_lock)
 
 mpu.save_data = True
-mpu.log = log_queue
+#mpu.log = log_queue
 mpu.SleepTime = GlobalSleepTime
 mpu.init(i2c, 0x68, i2c_lock)
 
 gps.save_data = True
-gps.log = log_queue
+#gps.log = log_queue
 gps.SleepTime = GlobalSleepTime
 gps.init(i2c, 0x10, i2c_lock)
 
