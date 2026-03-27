@@ -3,5 +3,5 @@ __pycache__/
 *.pyo
 *.pyd
 
-Data/*.csv
+Cansat/Data/*.csv
 venv/
