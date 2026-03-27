@@ -1,18 +1,24 @@
-from sx126x import sx126x
+import serial
 import time
 
-print("Inicializando módulo...")
+ports = ["/dev/serial0", "/dev/ttyS0", "/dev/ttyAMA0"]
 
-device = sx126x(
-    serial_num="/dev/serial0",
-    freq=868,
-    addr=0x0001,
-    power=22,
-    rssi=True
-)
+cmd = bytes([0xC1, 0x00, 0x09])
 
-print("Configurado correctamente")
+for p in ports:
+    try:
+        print("\n=== Testing", p, "===")
+        ser = serial.Serial(p, 9600, timeout=1)
 
-while True:
-    device.receive()
-    time.sleep(1)
+        ser.flushInput()
+        ser.write(cmd)
+        time.sleep(0.5)
+
+        data = ser.read(100)
+
+        print("Response:", data)
+
+        ser.close()
+
+    except Exception as e:
+        print("Error:", e)
