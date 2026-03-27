@@ -1,15 +1,9 @@
 from sx126x import sx126x
 import time
 
-radio = sx126x(
-    serial_num="/dev/serial0",
-    freq=868,
-    addr=0x0002,
-    power=22,
-    rssi=True
-)
+radio = sx126x("/dev/serial0", 868, 0x0002, 22, True)
 
-print("Nodo B escuchando...")
+print("RX node B")
 
 while True:
     radio.receive()

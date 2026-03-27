@@ -1,17 +1,12 @@
 from sx126x import sx126x
 import time
 
-radio = sx126x(
-    serial_num="/dev/serial0",
-    freq=868,
-    addr=0x0001,
-    power=22,
-    rssi=True
-)
+radio = sx126x("/dev/serial0", 868, 0x0001, 22, True)
 
-print("Nodo A transmitiendo...")
+print("TX node A")
 
 while True:
-    radio.send(b"Hola desde A")
-    print("Enviado")
+    msg = bytes([0x00, 0x02, radio.cfg_reg[8]]) + b"Hola desde A"
+    radio.send(msg)
+    print("Sent:", msg)
     time.sleep(2)
