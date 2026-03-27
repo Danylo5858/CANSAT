@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
+import spidev
 import time
 
-# Pines (modo BCM)
 BUSY = 24
 RESET = 25
 
@@ -11,40 +11,46 @@ GPIO.setwarnings(False)
 GPIO.setup(BUSY, GPIO.IN)
 GPIO.setup(RESET, GPIO.OUT)
 
-def read_busy(label=""):
-    state = GPIO.input(BUSY)
-    print(f"{label} BUSY = {state}")
-    return state
+spi = spidev.SpiDev()
+spi.open(0, 0)
+spi.max_speed_hz = 1000000
+
+def wait_busy():
+    while GPIO.input(BUSY) == 1:
+        pass
+
+def write_cmd(cmd, data=[]):
+    wait_busy()
+    spi.xfer2([cmd] + data)
+    # aquí el chip debería ponerse BUSY
+    print("Después de comando, BUSY =", GPIO.input(BUSY))
+    wait_busy()
 
 try:
-    print("=== TEST SX1262 BUSY ===\n")
-
-    # 1. Leer estado inicial
-    read_busy("Inicial")
-
-    time.sleep(1)
-
-    # 2. Reset del módulo
-    print("\nHaciendo RESET...")
+    print("RESET...")
     GPIO.output(RESET, 0)
     time.sleep(0.1)
     GPIO.output(RESET, 1)
+    time.sleep(0.1)
 
-    # 3. Leer BUSY varias veces después del reset
-    print("\nLeyendo BUSY después del reset:")
-    for i in range(10):
-        read_busy(f"t={i}")
-        time.sleep(0.2)
+    print("BUSY inicial:", GPIO.input(BUSY))
 
-    print("\nTest continuo (Ctrl+C para salir):")
+    # comando standby
+    print("\nEnviando SetStandby...")
+    write_cmd(0x80, [0x00])
 
-    # 4. Monitor continuo
+    print("\nEnviando GetStatus...")
+    resp = spi.xfer2([0xC0, 0x00])
+    print("Respuesta:", resp)
+
+    print("\nLectura continua BUSY:")
     while True:
-        read_busy()
+        print("BUSY =", GPIO.input(BUSY))
         time.sleep(0.5)
 
 except KeyboardInterrupt:
-    print("\nSaliendo...")
+    pass
 
 finally:
     GPIO.cleanup()
+    spi.close()
