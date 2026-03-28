@@ -269,15 +269,17 @@ class sx126x:
         #    else:
         #        pass
                 #print('\x1b[2A',end='\r')
-        if self.ser.inWaiting() > 0:
-            time.sleep(0.05)
-            r_buff = self.ser.read(self.ser.inWaiting())
+        if self.ser.in_waiting > 0:
+            data = self.ser.read(self.ser.in_waiting)
 
-            if len(r_buff) < 6:
+            if len(data) < 7:
                 return
 
+            payload_len = data[6]
+            payload = data[7:7+payload_len]
+
             try:
-                OnReceive(r_buff[6:].decode("utf-8", errors="ignore"))
+                OnReceive(payload.decode("utf-8"))
             except:
                 pass
 
