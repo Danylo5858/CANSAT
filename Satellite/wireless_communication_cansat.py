@@ -29,6 +29,6 @@ def SendData():
     data = json.dumps(buffer)
     if log:
         log_queue.put("Enviando datos: " + data)
-    send("amo a mi camburcito ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::)")
+    send('[{"latitude": 0, "longitude": 0, "satellites": 0}, {"temperature": 24.54, "pressure": 1002.87, "altitude": 86.76}, {"gyro": [-0.346534736764546745456757, 0.300453060520646345435345, -0.244444435435345435454]}]')
     #send(data)
     buffer.clear()
