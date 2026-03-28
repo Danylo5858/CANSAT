@@ -37,4 +37,4 @@ def SendData():
     if log:
         log_queue.put("Enviando datos: " + data)
     send(data)
-    buffer = {}
+    buffer.clear()
