@@ -4,7 +4,7 @@ import threading
 from queue import Queue
 import adafruit_gps
 from log_manager import log_queue
-from wireless_communication_cansat import msg_queue
+from wireless_communication_cansat import buffer
 
 log = False
 send_data = False
@@ -32,7 +32,7 @@ def GetData():
         if log:
             log_queue.put(f"Lat: {lan:.4f}\nLon: {lon:.4f}\nSatelites: {sat}")
         if send_data:
-            msg_queue.put({
+            buffer.append({
                 "latitude": lan,
                 "longitude": lon,
                 "satellites": sat
@@ -48,7 +48,7 @@ def GetData():
         if log:
             log_queue.put("Buscando fix (GPS)...")
         if send_data:
-            msg_queue.put({
+            buffer.append({
                 "latitude": 0,
                 "longitude": 0,
                 "satellites": 0

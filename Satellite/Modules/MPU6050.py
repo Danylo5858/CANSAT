@@ -4,7 +4,7 @@ import threading
 from queue import Queue
 import adafruit_mpu6050
 from log_manager import log_queue
-from wireless_communication_cansat import msg_queue
+from wireless_communication_cansat import buffer
 
 log = False
 send_data = False
@@ -25,7 +25,7 @@ def GetData():
     if log:
         log_queue.put(f"Giroscopio: {gyro}")
     if send_data:
-        msg_queue.put({
+        buffer.append({
             "gyro": gyro
         })
     data = {

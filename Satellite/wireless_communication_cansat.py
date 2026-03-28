@@ -1,11 +1,10 @@
 import json
-from queue import Queue
 from sx126x import sx126x
 
 freq = 868
 dest_addr = 2
 radio = sx126x("/dev/serial0", freq, 1, 22, False)
-msg_queue = Queue()
+buffer = []
 
 def send(str_msg):
     msg = str_msg.encode("utf-8")+b"}"
@@ -21,6 +20,6 @@ def send(str_msg):
     radio.send(data)
 
 def SendData():
-    msg = msg_queue.get()
-    print(json.dumps(msg))
-    #send(json.dumps(msg))
+    print(json.dumps(buffer))
+    #send(json.dumps(buffer))
+    buffer.clear()
