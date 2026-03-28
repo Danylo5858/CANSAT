@@ -13,7 +13,7 @@ def init(self_address, destination_address, frequency):
     radio = sx126x("/dev/serial0", freq, self_address, 22, False)
 
 def send(str_msg):
-    msg = str_msg.encode("utf-8")+b"}"
+    msg = str_msg.encode("utf-8")
     dest_h = (dest_addr >> 8) & 0xFF
     dest_l = dest_addr & 0xFF
     src_h = (radio.addr >> 8) & 0xFF

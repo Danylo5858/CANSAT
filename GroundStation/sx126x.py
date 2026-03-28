@@ -253,22 +253,33 @@ class sx126x:
 
 
     def receive(self, OnReceive):
-        if self.ser.inWaiting() > 0:
-            time.sleep(0.5)
-            r_buff = self.ser.read(self.ser.inWaiting())
+        #if self.ser.inWaiting() > 0:
+        #    time.sleep(0.5)
+        #    r_buff = self.ser.read(self.ser.inWaiting())
 
-            OnReceive(r_buff[3:-1].decode("utf-8"))
+        #    OnReceive(r_buff[3:-1].decode("utf-8"))
             #print("receive message from node address with frequence\033[1;32m %d,%d.125MHz\033[0m"%((r_buff[0]<<8)+r_buff[1],r_buff[2]+self.start_freq),end='\r\n',flush = True)
             #print("Datos recibidos: "+str(r_buff[3:-1]),end='\r\n')
             
             # print the rssi
-            if self.rssi:
+        #    if self.rssi:
                 # print('\x1b[3A',end='\r')
-                print("the packet rssi value: -{0}dBm".format(256-r_buff[-1:][0]))
-                self.get_channel_rssi()
-            else:
-                pass
+        #        print("the packet rssi value: -{0}dBm".format(256-r_buff[-1:][0]))
+        #        self.get_channel_rssi()
+        #    else:
+        #        pass
                 #print('\x1b[2A',end='\r')
+        if self.ser.inWaiting() > 0:
+            time.sleep(0.05)
+            r_buff = self.ser.read(self.ser.inWaiting())
+
+            if len(r_buff) < 6:
+                return
+
+            try:
+                OnReceive(r_buff[6:].decode("utf-8", errors="ignore"))
+            except:
+                pass
 
     def get_channel_rssi(self):
         GPIO.output(self.M1,GPIO.LOW)
