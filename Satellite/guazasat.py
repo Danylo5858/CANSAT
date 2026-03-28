@@ -21,7 +21,7 @@ with i2c_lock:
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
-wcom_c.log = True
+wcom_c.log = False
 wcom_c.init(1, 2, 868)
 
 bmp.log = True
