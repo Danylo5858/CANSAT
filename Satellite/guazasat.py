@@ -37,9 +37,9 @@ gps.save_data = True
 gps.init(i2c, 0x10, i2c_lock)
 
 threads = [
-    threading.Thread(bmp.GetData, daemon=True),
-    threading.Thread(mpu.GetData, daemon=True),
-    threading.Thread(gps.GetData, daemon=True)
+    threading.Thread(target=bmp.GetData, daemon=True),
+    threading.Thread(target=mpu.GetData, daemon=True),
+    threading.Thread(target=gps.GetData, daemon=True)
 ]
 
 while True:
