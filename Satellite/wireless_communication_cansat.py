@@ -1,8 +1,9 @@
 from sx126x import sx126x
 from queue import Queue
 
-radio = sx126x("/dev/serial0", 868, 0x0001, 22, True)
-dest_addr = 0x0002
+freq = 868
+dest_addr = 2
+radio = sx126x("/dev/serial0", freq, 1, 22, False)
 msg_queue = Queue()
 
 def send(str_msg):
@@ -21,4 +22,6 @@ def send(str_msg):
 def sender():
     while True:
         msg = msg_queue.get()
-        send(msg)
+        # send(msg)
+        print(msg)
+        radio.send(f"{dest_addr},{freq},"+msg)
