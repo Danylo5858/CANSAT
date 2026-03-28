@@ -12,7 +12,7 @@ def OnReceive(raw_data):
 	str_data = gzip.decompress(raw_data).decode("utf-8")
 	if log:
 		log_queue.put(str_data)
-	#data = json.loads(str_data)
+	data = json.loads(str_data)
 
 def receiver():
 	while True:
