@@ -10,6 +10,8 @@ from Modules import GPS as gps
 import log_manager as lm
 import wireless_communication_cansat as wcom_c
 
+GlobalSleepTime = 1
+
 os.makedirs("Data", exist_ok=True)
 
 i2c_lock = threading.Lock()
@@ -19,9 +21,8 @@ with i2c_lock:
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
+wcom_c.log = True
 wcom_c.init(1, 2, 868)
-
-GlobalSleepTime = 1
 
 bmp.log = True
 bmp.send_data = True

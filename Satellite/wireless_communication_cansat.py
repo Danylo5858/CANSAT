@@ -1,5 +1,8 @@
 import json
 from sx126x import sx126x
+from log_manager import log_queue
+
+log = False
 
 buffer = []
 
@@ -23,5 +26,8 @@ def send(str_msg):
     radio.send(data)
 
 def SendData():
-    send(json.dumps(buffer))
+    data = json.dumps(buffer)
+    if log:
+        log_queue.put(data)
+    send(data)
     buffer.clear()
