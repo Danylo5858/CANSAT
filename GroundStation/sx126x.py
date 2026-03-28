@@ -254,7 +254,7 @@ class sx126x:
 
     def receive(self, OnReceive):
         if self.ser.inWaiting() > 0:
-            time.sleep(0.1)
+            time.sleep(0.3)
             r_buff = self.ser.read(self.ser.inWaiting())
 
             OnReceive(r_buff[3:])
