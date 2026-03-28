@@ -3,7 +3,6 @@ import json
 import gzip
 from queue import Queue
 from sx126x import sx126x
-from graph_manager import data_queue as gm_data_queue
 from log_manager import log_queue
 
 log = False
