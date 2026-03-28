@@ -1,5 +1,5 @@
-from sx126x import sx126x
 from queue import Queue
+from sx126x import sx126x
 
 freq = 868
 dest_addr = 2
