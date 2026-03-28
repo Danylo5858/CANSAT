@@ -1,3 +1,4 @@
+import json
 import threading
 import graph_manager as gm
 import weather_data_fetcher as wdf

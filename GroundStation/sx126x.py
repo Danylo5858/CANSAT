@@ -2,7 +2,6 @@
 
 import RPi.GPIO as GPIO
 import serial
-import json
 import time
 import threading
 
@@ -86,8 +85,6 @@ class sx126x:
 
         self.set(freq,addr,power,rssi,air_speed,net_id,buffer_size,crypt,relay,lbt,wor)
 
-    # ---------------- CONFIG OK (SIN CAMBIOS IMPORTANTES) ----------------
-
     def set(self,freq,addr,power,rssi,air_speed=2400,
             net_id=0,buffer_size=240,crypt=0,
             relay=False,lbt=False,wor=False):
@@ -146,8 +143,6 @@ class sx126x:
         GPIO.output(self.M1,GPIO.LOW)
         time.sleep(0.1)
 
-    # ---------------- SEND OK ----------------
-
     def send(self,data):
         GPIO.output(self.M0,GPIO.LOW)
         GPIO.output(self.M1,GPIO.LOW)
@@ -155,50 +150,29 @@ class sx126x:
         self.ser.write(data)
         time.sleep(0.1)
 
-    # ---------------- LISTENER FIXED COMPLETAMENTE ----------------
-
     def start_listener(self, callback):
         self._running = True
         self._callback = callback
-
         def loop():
             buffer = b""
-
             while self._running:
-
-                if self.ser.inWaiting() > 0:
-                    buffer += self.ser.read(self.ser.inWaiting())
-
-                    while len(buffer) >= 6:
-
-                        # eliminar ruido inicial
-                        if buffer[0] == 0x00:
-                            buffer = buffer[1:]
-                            continue
-
-                        # eliminar ráfagas de zeros
-                        if buffer.startswith(b'\x00\x00\x00\x00'):
+                data = self.ser.read(self.ser.in_waiting or 1)
+                if data:
+                    buffer += data
+                while len(buffer) > 0:
+                    if buffer[0] in (0x00, 0xFF):
+                        buffer = buffer[1:]
+                        continue
+                    try:
+                        decoded = buffer.decode('utf-8')
+                        if len(decoded) > 0:
+                            self._callback(decoded)
                             buffer = b""
-                            continue
-
-                        # extraer payload (AJUSTABLE SEGÚN TU PROTOCOLO)
-                        payload = buffer[6:]
-
-                        try:
-                            msg = json.loads(payload.decode('utf-8', errors='ignore'))
-                        except:
-                            msg = payload.decode('utf-8', errors='ignore')
-
-                        if self._callback:
-                            self._callback(msg)
-
-                        # IMPORTANTE: limpiar buffer después de consumir
-                        buffer = b""
+                            break
+                    except:
                         break
-
-                time.sleep(0.02)
-
-        self._thread = threading.Thread(target=loop)
+                time.sleep(0.005)
+        self._thread = threading.Thread(target=loop, daemon=True)
         self._thread.start()
 
     def stop_listener(self):
@@ -206,8 +180,6 @@ class sx126x:
 
         if hasattr(self, "_thread"):
             self._thread.join(timeout=1)
-
-    # ---------------- RECEIVE (DEJADO COMO DEBUG) ----------------
 
     def receive(self):
         if self.ser.inWaiting() > 0:
