@@ -1,4 +1,6 @@
 import json
+import struct
+import gzip
 from sx126x import sx126x
 from log_manager import log_queue
 
@@ -12,8 +14,13 @@ def init(self_address, destination_address, frequency):
     freq = frequency
     radio = sx126x("/dev/serial0", freq, self_address, 22, False)
 
+def pack(data):
+    compressed = gzip.compress(data)
+    return compressed
+
 def send(str_msg):
     msg = str_msg.encode("utf-8")+b"}"
+    packet = pack(msg)
     dest_h = (dest_addr >> 8) & 0xFF
     dest_l = dest_addr & 0xFF
     src_h = (radio.addr >> 8) & 0xFF
@@ -22,13 +29,12 @@ def send(str_msg):
     data = bytes([
         dest_h, dest_l, ch,
         src_h, src_l, ch
-    ]) + msg
+    ]) + packet
     radio.send(data)
 
 def SendData():
     data = json.dumps(buffer)
     if log:
         log_queue.put("Enviando datos: " + data)
-    #send('[{"latitude": 0, "longitude": 0, "satellites": 0}, {"temperature": 24.54, "pressure": 1002.87, "altitude": 86.76}, {"gyro": [-0.346534736764546745456757, 0.300453060520646345435345, -0.244444435435345435454]}]')
     send(data)
     buffer.clear()
