@@ -1,4 +1,4 @@
-import json
+import time
 import threading
 import graph_manager as gm
 import weather_data_fetcher as wdf
@@ -17,8 +17,8 @@ gm.log = True
 
 #threading.Thread(target=wcom.start, daemon=False).start()
 
-def OnReceive(data):
-	print(data)
-
 radio = sx126x("/dev/serial0", 868, 0x0002, 22, True)
-radio.start_listener(OnReceive)
+
+while True:
+	data = radio.receive()
+	time.sleep(0.5)
