@@ -19,4 +19,5 @@ gm.log = True
 def OnReceive(data):
 	print(data)
 
-sx126x.start_listener(OnReceive)
+radio = sx126x("/dev/serial0", 868, 0x0002, 22, True)
+radio.start_listener(OnReceive)
