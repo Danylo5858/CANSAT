@@ -32,27 +32,28 @@ def start():
                 lan = gps.latitude
                 lon = gps.longitude
                 sat = gps.satellites
-            radio_data = {
+            data = {
+                "time": datetime.now(),
                 "latitude": lan,
                 "longitude": lon,
                 "satellites": sat
             }
             if send_data:
-                msg_queue.put(radio_data)
-            data = radio_data
-            timestamp = datetime.now()
-            data["time"] = timestamp
+                msg_queue.put({
+                    "latitude": lan,
+                    "longitude": lon,
+                    "satellites": sat
+                })
             data_queue.put(data)
             if log:
                 log_queue.put(f"Lat: {lan:.4f}\nLon: {lon:.4f}\nSatelites: {sat}")
         else:
-            radio_data = {
-                "latitude": 0,
-                "longitude": 0,
-                "satellites": 0
-            }
             if send_data:
-                msg_queue.put(radio_data)
+                msg_queue.put({
+                    "latitude": 0,
+                    "longitude": 0,
+                    "satellites": 0
+                })
             if log:
                 log_queue.put("Buscando fix (GPS)...")
         time.sleep(SleepTime)

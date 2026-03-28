@@ -31,16 +31,18 @@ def start():
             t = round(bmp.temperature, 2)
             p = round(bmp.pressure, 2)
             a = round(bmp.altitude, 2)
-        radio_data = {
+        data = {
+            "time": datetime.now(),
             "temperature": t,
             "pressure": p,
             "altitude": a
         }
         if send_data:
-            msg_queue.put(radio_data)
-        data = radio_data
-        timestamp = datetime.now()
-        data["time"] = timestamp
+            msg_queue.put({
+                "temperature": t,
+                "pressure": p,
+                "altitude": a
+            })
         data_queue.put(data)
         if log:
             log_queue.put(f"Temperature: {t}\nPressure: {p}\nAltitude: {a}")

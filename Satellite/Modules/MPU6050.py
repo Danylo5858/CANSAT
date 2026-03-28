@@ -26,14 +26,14 @@ def start():
     while True:
         with i2c_lock:
             gyro = mpu.gyro
-        radio_data = {
+        data = {
+            "time": datetime.now(),
             "gyro": gyro
         }
         if send_data:
-            msg_queue.put(radio_data)
-        data = radio_data
-        timestamp = datetime.now()
-        data["time"] = timestamp
+            msg_queue.put({
+                "gyro": gyro
+            })
         data_queue.put(data)
         if log:
             log_queue.put(f"Giroscopio: {gyro}")
