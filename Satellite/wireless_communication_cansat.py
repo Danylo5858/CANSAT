@@ -22,6 +22,6 @@ def send(str_msg):
 def sender():
     while True:
         msg = msg_queue.get()
-        send(msg)
+        #send(msg)
         print(msg)
-        #radio.send(b"2,868,"+msg.encode("utf-8"))
+        radio.send(b"2,868,"+msg.encode("utf-8"))
