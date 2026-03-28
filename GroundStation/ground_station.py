@@ -25,4 +25,3 @@ while True:
 		t.start()
 	for t in threads:
 		t.join()
-	time.sleep(GlobalSleepTime)
