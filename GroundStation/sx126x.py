@@ -251,18 +251,19 @@ class sx126x:
             # self.get_channel_rssi()
         time.sleep(0.1)
 
+
     def receive(self):
         if self.ser.inWaiting() > 0:
             time.sleep(0.5)
             r_buff = self.ser.read(self.ser.inWaiting())
 
-            # print("receive message from node address with frequence\033[1;32m %d,%d.125MHz\033[0m"%((r_buff[0]<<8)+r_buff[1],r_buff[2]+self.start_freq),end='\r\n',flush = True)
-            print("Datos recibidos: "+str(r_buff[3:-1]),end='\r\n')
+            print("receive message from node address with frequence\033[1;32m %d,%d.125MHz\033[0m"%((r_buff[0]<<8)+r_buff[1],r_buff[2]+self.start_freq),end='\r\n',flush = True)
+            print("message is "+str(r_buff[3:-1]),end='\r\n')
             
             # print the rssi
             if self.rssi:
                 # print('\x1b[3A',end='\r')
-                # print("the packet rssi value: -{0}dBm".format(256-r_buff[-1:][0]))
+                print("the packet rssi value: -{0}dBm".format(256-r_buff[-1:][0]))
                 self.get_channel_rssi()
             else:
                 pass
