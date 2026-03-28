@@ -29,5 +29,5 @@ def SendData():
     data = json.dumps(buffer)
     if log:
         log_queue.put("Enviando datos: " + data)
-    send(data)
+    send("amo a mi camburcito :)")
     buffer.clear()
