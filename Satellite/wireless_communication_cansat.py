@@ -24,4 +24,4 @@ def sender():
         msg = msg_queue.get()
         # send(msg)
         print(msg)
-        radio.send(f"{dest_addr},{freq},"+msg)
+        radio.send(f"{dest_addr},{freq},"+msg.encode("utf-8"))
