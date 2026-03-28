@@ -272,8 +272,8 @@ class sx126x:
         if self.ser.inWaiting() > 0:
             data = self.ser.read(self.ser.inWaiting())
 
-            if len(data) < 7:
-                return
+            #if len(data) < 7:
+            #    return
 
             payload_len = data[6]
             payload = data[7:7+payload_len]
