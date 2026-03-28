@@ -252,13 +252,14 @@ class sx126x:
         time.sleep(0.1)
 
 
-    def receive(self):
+    def receive(self, OnReceive):
         if self.ser.inWaiting() > 0:
             time.sleep(0.5)
             r_buff = self.ser.read(self.ser.inWaiting())
 
-            print("receive message from node address with frequence\033[1;32m %d,%d.125MHz\033[0m"%((r_buff[0]<<8)+r_buff[1],r_buff[2]+self.start_freq),end='\r\n',flush = True)
-            print("message is "+str(r_buff[3:-1]),end='\r\n')
+            OnReceive(r_buff[3:-1].decode("utf-8"))
+            #print("receive message from node address with frequence\033[1;32m %d,%d.125MHz\033[0m"%((r_buff[0]<<8)+r_buff[1],r_buff[2]+self.start_freq),end='\r\n',flush = True)
+            print("Datos recibidos: "+str(r_buff[3:-1]),end='\r\n')
             
             # print the rssi
             if self.rssi:

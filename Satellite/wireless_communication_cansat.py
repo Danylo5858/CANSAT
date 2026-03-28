@@ -7,7 +7,7 @@ radio = sx126x("/dev/serial0", freq, 1, 22, False)
 msg_queue = Queue()
 
 def send(str_msg):
-    msg = str_msg.encode("utf-8")
+    msg = str_msg.encode("utf-8")+b"}"
     dest_h = (dest_addr >> 8) & 0xFF
     dest_l = dest_addr & 0xFF
     src_h = (radio.addr >> 8) & 0xFF
@@ -22,6 +22,4 @@ def send(str_msg):
 def sender():
     while True:
         msg = msg_queue.get()
-        send(msg+"}")
-        print(msg)
-        #radio.send(f"{dest_addr},{freq},{msg}".encode("utf-8"))
+        send(msg)

@@ -18,8 +18,11 @@ gm.log = True
 
 #threading.Thread(target=wcom.start, daemon=False).start()
 
+def OnReceive(data):
+	print(data)
+
 radio = sx126x("/dev/serial0", 868, 2, 22, False)
 
 while True:
-	radio.receive()
+	radio.receive(OnReceive)
 	time.sleep(0.5)
