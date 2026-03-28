@@ -6,7 +6,7 @@ from log_manager import log_queue
 
 log = False
 
-buffer = []
+buffer = {}
 
 def init(self_address, destination_address, frequency):
     global radio, dest_addr, freq
@@ -37,4 +37,4 @@ def SendData():
     if log:
         log_queue.put("Enviando datos: " + data)
     send(data)
-    buffer.clear()
+    buffer = {}
