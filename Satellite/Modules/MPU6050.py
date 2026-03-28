@@ -21,13 +21,15 @@ def init(i2c, address, lock):
 
 def GetData():
     with i2c_lock:
-        gyro = mpu.gyro
+        gx, gy, gz = [round(v, 5) for v in mpu.gyro]
+    gyro = [gx, gy, gz]
     if log:
         log_queue.put(f"Giroscopio: {gyro}")
     if send_data:
-        buffer.append({
-            "gyro": gyro
-        })
+        #buffer.append({
+        #    "gyro": gyro
+        #})
+        buffer.append(gyro)
     data = {
         "time": datetime.now(),
         "gyro": gyro
