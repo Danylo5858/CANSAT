@@ -1,10 +1,13 @@
 import json
 from sx126x import sx126x
 
-freq = 868
-dest_addr = 2
-radio = sx126x("/dev/serial0", freq, 1, 22, False)
 buffer = []
+
+def init(self_address, destination_address, frequency):
+    global radio, dest_addr, freq
+    dest_addr = destination_address
+    freq = frequency
+    radio = sx126x("/dev/serial0", freq, self_address, 22, False)
 
 def send(str_msg):
     msg = str_msg.encode("utf-8")+b"}"
@@ -20,6 +23,5 @@ def send(str_msg):
     radio.send(data)
 
 def SendData():
-    print(json.dumps(buffer))
-    #send(json.dumps(buffer))
+    send(json.dumps(buffer))
     buffer.clear()

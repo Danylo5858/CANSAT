@@ -19,6 +19,8 @@ with i2c_lock:
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
+wcom_c.init(1, 2, 868)
+
 GlobalSleepTime = 1
 
 bmp.log = True
