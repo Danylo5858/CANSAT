@@ -1,3 +1,4 @@
+import json
 from queue import Queue
 from sx126x import sx126x
 
@@ -22,4 +23,4 @@ def send(str_msg):
 def sender():
     while True:
         msg = msg_queue.get()
-        send(msg)
+        send(json.dumps(msg))
