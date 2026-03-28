@@ -22,5 +22,5 @@ radio = sx126x("/dev/serial0", 868, 0x0002, 22, True)
 
 while True:
 	data = radio.receive()
-	print(json.loads(data))
+	print(data)
 	time.sleep(0.5)
