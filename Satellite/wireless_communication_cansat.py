@@ -5,8 +5,6 @@ radio = sx126x("/dev/serial0", 868, 0x0001, 22, True)
 dest_addr = 0x0002
 msg_queue = Queue()
 
-print("WIRELEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEESS INIT")
-
 def send(str_msg):
     msg = str_msg.encode("utf-8")
     dest_h = (dest_addr >> 8) & 0xFF

@@ -2,7 +2,9 @@
 
 import RPi.GPIO as GPIO
 import serial
+import json
 import time
+import threading
 
 class sx126x:
 
@@ -183,7 +185,7 @@ class sx126x:
             if self.ser.inWaiting() > 0:
                 time.sleep(0.1)
                 r_buff = self.ser.read(self.ser.inWaiting())
-                print("RAW RESPONSE:", r_buff)
+                # print("RAW RESPONSE:", r_buff)
                 if r_buff[0] == 0xC1:
                     pass
                     # print("parameters setting is :",end='')
@@ -251,19 +253,41 @@ class sx126x:
             # self.get_channel_rssi()
         time.sleep(0.1)
 
+    def start_listener(self, callback):
+        self._running = True
+
+    def stop_listener(self):
+        self._running = False
+
+    def loop():
+        while self._running:
+            if self.ser.inWaiting() > 0:
+                time.sleep(0.1)
+                r_buff = self.ser.read(self.ser.inWaiting())
+                if len(r_buff) > 6:
+                    payload = r_buff[6:]
+                    try:
+                        msg = json.loads(payload.decode('utf-8', errors='ignore'))
+                    except:
+                        msg = str(payload)
+                    callback(msg)
+            time.sleep(0.05)
+
+    self._thread = threading.Thread(target=loop, daemon=True)
+    self._thread.start()
 
     def receive(self):
         if self.ser.inWaiting() > 0:
             time.sleep(0.5)
             r_buff = self.ser.read(self.ser.inWaiting())
 
-            print("receive message from node address with frequence\033[1;32m %d,%d.125MHz\033[0m"%((r_buff[0]<<8)+r_buff[1],r_buff[2]+self.start_freq),end='\r\n',flush = True)
-            print("message is "+str(r_buff[3:-1]),end='\r\n')
+            # print("receive message from node address with frequence\033[1;32m %d,%d.125MHz\033[0m"%((r_buff[0]<<8)+r_buff[1],r_buff[2]+self.start_freq),end='\r\n',flush = True)
+            print("Datos recibidos: "+str(r_buff[3:-1]),end='\r\n')
             
             # print the rssi
             if self.rssi:
                 # print('\x1b[3A',end='\r')
-                print("the packet rssi value: -{0}dBm".format(256-r_buff[-1:][0]))
+                # print("the packet rssi value: -{0}dBm".format(256-r_buff[-1:][0]))
                 self.get_channel_rssi()
             else:
                 pass

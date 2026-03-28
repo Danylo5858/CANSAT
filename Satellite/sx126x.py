@@ -183,7 +183,7 @@ class sx126x:
             if self.ser.inWaiting() > 0:
                 time.sleep(0.1)
                 r_buff = self.ser.read(self.ser.inWaiting())
-                print("RAW RESPONSE:", r_buff)
+                # print("RAW RESPONSE:", r_buff)
                 if r_buff[0] == 0xC1:
                     pass
                     # print("parameters setting is :",end='')
