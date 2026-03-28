@@ -16,4 +16,5 @@ gm.SleepTime = GlobalSleepTime
 gm.log = True
 #threading.Thread(target=gm.start, daemon=False).start()
 
+wcom_gs.log = True
 threading.Thread(target=wcom_gs.receiver, daemon=False).start()
