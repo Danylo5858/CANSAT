@@ -32,11 +32,11 @@ def GetData():
         if log:
             log_queue.put(f"Lat: {lan:.4f}\nLon: {lon:.4f}\nSatelites: {sat}")
         if send_data:
-            buffer.append({
+            buffer["GPS"] = {
                 "latitude": lan,
                 "longitude": lon,
                 "satellites": sat
-            })
+            }
             #buffer.append([lan, lon, sat])
         data = {
             "time": datetime.now(),
@@ -49,11 +49,11 @@ def GetData():
         if log:
             log_queue.put("Buscando fix (GPS)...")
         if send_data:
-            buffer.append({
+            buffer["GPS"] = {
                 "latitude": 0,
                 "longitude": 0,
                 "satellites": 0
-            })
+            }
             #buffer.append([0, 0, 0])
 
 def SaveData():

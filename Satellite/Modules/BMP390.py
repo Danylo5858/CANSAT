@@ -30,11 +30,11 @@ def GetData():
     if log:
         log_queue.put(f"Temperature: {t}\nPressure: {p}\nAltitude: {a}")
     if send_data:
-        buffer.append({
+        buffer["BMP390"] = {
             "temperature": t,
             "pressure": p,
             "altitude": a
-        })
+        }
         #buffer.append([t, p, a])
     data = {
         "time": datetime.now(),

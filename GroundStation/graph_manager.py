@@ -1,5 +1,6 @@
 import time
 import requests
+from queue import Queue
 import threading
 import asyncio
 
@@ -8,6 +9,8 @@ log = False
 SleepTime = 10
 
 print_lock = threading.Lock()
+
+data_queue = Queue()
 
 def start():
     while True:

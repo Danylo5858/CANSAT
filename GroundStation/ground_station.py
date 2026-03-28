@@ -18,5 +18,4 @@ gm.log = True
 
 wcom_gs.log = True
 wcom_gs.init(2, 868)
-
 threading.Thread(target=wcom_gs.receiver, daemon=False).start()
