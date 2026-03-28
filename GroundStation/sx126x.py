@@ -181,7 +181,7 @@ class sx126x:
 
                 time.sleep(0.05)
 
-        self._thread = threading.Thread(target=loop, daemon=True)
+        self._thread = threading.Thread(target=loop)
         self._thread.start()
 
     def stop_listener(self):
