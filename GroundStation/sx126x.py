@@ -162,24 +162,41 @@ class sx126x:
         self._callback = callback
 
         def loop():
+            buffer = b""
+
             while self._running:
+
                 if self.ser.inWaiting() > 0:
-                    time.sleep(0.1)
+                    buffer += self.ser.read(self.ser.inWaiting())
 
-                    r_buff = self.ser.read(self.ser.inWaiting())
+                    while len(buffer) >= 6:
 
-                    if len(r_buff) > 6:
-                        payload = r_buff[6:]
+                        # eliminar ruido inicial
+                        if buffer[0] == 0x00:
+                            buffer = buffer[1:]
+                            continue
+
+                        # eliminar ráfagas de zeros
+                        if buffer.startswith(b'\x00\x00\x00\x00'):
+                            buffer = b""
+                            continue
+
+                        # extraer payload (AJUSTABLE SEGÚN TU PROTOCOLO)
+                        payload = buffer[6:]
 
                         try:
                             msg = json.loads(payload.decode('utf-8', errors='ignore'))
                         except:
-                            msg = str(payload)
+                            msg = payload.decode('utf-8', errors='ignore')
 
                         if self._callback:
                             self._callback(msg)
 
-                time.sleep(0.05)
+                        # IMPORTANTE: limpiar buffer después de consumir
+                        buffer = b""
+                        break
+
+                time.sleep(0.02)
 
         self._thread = threading.Thread(target=loop)
         self._thread.start()
