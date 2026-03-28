@@ -264,7 +264,7 @@ class sx126x:
                 # print('\x1b[3A',end='\r')
                 # print("the packet rssi value: -{0}dBm".format(256-r_buff[-1:][0]))
                 self.get_channel_rssi()
-            return r_buff[3:-1]
+            return str(r_buff[3:-1])
 
     def get_channel_rssi(self):
         GPIO.output(self.M1,GPIO.LOW)
