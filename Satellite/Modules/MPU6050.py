@@ -26,11 +26,12 @@ def start():
     while True:
         with i2c_lock:
             gyro = mpu.gyro
-        data = {
+        radio_data = {
             "gyro": gyro
         }
         if send_data:
-            msg_queue.put(data)
+            msg_queue.put(radio_data)
+        data = radio_data
         timestamp = datetime.now()
         data["time"] = timestamp
         data_queue.put(data)

@@ -34,5 +34,5 @@ def sender():
             except Empty:
                 break
         if buffer:
-            send(json.dumps(buffer, default=str))
+            send(json.dumps(buffer)
             buffer.clear()
