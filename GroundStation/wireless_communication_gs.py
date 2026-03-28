@@ -15,4 +15,4 @@ def OnReceive(str_data):
 def receiver():
 	while True:
 		radio.receive(OnReceive)
-		time.sleep(0.5)
+		time.sleep(1)
