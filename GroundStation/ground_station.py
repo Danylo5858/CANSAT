@@ -2,6 +2,7 @@ import threading
 import graph_manager as gm
 import weather_data_fetcher as wdf
 import wireless_communication_gs as wcom_gs
+from sx126x import sx126x
 
 GlobalSleepTime = 5
 
@@ -18,4 +19,4 @@ gm.log = True
 def OnReceive(data):
 	print(data)
 
-wcom_gs.start_listener(OnReceive)
+sx126x.start_listener(OnReceive)
