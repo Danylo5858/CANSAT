@@ -257,14 +257,16 @@ class sx126x:
             r_buff = self.ser.read(self.ser.inWaiting())
 
             # print("receive message from node address with frequence\033[1;32m %d,%d.125MHz\033[0m"%((r_buff[0]<<8)+r_buff[1],r_buff[2]+self.start_freq),end='\r\n',flush = True)
-            # print("Datos recibidos: "+str(r_buff[3:-1]),end='\r\n')
-            return str(r_buff[3:-1])
+            print("Datos recibidos: "+str(r_buff[3:-1]),end='\r\n')
             
             # print the rssi
             if self.rssi:
                 # print('\x1b[3A',end='\r')
                 # print("the packet rssi value: -{0}dBm".format(256-r_buff[-1:][0]))
                 self.get_channel_rssi()
+            else:
+                pass
+                #print('\x1b[2A',end='\r')
 
     def get_channel_rssi(self):
         GPIO.output(self.M1,GPIO.LOW)
@@ -278,8 +280,7 @@ class sx126x:
             time.sleep(0.1)
             re_temp = self.ser.read(self.ser.inWaiting())
         if re_temp[0] == 0xC1 and re_temp[1] == 0x00 and re_temp[2] == 0x02:
-            pass
-            # print("the current noise rssi value: -{0}dBm".format(256-re_temp[3]))
+            print("the current noise rssi value: -{0}dBm".format(256-re_temp[3]))
             # print("the last receive packet rssi value: -{0}dBm".format(256-re_temp[4]))
         else:
             # pass
