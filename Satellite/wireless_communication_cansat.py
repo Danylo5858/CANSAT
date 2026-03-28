@@ -28,6 +28,6 @@ def send(str_msg):
 def SendData():
     data = json.dumps(buffer)
     if log:
-        log_queue.put(data)
+        log_queue.put("Enviando datos: " + data)
     send(data)
     buffer.clear()
