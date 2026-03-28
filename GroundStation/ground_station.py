@@ -13,7 +13,6 @@ gm.SleepTime = GlobalSleepTime
 gm.log = True
 #threading.Thread(target=gm.start, daemon=False).start()
 
-wcom.log = True
 #threading.Thread(target=wcom.start, daemon=False).start()
 
 def OnReceive(data):
