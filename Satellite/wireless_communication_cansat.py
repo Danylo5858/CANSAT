@@ -19,7 +19,7 @@ def pack(data):
     return compressed
 
 def send(str_msg):
-    msg = str_msg.encode("utf-8")+b"}"
+    msg = str_msg.encode("utf-8")
     packet = pack(msg)
     dest_h = (dest_addr >> 8) & 0xFF
     dest_l = dest_addr & 0xFF

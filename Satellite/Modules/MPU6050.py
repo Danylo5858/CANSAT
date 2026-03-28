@@ -26,10 +26,10 @@ def GetData():
     if log:
         log_queue.put(f"Giroscopio: {gyro}")
     if send_data:
-        #buffer.append({
-        #    "gyro": gyro
-        #})
-        buffer.append(gyro)
+        buffer.append({
+            "gyro": gyro
+        })
+        #buffer.append(gyro)
     data = {
         "time": datetime.now(),
         "gyro": gyro
