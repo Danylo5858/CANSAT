@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 from csv import writer
 import threading
@@ -8,9 +7,8 @@ from log_manager import log_queue
 from wireless_communication_cansat import msg_queue
 
 log = False
-save_data = False
 send_data = False
-SleepTime = 1
+save_data = False
 
 data_queue = Queue()
 
@@ -21,32 +19,29 @@ def init(i2c, address, lock):
     bmp.pressure_oversampling = 8
     bmp.temperature_oversampling = 2
     bmp.sea_level_pressure = 1013.25
-    threading.Thread(target=start, daemon=True).start()
     if save_data:
         threading.Thread(target=SaveData, daemon=True).start()
 
-def start():
-    while True:
-        with i2c_lock:
-            t = round(bmp.temperature, 2)
-            p = round(bmp.pressure, 2)
-            a = round(bmp.altitude, 2)
-        data = {
-            "time": datetime.now(),
+def GetData():
+    with i2c_lock:
+        t = round(bmp.temperature, 2)
+        p = round(bmp.pressure, 2)
+        a = round(bmp.altitude, 2)
+    if log:
+        log_queue.put(f"Temperature: {t}\nPressure: {p}\nAltitude: {a}")
+    if send_data:
+        msg_queue.put({
             "temperature": t,
             "pressure": p,
             "altitude": a
-        }
-        if send_data:
-            msg_queue.put({
-                "temperature": t,
-                "pressure": p,
-                "altitude": a
-            })
-        data_queue.put(data)
-        if log:
-            log_queue.put(f"Temperature: {t}\nPressure: {p}\nAltitude: {a}")
-        time.sleep(SleepTime)
+        })
+    data = {
+        "time": datetime.now(),
+        "temperature": t,
+        "pressure": p,
+        "altitude": a
+    }
+    data_queue.put(data)
 
 def SaveData():
     with open('./Data/BMP390_data.csv', 'a', buffering=1, newline='') as f:

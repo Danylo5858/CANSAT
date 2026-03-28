@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 from csv import writer
 import threading
@@ -8,9 +7,8 @@ from log_manager import log_queue
 from wireless_communication_cansat import msg_queue
 
 log = False
-save_data = False
 send_data = False
-SleepTime = 1
+save_data = False
 
 data_queue = Queue()
 
@@ -18,26 +16,23 @@ def init(i2c, address, lock):
     global mpu, i2c_lock
     i2c_lock = lock
     mpu = adafruit_mpu6050.MPU6050(i2c, address=address)
-    threading.Thread(target=start, daemon=True).start()
     if save_data:
         threading.Thread(target=SaveData, daemon=True).start()
 
-def start():
-    while True:
-        with i2c_lock:
-            gyro = mpu.gyro
-        data = {
-            "time": datetime.now(),
+def GetData():
+    with i2c_lock:
+        gyro = mpu.gyro
+    if log:
+        log_queue.put(f"Giroscopio: {gyro}")
+    if send_data:
+        msg_queue.put({
             "gyro": gyro
-        }
-        if send_data:
-            msg_queue.put({
-                "gyro": gyro
-            })
-        data_queue.put(data)
-        if log:
-            log_queue.put(f"Giroscopio: {gyro}")
-        time.sleep(SleepTime)
+        })
+    data = {
+        "time": datetime.now(),
+        "gyro": gyro
+    }
+    data_queue.put(data)
 
 def SaveData():
     with open('./Data/MPU6050_data.csv', 'a', buffering=1, newline='') as f:

@@ -1,5 +1,5 @@
-import time
 import os
+import time
 import threading
 import board
 import busio
@@ -17,7 +17,6 @@ i2c = busio.I2C(board.SCL, board.SDA)
 with i2c_lock:
     print("Devices: ", [hex(device_address) for device_address in i2c.scan()])
 
-threading.Thread(target=wcom_c.sender, daemon=True).start()
 threading.Thread(target=lm.logger, daemon=True).start()
 
 GlobalSleepTime = 1
@@ -25,27 +24,38 @@ GlobalSleepTime = 1
 bmp.log = True
 bmp.send_data = True
 bmp.save_data = True
-bmp.SleepTime = GlobalSleepTime
 bmp.init(i2c, 0x76, i2c_lock)
 
 mpu.log = True
 mpu.send_data = True
 mpu.save_data = True
-mpu.SleepTime = GlobalSleepTime
 mpu.init(i2c, 0x68, i2c_lock)
 
 gps.log = True
 gps.send_data = True
 gps.save_data = True
-gps.SleepTime = GlobalSleepTime
 gps.init(i2c, 0x10, i2c_lock)
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(17, GPIO.OUT)    # LED
-GPIO.setup(15, GPIO.OUT)    # BUZZER
-GPIO.output(17, GPIO.HIGH)
+threads = [
+    threading.Thread(bmp.GetData, daemon=True),
+    threading.Thread(mpu.GetData, daemon=True),
+    threading.Thread(gps.GetData, daemon=True)
+]
 
 while True:
-    GPIO.output(15, GPIO.HIGH)
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
     time.sleep(GlobalSleepTime)
-    GPIO.output(15, GPIO.LOW)
+    wcom_c.SendData()
+
+#GPIO.setmode(GPIO.BCM)
+#GPIO.setup(17, GPIO.OUT)    # LED
+#GPIO.setup(15, GPIO.OUT)    # BUZZER
+#GPIO.output(17, GPIO.HIGH)
+
+#while True:
+#    GPIO.output(15, GPIO.HIGH)
+#    time.sleep(GlobalSleepTime)
+#    GPIO.output(15, GPIO.LOW)
