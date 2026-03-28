@@ -6,7 +6,9 @@ from log_manager import log_queue
 
 log = False
 
-radio = sx126x("/dev/serial0", 868, 2, 22, False)
+def init(self_address, frequency):
+	global radio
+	radio = sx126x("/dev/serial0", frequency, self_address, 22, False)
 
 def OnReceive(raw_data):
 	str_data = gzip.decompress(raw_data).decode("utf-8")
