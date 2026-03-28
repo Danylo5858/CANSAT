@@ -269,8 +269,8 @@ class sx126x:
         #    else:
         #        pass
                 #print('\x1b[2A',end='\r')
-        if self.ser.in_waiting > 0:
-            data = self.ser.read(self.ser.in_waiting)
+        if self.ser.inWaiting() > 0:
+            data = self.ser.read(self.ser.inWaiting())
 
             if len(data) < 7:
                 return
