@@ -21,7 +21,9 @@ data = {
 		label: 'Altitud del CanSat en tiempo real',
 		data: [],
 		borderColor: 'rgb(75, 192, 192)',
-   		tension: 0.1
+		tension: 0.5,
+   		cubicInterpolationMode: 'monotone',
+  		borderWidth: 2
 	}]
 };
 
@@ -30,13 +32,26 @@ config = {
 	data: data,
 	options: {
 		responsive: true,
+		animation: {
+    		duration: 600,
+    		easing: 'linear'
+  		},
+  		elements: {
+	      	line: {
+	        	tension: 0.5,
+	        	cubicInterpolationMode: 'monotone'
+	      	},
+	      	point: {
+	        	radius: 0,
+	        	hoverRadius: 4
+	      	}
+	    },
 		scales: {
 			x: {
 				type: 'time',
 				time: {
 					unit: 'second'
 				},
-				offset: true,
 				min: () => Date.now() - 60000,
     			max: () => Date.now(),
 				title: {
@@ -45,13 +60,18 @@ config = {
 				}
 			},
 			y: {
-				offset: true,
 				title: {
 					display: true,
 					text: 'Altitud (m)'
 				}
 			}
-		}
+		},
+		layout: {
+    		padding: {
+      			left: 10,
+      			right: 10
+    		}
+  		}
 	}
 };
 
