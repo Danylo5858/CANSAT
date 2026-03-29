@@ -136,7 +136,7 @@ socket.on("BMP390_data", (data) => {
 		y: pressure
 	});
 
-	for (chart in charts) {
+	for (const chart of charts) {
 		chart.update();
 	};
 });
