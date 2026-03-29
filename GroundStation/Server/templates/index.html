@@ -77,28 +77,28 @@ config_template = {
 	}
 };
 
-const data_a = JSON.parse(JSON.stringify(data_template));
+const data_a = structuredClone(data_template);
 data_a['datasets'][0]['label'] = 'Altitud del CanSat en tiempo real';
 data_a['datasets'][0]['borderColor'] = 'rgb(75, 192, 192)';
 
-const data_t = JSON.parse(JSON.stringify(data_template));
+const data_t = structuredClone(data_template);
 data_t['datasets'][0]['label'] = 'Temperatura del CanSat en tiempo real';
 data_t['datasets'][0]['borderColor'] = 'rgb(75, 192, 75)';
 
-const data_p = JSON.parse(JSON.stringify(data_template));
+const data_p = structuredClone(data_template);
 data_p['datasets'][0]['label'] = 'Presión del CanSat en tiempo real';
 data_p['datasets'][0]['borderColor'] = 'rgb(75, 75, 192)';
 
 
-const config_a = JSON.parse(JSON.stringify(config_template));
+const config_a = structuredClone(config_template);
 config_a['options']['scales']['y']['title']['text'] = 'Altitud (m)';
 config_a['data'] = data_a;
 
-const config_t = JSON.parse(JSON.stringify(config_template));
+const config_t = structuredClone(config_template);
 config_t['options']['scales']['y']['title']['text'] = 'Temperatura (Celsius)';
 config_t['data'] = data_t;
 
-const config_p = JSON.parse(JSON.stringify(config_template));
+const config_p = structuredClone(config_template);
 config_p['options']['scales']['y']['title']['text'] = 'Presión (hPa)';
 config_p['data'] = data_p;
 
