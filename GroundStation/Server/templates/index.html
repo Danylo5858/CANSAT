@@ -11,15 +11,27 @@
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 	<style>
 		.charts-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-template-rows: 1fr 1fr;
+			height: 100vh;
+		}
 
+		.charts-grid > div {
+			position: relative;
+		}
+
+		canvas {
+			width: 100% !important;
+			height: 100% !important;
 		}
 	</style>
 </head>
 <body>
 	<div class="charts-grid">
-		<canvas id="chart_a"></canvas>
-		<canvas id="chart_t"></canvas>
-		<canvas id="chart_p"></canvas>
+		<div><canvas id="chart_a"></canvas></div>
+		<div><canvas id="chart_t"></canvas></div>
+		<div><canvas id="chart_p"></canvas></div>
 	</div>
 <script>
 // CHART.JS
