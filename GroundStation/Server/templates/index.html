@@ -134,11 +134,9 @@ socket.on("BMP390_data", (data) => {
 		y: pressure
 	});
 
-	const max = 60;
-
 	for (const chart of charts) {
-		let data = chart.data.datasets[0].data;
-		if (data.length > max) data.shift();
+		chart.options.scales.x.min = () => Date.now() - 60 * 1000;
+		chart.options.scales.x.max = () => Date.now();
 		chart.update();
 	};
 });
