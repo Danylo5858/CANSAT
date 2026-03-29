@@ -1,1 +1,119 @@
-hello world
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  	<meta charset="UTF-8">
+  	<title>GuazaSat</title>
+  	<!-- Chart.js -->
+  	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  	<!-- Socket.IO -->
+  	<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  	<style>
+    	body {
+      		margin: 0;
+		    background: #111;
+		    color: white;
+		    font-family: Arial, sans-serif;
+		    overflow: hidden;
+    	}
+
+    	.grid {
+      		display: grid;
+      		grid-template-columns: 1fr 1fr;
+      		gap: 10px;
+      		padding: 10px;
+      		height: 100vh;
+      		box-sizing: border-box;
+    	}
+
+    	canvas {
+      		background: #1e1e1e;
+      		border-radius: 12px;
+     		padding: 10px;
+    	}
+  	</style>
+</head>
+<body>
+	<div class="grid">
+  		<canvas id="alt"></canvas>
+	</div>
+
+<script>
+/* =========================
+   CONEXIÓN WEBSOCKET
+========================= */
+const socket = io();
+
+/* =========================
+   DATOS DEL GRÁFICO
+========================= */
+let labels = [];
+let altData = [];
+
+/* =========================
+   CANVAS + CHART
+========================= */
+const altCtx = document.getElementById("alt");
+
+const altChart = new Chart(altCtx, {
+    type: "line",
+    data: {
+        labels: labels,
+        datasets: [{
+            label: "Altitud (m)",
+            data: altData,
+            borderColor: "lime",
+            backgroundColor: "rgba(0,255,0,0.1)",
+            tension: 0.3,
+            pointRadius: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        animation: {
+            duration: 200
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: "white"
+                }
+            },
+            y: {
+                ticks: {
+                    color: "white"
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: "white"
+                }
+            }
+        }
+    }
+});
+
+/* =========================
+   RECEPCIÓN DE DATOS WS
+========================= */
+socket.on("BMP390_data", function(data) {
+
+    // tiempo en eje X
+    labels.push(data.temperature);
+
+    // altitud
+    altData.push(data.altitude);
+
+    // mantener últimos 20 puntos
+    if (labels.length > 20) {
+        labels.shift();
+        altData.shift();
+    }
+
+    // actualizar gráfico
+    altChart.update();
+});
+</script>
+</body>
+</html>
