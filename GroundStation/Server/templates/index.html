@@ -73,11 +73,11 @@ socket.on("BMP390_data", (data) => {
 		y: altitude
 	});
 
-	const max_age = 60 * 1000;
-	const cutoff = Date.now() - max_age;
-	chart.data.datasets[0].data = chart.data.datasets[0].data.filter(
-  		point => point.x.getTime() > cutoff
-	);
+	//const max_age = 60 * 1000;
+	//const cutoff = Date.now() - max_age;
+	//chart.data.datasets[0].data = chart.data.datasets[0].data.filter(
+  	//	point => point.x.getTime() > cutoff
+	//);
 
 	chart.update();
 });
