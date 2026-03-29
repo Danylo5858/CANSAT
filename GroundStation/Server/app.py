@@ -1,13 +1,17 @@
-import os
-import sys
-from flask import Flask, jsonify, render_template
-from flask_socketio import SocketIO
-import eventlet
+def run(queue):
+	import os
+	import sys
+	from flask import Flask, jsonify, render_template
+	from flask_socketio import SocketIO
 
-def init():
-	global app, socketio
 	app = Flask(__name__)
 	socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
+
+	def forward():
+		while True:
+			name, data = queue.get()
+			print("Emitiendo datos:", name)
+			socketio.emit(name, data)
 
 	@app.route("/")
 	def index():
@@ -17,11 +21,6 @@ def init():
 	def handle_connect():
 		log_queue.put("Cliente conectado")
 
-def run():
 	print("SERVER RUNNING")
+	socketio.start_background_task(forward)
 	socketio.run(app, host="0.0.0.0", port=5000)
-
-def send_data(name, data):
-	print("Emitiendo datos:", name)
-	print(data)
-	socketio.emit(name, data)
