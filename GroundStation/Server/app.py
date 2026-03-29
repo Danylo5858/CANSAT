@@ -23,7 +23,7 @@ def run(queue):
 
 	@socketio.on("connect")
 	def handle_connect():
-		log_queue.put("Cliente conectado")
+		print("CLIENTE CONECTADO")
 
 	print("SERVER RUNNING")
 	socketio.start_background_task(forward)
