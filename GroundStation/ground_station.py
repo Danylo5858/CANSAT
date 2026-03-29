@@ -25,7 +25,7 @@ try:
 		data = wcom_gs.received_data.get()
 		server_queue.put(("BMP390_data", data["BMP390"]))
 		threads = [
-			threading.Thread(target=gm.update_graph, args=(data["BMP390"],), daemon=True)
+			#threading.Thread(target=gm.update_graph, args=(data["BMP390"],), daemon=True)
 		]
 		for t in threads:
 			t.start()
