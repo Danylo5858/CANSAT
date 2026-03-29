@@ -77,30 +77,30 @@ config_template = {
 	}
 };
 
-data_a = data_template;
+const data_a = JSON.parse(JSON.stringify(data_template));
 data_a['datasets'][0]['label'] = 'Altitud del CanSat en tiempo real';
 data_a['datasets'][0]['borderColor'] = 'rgb(75, 192, 192)';
 
-data_t = data_template;
+const data_t = JSON.parse(JSON.stringify(data_template));
 data_t['datasets'][0]['label'] = 'Temperatura del CanSat en tiempo real';
 data_t['datasets'][0]['borderColor'] = 'rgb(75, 192, 75)';
 
-data_p = data_template;
+const data_p = JSON.parse(JSON.stringify(data_template));
 data_p['datasets'][0]['label'] = 'Presión del CanSat en tiempo real';
 data_p['datasets'][0]['borderColor'] = 'rgb(75, 75, 192)';
 
 
-config_a = config_template
+const config_a = JSON.parse(JSON.stringify(config_template));
 config_a['options']['scales']['y']['title']['text'] = 'Altitud (m)';
 config_a['data'] = data_a;
 
-config_t = config_template
+const config_t = JSON.parse(JSON.stringify(config_template));
 config_t['options']['scales']['y']['title']['text'] = 'Temperatura (Celsius)';
-config_t['data'] = data_a;
+config_t['data'] = data_t;
 
-config_p = config_template
+const config_p = JSON.parse(JSON.stringify(config_template));
 config_p['options']['scales']['y']['title']['text'] = 'Presión (hPa)';
-config_p['data'] = data_a;
+config_p['data'] = data_p;
 
 const charts = [
 	new Chart(ctx_a, config_a),
