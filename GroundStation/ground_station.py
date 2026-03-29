@@ -31,7 +31,7 @@ try:
 		for t in threads:
 			t.join()
 except KeyboardInterrupt:
-	log_queue.put("Cerrando todos los procesos...")
+	print("\nCerrando todos los procesos...")
 finally:
 	server.terminate()
 	server.join()

@@ -21,6 +21,7 @@ def init():
 		log_queue.put("Cliente conectado")
 
 def run():
+	log_queue.put("SERVER RUNNING")
 	def handle_sigterm(signum, frame):
 		log_queue.put("Apagando servidor correctamente...")
 		exit(0)

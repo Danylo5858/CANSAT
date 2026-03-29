@@ -8,7 +8,6 @@ from Modules import BMP390 as bmp
 from Modules import MPU6050 as mpu
 from Modules import GPS as gps
 import log_manager as lm
-from log_manager import log_queue
 import wireless_communication_cansat as wcom_c
 
 GlobalSleepTime = 1
