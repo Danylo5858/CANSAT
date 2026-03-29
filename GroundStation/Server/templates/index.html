@@ -38,82 +38,14 @@
 	</div>
 
 <script>
-/* =========================
-   CONEXIÓN WEBSOCKET
-========================= */
-const socket = io();
+const socket = io("http://localhost:5000");
 
-/* =========================
-   DATOS DEL GRÁFICO
-========================= */
-let labels = [];
-let altData = [];
-
-/* =========================
-   CANVAS + CHART
-========================= */
-const altCtx = document.getElementById("alt");
-
-const altChart = new Chart(altCtx, {
-    type: "line",
-    data: {
-        labels: labels,
-        datasets: [{
-            label: "Altitud (m)",
-            data: altData,
-            borderColor: "lime",
-            backgroundColor: "rgba(0,255,0,0.1)",
-            tension: 0.3,
-            pointRadius: 2
-        }]
-    },
-    options: {
-        responsive: true,
-        animation: {
-            duration: 200
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: "white"
-                }
-            },
-            y: {
-                ticks: {
-                    color: "white"
-                }
-            }
-        },
-        plugins: {
-            legend: {
-                labels: {
-                    color: "white"
-                }
-            }
-        }
-    }
+socket.on("connect", () => {
+	console.log("Conectado al servidor");
 });
 
-/* =========================
-   RECEPCIÓN DE DATOS WS
-========================= */
-socket.on("BMP390_data", function(data) {
-	console.log("wow")
-
-    // tiempo en eje X
-    labels.push(data.temperature);
-
-    // altitud
-    altData.push(data.altitude);
-
-    // mantener últimos 20 puntos
-    if (labels.length > 20) {
-        labels.shift();
-        altData.shift();
-    }
-
-    // actualizar gráfico
-    altChart.update();
+socket.on("BMP390_data", (data) => {
+	console.log("Datos recibidos:", data);
 });
 </script>
 </body>
