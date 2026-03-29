@@ -2,11 +2,12 @@ import os
 import sys
 from flask import Flask, jsonify, render_template
 from flask_socketio import SocketIO
+import eventlet
 
 def init():
 	global app, socketio
 	app = Flask(__name__)
-	socketio = SocketIO(app, cors_allowed_origins="*")
+	socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 	@app.route("/")
 	def index():
