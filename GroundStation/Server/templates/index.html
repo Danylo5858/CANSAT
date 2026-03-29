@@ -79,7 +79,7 @@ socket.on("BMP390_data", (data) => {
   		point => point.x.getTime() > cutoff
 	);
 
-	chart.update('none');
+	chart.update();
 });
 </script>
 </body>
