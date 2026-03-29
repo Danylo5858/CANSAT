@@ -2,9 +2,6 @@ import os
 import sys
 from flask import Flask, jsonify, render_template
 from flask_socketio import SocketIO
-import eventlet
-
-eventlet.monkey_patch()
 
 sys.path.append(os.path.abspath(".."))
 from log_manager import log_queue
