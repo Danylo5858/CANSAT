@@ -7,11 +7,11 @@ import log_manager as lm
 import wireless_communication_gs as wcom_gs
 import Server.app as app
 
+threading.Thread(target=lm.logger, daemon=True).start()
+
 app.init()
 server = Process(target=app.run)
 server.start()
-
-threading.Thread(target=lm.logger, daemon=True).start()
 
 wcom_gs.log = True
 wcom_gs.init(2, 868)
