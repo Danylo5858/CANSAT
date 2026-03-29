@@ -4,10 +4,12 @@ import graph_manager as gm
 import weather_data_fetcher as wdf
 import log_manager as lm
 import wireless_communication_gs as wcom_gs
-
-GlobalSleepTime = 1
+import server
 
 threading.Thread(target=lm.logger, daemon=True).start()
+
+server.init()
+server.run()
 
 wcom_gs.log = True
 wcom_gs.init(2, 868)
