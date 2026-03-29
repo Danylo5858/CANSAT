@@ -11,6 +11,7 @@ import log_manager as lm
 import wireless_communication_cansat as wcom_c
 
 GlobalSleepTime = 1
+threads = None
 
 os.makedirs("Data", exist_ok=True)
 
@@ -39,18 +40,24 @@ gps.send_data = True
 gps.save_data = True
 gps.init(i2c, 0x10, i2c_lock)
 
-while True:
-    threads = [
-        threading.Thread(target=bmp.GetData, daemon=True),
-        threading.Thread(target=mpu.GetData, daemon=True),
-        threading.Thread(target=gps.GetData, daemon=True)
-    ]
-    for t in threads:
-        t.start()
+try:
+    while True:
+        threads = [
+            threading.Thread(target=bmp.GetData, daemon=True),
+            threading.Thread(target=mpu.GetData, daemon=True),
+            threading.Thread(target=gps.GetData, daemon=True)
+        ]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        time.sleep(GlobalSleepTime)
+        wcom_c.SendData()
+except KeyboardInterrupt:
+    log_queue.put("Cerrando todos los procesos...")
+finally:
     for t in threads:
         t.join()
-    time.sleep(GlobalSleepTime)
-    wcom_c.SendData()
 
 #GPIO.setmode(GPIO.BCM)
 #GPIO.setup(17, GPIO.OUT)    # LED
