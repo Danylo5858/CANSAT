@@ -23,7 +23,7 @@ try:
 	while True:
 		data = wcom_gs.received_data.get()
 		threads = [
-			threading.Thread(target=send_data, args=("BMP390_data", data["BMP390"]), daemon=True),
+			threading.Thread(target=app.send_data, args=("BMP390_data", data["BMP390"]), daemon=True),
 			threading.Thread(target=gm.update_graph, args=(data["BMP390"],), daemon=True)
 		]
 		for t in threads:
