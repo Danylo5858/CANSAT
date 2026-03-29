@@ -98,6 +98,7 @@ const altChart = new Chart(altCtx, {
    RECEPCIÓN DE DATOS WS
 ========================= */
 socket.on("BMP390_data", function(data) {
+	console.log("wow")
 
     // tiempo en eje X
     labels.push(data.temperature);
