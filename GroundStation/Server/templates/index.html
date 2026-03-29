@@ -11,7 +11,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 	<style>
 		.charts-grid {
-			
+
 		}
 	</style>
 </head>
@@ -78,29 +78,29 @@ config_template = {
 };
 
 data_a = data_template;
-data_a = data_a['datasets'][0]['label'] = 'Altitud del CanSat en tiempo real';
-data_a = data_a['datasets'][0]['borderColor'] = 'rgb(75, 192, 192)';
+data_a['datasets'][0]['label'] = 'Altitud del CanSat en tiempo real';
+data_a['datasets'][0]['borderColor'] = 'rgb(75, 192, 192)';
 
 data_t = data_template;
-data_t = data_t['datasets'][0]['label'] = 'Temperatura del CanSat en tiempo real';
-data_t = data_t['datasets'][0]['borderColor'] = 'rgb(75, 192, 75)';
+data_t['datasets'][0]['label'] = 'Temperatura del CanSat en tiempo real';
+data_t['datasets'][0]['borderColor'] = 'rgb(75, 192, 75)';
 
 data_p = data_template;
-data_p = data_p['datasets'][0]['label'] = 'Presión del CanSat en tiempo real';
-data_p = data_p['datasets'][0]['borderColor'] = 'rgb(75, 75, 192)';
+data_p['datasets'][0]['label'] = 'Presión del CanSat en tiempo real';
+data_p['datasets'][0]['borderColor'] = 'rgb(75, 75, 192)';
 
 
 config_a = config_template
-config_a = config_a['options']['scales']['y']['title']['text'] = 'Altitud (m)';
-config_a = config_a['data'] = data_a;
+config_a['options']['scales']['y']['title']['text'] = 'Altitud (m)';
+config_a['data'] = data_a;
 
 config_t = config_template
-config_t = config_t['options']['scales']['y']['title']['text'] = 'Temperatura (Celsius)';
-config_t = config_t['data'] = data_a;
+config_t['options']['scales']['y']['title']['text'] = 'Temperatura (Celsius)';
+config_t['data'] = data_a;
 
 config_p = config_template
-config_p = config_p['options']['scales']['y']['title']['text'] = 'Presión (hPa)';
-config_p = config_p['data'] = data_a;
+config_p['options']['scales']['y']['title']['text'] = 'Presión (hPa)';
+config_p['data'] = data_a;
 
 const charts = [
 	new Chart(ctx_a, config_a),
