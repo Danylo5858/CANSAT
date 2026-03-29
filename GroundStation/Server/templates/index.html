@@ -54,8 +54,6 @@ config_template = {
 					unit: 'second'
 				},
 				offset: true,
-				min: () => Date.now() - 60000,
-    			max: () => Date.now(),
 				title: {
 					display: true,
 					text: 'Tiempo'
@@ -136,7 +134,11 @@ socket.on("BMP390_data", (data) => {
 		y: pressure
 	});
 
+	const max = 60;
+
 	for (const chart of charts) {
+		let data = chart.data.datasets.data;
+		if (data.length > max) data.shift();
 		chart.update();
 	};
 });
