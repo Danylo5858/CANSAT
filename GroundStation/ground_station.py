@@ -33,5 +33,6 @@ try:
 except KeyboardInterrupt:
 	print("\nCerrando todos los procesos...")
 finally:
-	server.terminate()
-	server.join()
+	if server is not None and server.is_alive():
+		server.terminate()
+		server.join()
