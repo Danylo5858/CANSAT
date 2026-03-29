@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(".."))
 from log_manager import log_queue
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*", threaded=True)
 
 def SendData(data):
 	socketio.emit("BMP390_data", data)
