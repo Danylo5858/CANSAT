@@ -36,6 +36,7 @@ config = {
 				time: {
 					unit: 'second'
 				},
+				offset: true,
 				min: () => Date.now() - 60000,
     			max: () => Date.now(),
 				title: {
@@ -44,6 +45,7 @@ config = {
 				}
 			},
 			y: {
+				offset: true,
 				title: {
 					display: true,
 					text: 'Altitud (m)'
