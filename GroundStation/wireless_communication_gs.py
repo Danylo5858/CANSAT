@@ -13,7 +13,7 @@ def init(self_address, frequency):
 	global radio
 	radio = sx126x("/dev/serial0", frequency, self_address, 22, False)
 
-def OnReceive(raw_data):
+def on_receive(raw_data):
 	str_data = gzip.decompress(raw_data).decode("utf-8")
 	if log:
 		log_queue.put("Datos recibidos: " + str_data)
@@ -22,4 +22,4 @@ def OnReceive(raw_data):
 
 def receiver():
 	while True:
-		radio.receive(OnReceive)
+		radio.receive(on_receive)

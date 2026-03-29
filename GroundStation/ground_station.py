@@ -1,10 +1,14 @@
 import time
 import threading
+from multiprocessing import Process
 import graph_manager as gm
 import weather_data_fetcher as wdf
 import log_manager as lm
 import wireless_communication_gs as wcom_gs
-from Server.app import SendData
+import Server.app as app
+
+app.init()
+server = Process(target=app.run).start()
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
@@ -15,13 +19,19 @@ threading.Thread(target=wcom_gs.receiver, daemon=True).start()
 wdf.log = True
 gm.log = True
 
-while True:
-	data = wcom_gs.received_data.get()
-	threads = [
-		threading.Thread(target=SendData, args=(data["BMP390"],), daemon=True),
-		threading.Thread(target=gm.UpdateGraph, args=(data["BMP390"],), daemon=True)
-	]
-	for t in threads:
-		t.start()
-	for t in threads:
-		t.join()
+try:
+	while True:
+		data = wcom_gs.received_data.get()
+		threads = [
+			threading.Thread(target=send_data, args=("BMP390_data", data["BMP390"]), daemon=True),
+			threading.Thread(target=gm.update_graph, args=(data["BMP390"],), daemon=True)
+		]
+		for t in threads:
+			t.start()
+		for t in threads:
+			t.join()
+except KeyboardInterrupt:
+	log_queue.put("Cerrando todos los procesos...")
+finally:
+	server.terminate()
+	server.join()

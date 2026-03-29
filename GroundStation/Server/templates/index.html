@@ -4,39 +4,14 @@
   	<meta charset="UTF-8">
   	<title>GuazaSat</title>
   	<!-- Chart.js -->
-  	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
   	<!-- Socket.IO -->
-  	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
-  	<style>
-    	body {
-      		margin: 0;
-		    background: #111;
-		    color: white;
-		    font-family: Arial, sans-serif;
-		    overflow: hidden;
-    	}
-
-    	.grid {
-      		display: grid;
-      		grid-template-columns: 1fr 1fr;
-      		gap: 10px;
-      		padding: 10px;
-      		height: 100vh;
-      		box-sizing: border-box;
-    	}
-
-    	canvas {
-      		background: #1e1e1e;
-      		border-radius: 12px;
-     		padding: 10px;
-    	}
-  	</style>
+  	<script src="https://cdn.socket.io/4.8.3/socket.io.min.js" integrity="sha384-kzavj5fiMwLKzzD1f8S7TeoVIEi7uKHvbTA3ueZkrzYq75pNQUiUi6Dy98Q3fxb0" crossorigin="anonymous"></script>
 </head>
 <body>
-	<div class="grid">
-  		<canvas id="alt"></canvas>
+	<div class="chart">
+		
 	</div>
-
 <script>
 const socket = io("http://localhost:5000");
 

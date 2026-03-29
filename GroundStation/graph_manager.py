@@ -4,7 +4,7 @@ from log_manager import log_queue
 
 log = False
 
-def UpdateGraph(data):
+def update_graph(data):
     air_quality_g = None
     temperature_g = None
     humidity_g = None
