@@ -23,7 +23,7 @@ def init():
 def run():
 	log_queue.put("SERVER RUNNING")
 	def handle_sigterm(signum, frame):
-		log_queue.put("Apagando servidor correctamente...")
+		print("Apagando servidor correctamente...")
 		exit(0)
 
 	signal.signal(signal.SIGTERM, handle_sigterm)

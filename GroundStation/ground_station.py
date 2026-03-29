@@ -8,7 +8,8 @@ import wireless_communication_gs as wcom_gs
 import Server.app as app
 
 app.init()
-server = Process(target=app.run).start()
+server = Process(target=app.run)
+server.start()
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
