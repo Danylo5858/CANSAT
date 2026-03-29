@@ -55,7 +55,7 @@ try:
         time.sleep(GlobalSleepTime)
         wcom_c.SendData()
 except KeyboardInterrupt:
-    log_queue.put("Cerrando todos los procesos...")
+    print("\nCerrando todos los procesos...")
 finally:
     for t in threads:
         t.join()
