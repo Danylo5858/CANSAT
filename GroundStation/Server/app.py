@@ -23,13 +23,13 @@ def init():
 
 def run():
 	print("SERVER RUNNING")
-	time.sleep(7)
-	log_queue.put("SERVERRRRR")
 	def handle_sigterm(signum, frame):
 		print("Apagando servidor correctamente...")
 		exit(0)
 
 	signal.signal(signal.SIGTERM, handle_sigterm)
+	time.sleep(7)
+	print("SERVERRRRR")
 
 	socketio.run(app, host="0.0.0.0", port=5000)
 
