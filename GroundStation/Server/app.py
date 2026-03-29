@@ -1,4 +1,7 @@
 def run(queue):
+	import eventlet
+	eventlet.monkey_patch()
+
 	import os
 	import sys
 	from flask import Flask, jsonify, render_template
@@ -9,6 +12,7 @@ def run(queue):
 
 	def forward():
 		while True:
+			eventlet.sleep(0)
 			name, data = queue.get()
 			print("Emitiendo datos:", name)
 			socketio.emit(name, data)
