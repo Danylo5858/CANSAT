@@ -9,16 +9,27 @@
   	<script src="https://cdn.socket.io/4.8.3/socket.io.min.js" integrity="sha384-kzavj5fiMwLKzzD1f8S7TeoVIEi7uKHvbTA3ueZkrzYq75pNQUiUi6Dy98Q3fxb0" crossorigin="anonymous"></script>
   	<script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+	<style>
+		.charts-grid {
+			
+		}
+	</style>
 </head>
 <body>
-	<canvas id="chart"></canvas>
+	<div class="charts-grid">
+		<canvas id="chart_a"></canvas>
+		<canvas id="chart_t"></canvas>
+		<canvas id="chart_p"></canvas>
+	</div>
 <script>
 // CHART.JS
-const ctx = document.getElementById('chart');
+const ctx_a = document.getElementById('chart_a');
+const ctx_t = document.getElementById('chart_t');
+const ctx_p = document.getElementById('chart_p');
 
-data = {
+data_template = {
 	datasets: [{
-		label: 'Altitud del CanSat en tiempo real',
+		label: 'Placeholder',
 		data: [],
 		borderColor: 'rgb(75, 192, 192)',
 		tension: 0.5,
@@ -27,9 +38,9 @@ data = {
 	}]
 };
 
-config = {
+config_template = {
 	type: 'line',
-	data: data,
+	data: {},
 	options: {
 		responsive: true,
 		animation: {
@@ -53,7 +64,7 @@ config = {
 			y: {
 				title: {
 					display: true,
-					text: 'Altitud (m)'
+					text: 'Placeholder'
 				}
 			}
 		},
@@ -66,7 +77,36 @@ config = {
 	}
 };
 
-const chart = new Chart(ctx, config);
+data_a = data_template;
+data_a = data_a['datasets'][0]['label'] = 'Altitud del CanSat en tiempo real';
+data_a = data_a['datasets'][0]['borderColor'] = 'rgb(75, 192, 192)';
+
+data_t = data_template;
+data_t = data_t['datasets'][0]['label'] = 'Temperatura del CanSat en tiempo real';
+data_t = data_t['datasets'][0]['borderColor'] = 'rgb(75, 192, 75)';
+
+data_p = data_template;
+data_p = data_p['datasets'][0]['label'] = 'Presión del CanSat en tiempo real';
+data_p = data_p['datasets'][0]['borderColor'] = 'rgb(75, 75, 192)';
+
+
+config_a = config_template
+config_a = config_a['options']['scales']['y']['title']['text'] = 'Altitud (m)';
+config_a = config_a['data'] = data_a;
+
+config_t = config_template
+config_t = config_t['options']['scales']['y']['title']['text'] = 'Temperatura (Celsius)';
+config_t = config_t['data'] = data_a;
+
+config_p = config_template
+config_p = config_p['options']['scales']['y']['title']['text'] = 'Presión (hPa)';
+config_p = config_p['data'] = data_a;
+
+const charts = [
+	new Chart(ctx_a, config_a),
+	new Chart(ctx_t, config_t),
+	new Chart(ctx_p, config_p)
+];
 
 // SOCKETIO
 const socket = io("http://localhost:5000");
@@ -80,19 +120,25 @@ socket.on("BMP390_data", (data) => {
 
 	const now = new Date();
 	const altitude = data['altitude'];
+	const temperature = data['temperature'];
+	const pressure = data['pressure'];
 
-	chart.data.datasets[0].data.push({
+	charts[0].data.datasets[0].data.push({
 		x: now,
 		y: altitude
 	});
+	charts[1].data.datasets[0].data.push({
+		x: now,
+		y: temperature
+	});
+	charts[2].data.datasets[0].data.push({
+		x: now,
+		y: pressure
+	});
 
-	//const max_age = 60 * 1000;
-	//const cutoff = Date.now() - max_age;
-	//chart.data.datasets[0].data = chart.data.datasets[0].data.filter(
-  	//	point => point.x.getTime() > cutoff
-	//);
-
-	chart.update();
+	for (chart in charts) {
+		chart.update();
+	};
 });
 </script>
 </body>
