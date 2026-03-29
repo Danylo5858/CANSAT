@@ -7,14 +7,58 @@
   	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
   	<!-- Socket.IO -->
   	<script src="https://cdn.socket.io/4.8.3/socket.io.min.js" integrity="sha384-kzavj5fiMwLKzzD1f8S7TeoVIEi7uKHvbTA3ueZkrzYq75pNQUiUi6Dy98Q3fxb0" crossorigin="anonymous"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 </head>
 <body>
 	<div class="chart">
 		
 	</div>
 <script>
+// CHART.JS
+const ctx = document.getElementById('chart');
+
+data = {
+	datasets: [{
+		label: 'Altitud del CanSat en tiempo real',
+		data: [],
+		borderColor: 'rgb(75, 192, 192)',
+   		tension: 0.1
+	}]
+};
+
+config = {
+	type: 'line',
+	data: data,
+	options: {
+		animation: false,
+		responsive: true,
+		scales: {
+			x: {
+				type: 'time',
+				time: {
+					unit: 'second'
+				},
+				min: () => Date.now() - 60000,
+    			max: () => Date.now(),
+				title: {
+					display: true,
+					text: 'Tiempo'
+				}
+			},
+			y: {
+				title: {
+					display: true,
+					text: 'Altitud (m)'
+				}
+			}
+		}
+	}
+};
+
+const chart = new Chart(ctx, config);
+
+// SOCKETIO
 const socket = io("http://localhost:5000");
-console.log("hello world")
 
 socket.on("connect", () => {
 	console.log("Conectado al servidor");
@@ -22,6 +66,22 @@ socket.on("connect", () => {
 
 socket.on("BMP390_data", (data) => {
 	console.log("Datos recibidos:", data);
+
+	const now = new Date();
+	const altitude = data['altitude'];
+
+	chart.data.datasets[0].data.push({
+		x: now,
+		y: altitude
+	});
+
+	const max_age = 60 * 1000;
+	const cutoff = Date.now() - max_age;
+	chart.data.datasets[0].data = chart.data.datasets[0].data.filter(
+  		point => point.x.getTime() > cutoff
+	);
+
+	chart.update('none');
 });
 </script>
 </body>
