@@ -1,9 +1,7 @@
 import os
 import sys
-import signal
 from flask import Flask, jsonify, render_template
 from flask_socketio import SocketIO
-import time
 
 def init():
 	global app, socketio
@@ -20,12 +18,6 @@ def init():
 
 def run():
 	print("SERVER RUNNING")
-
-	def handle_sigterm(signum, frame):
-		print("Apagando servidor correctamente...")
-		exit(0)
-	signal.signal(signal.SIGTERM, handle_sigterm)
-
 	socketio.run(app, host="0.0.0.0", port=5000)
 
 def send_data(name, data):
