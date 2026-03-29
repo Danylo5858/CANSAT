@@ -137,7 +137,7 @@ socket.on("BMP390_data", (data) => {
 	const max = 60;
 
 	for (const chart of charts) {
-		let data = chart.data.datasets.data;
+		let data = chart.data.datasets[0].data;
 		if (data.length > max) data.shift();
 		chart.update();
 	};
