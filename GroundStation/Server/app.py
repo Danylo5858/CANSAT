@@ -3,6 +3,7 @@ import sys
 import signal
 from flask import Flask, jsonify, render_template
 from flask_socketio import SocketIO
+import time
 
 sys.path.append(os.path.abspath(".."))
 from log_manager import log_queue
@@ -21,7 +22,9 @@ def init():
 		log_queue.put("Cliente conectado")
 
 def run():
-	log_queue.put("SERVER RUNNING")
+	print("SERVER RUNNING")
+	time.sleep(7)
+	log_queue.put("SERVERRRRR")
 	def handle_sigterm(signum, frame):
 		print("Apagando servidor correctamente...")
 		exit(0)
