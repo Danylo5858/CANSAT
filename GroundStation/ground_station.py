@@ -4,7 +4,7 @@ import graph_manager as gm
 import weather_data_fetcher as wdf
 import log_manager as lm
 import wireless_communication_gs as wcom_gs
-import Server.app
+import Server.app as app
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
