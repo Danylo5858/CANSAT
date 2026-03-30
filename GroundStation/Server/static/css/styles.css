@@ -15,6 +15,12 @@ body {
 	height: 100vh;
 }
 
+.apexcharts-tooltip {
+  	background: #0f1720 !important;
+  	color: #e5e7eb !important;
+  	border: 1px solid #1f2a37 !important;
+}
+
 .charts-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;

@@ -21,8 +21,21 @@ const options = {
 		},
 		tooltip: {
 			theme: 'dark',
+			followCursor: true,
 			intersect: false,
 			shared: true
+		},
+		states: {
+		  	hover: {
+		    	filter: {
+		      		type: 'none'
+		    	}
+		  	},
+		  	active: {
+		    	filter: {
+		      		type: 'none'
+		    	}
+		  	}
 		}
 	},
 	series: [{
@@ -52,7 +65,7 @@ const options = {
 	},
 	stroke: {
 		curve: 'smooth',
-		width: 3
+		width: 2
 	}
 };
 
