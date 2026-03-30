@@ -39,6 +39,9 @@ function createChart(element, title, yLabel, color, window_size, ticks) {
 				offsetY: 0
 			}
 		},
+		grid: {
+			borderColor: '#1f2a37'
+		},
 		series: [{
 			data: [],
 			color: color
@@ -72,10 +75,10 @@ function createChart(element, title, yLabel, color, window_size, ticks) {
 }
 
 const charts = [
-	createChart(document.querySelector("#chart_a"), 'Altitud del CanSat en tiempo real', 'Altitud (m)', '#00e5ff', WINDOW_SIZE, TICKS),
+	createChart(document.querySelector("#chart_a"), 'Altitud del CanSat en tiempo real', 'Altitud (m)', '#7c4dff', WINDOW_SIZE, TICKS),
 	createChart(document.querySelector("#chart_t"), 'Temperatura del CanSat en tiempo real', 'Temperatura (Celsius)', '#00e5ff', WINDOW_SIZE, TICKS),
-	createChart(document.querySelector("#chart_p"), 'Presión del CanSat en tiempo real', 'Presión (hPa)', '#00e5ff', WINDOW_SIZE, TICKS)
-];
+	createChart(document.querySelector("#chart_p"), 'Presión del CanSat en tiempo real', 'Presión (hPa)', '#00ff88', WINDOW_SIZE, TICKS)
+]; // #ff3b3b
 
 for (const chart of charts) {
 	chart.render();
