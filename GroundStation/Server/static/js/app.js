@@ -1,4 +1,9 @@
 const WINDOW_SIZE = 60 * 1000;
+const MAX_POINTS = 70;
+
+const buffer = new Array(MAX_POINTS);
+let index = 0;
+let filled = false;
 
 const options = {
 	chart: {
@@ -68,8 +73,11 @@ const options = {
 	}
 };
 
-const chart = new ApexCharts(document.querySelector("#chart"), options);
-chart.render();
+function addPoint(point) {
+	buffer[index] = point;
+	index = (index + 1) % MAX_POINTS;
+	if (index === 0) filled = true;
+}
 
 function getNewPoint() {
 	return {
@@ -78,9 +86,17 @@ function getNewPoint() {
 	};
 }
 
+const chart = new ApexCharts(document.querySelector("#chart"), options);
+chart.render();
+
 setInterval(() => {
-	chart.appendData([{
-		data: [getNewPoint()]
+	const point = getNewPoint();
+	addPoint(point);
+	//chart.appendData([{
+	//	data: [point]
+	//}]);
+	chart.updateSeries([{
+		data: buffer
 	}]);
 }, 1000);
 
