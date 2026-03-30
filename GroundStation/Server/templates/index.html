@@ -1,25 +1,97 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  	<meta charset="UTF-8">
-  	<title>GuazaSat</title>
-  	<!-- Chart.js -->
-  	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-  	<script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
-	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-  	<!-- ApexCharts -->
-  	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-  	<!-- Socket.IO -->
-  	<script src="https://cdn.socket.io/4.8.3/socket.io.min.js" integrity="sha384-kzavj5fiMwLKzzD1f8S7TeoVIEi7uKHvbTA3ueZkrzYq75pNQUiUi6Dy98Q3fxb0" crossorigin="anonymous"></script>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+  <meta charset="UTF-8">
+  <title>Realtime Altitude Chart</title>
+
+  <!-- ApexCharts CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+    #chart {
+      max-width: 800px;
+      margin: 40px auto;
+    }
+  </style>
 </head>
 <body>
-	<div class="charts-grid">
-		<div id="chart"></div>
-		<div><canvas id="chart_a"></canvas></div>
-		<div><canvas id="chart_t"></canvas></div>
-		<div><canvas id="chart_p"></canvas></div>
-	</div>
-	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+<div id="chart"></div>
+
+<script>
+  const MAX_POINTS = 20; // número de puntos visibles
+
+  let data = [];
+
+  // función para generar punto inicial
+  function getNewPoint() {
+    return {
+      x: new Date().getTime(),
+      y: Math.floor(Math.random() * 1000) + 100 // altitud simulada
+    };
+  }
+
+  // inicializar con datos
+  for (let i = 0; i < MAX_POINTS; i++) {
+    data.push(getNewPoint());
+  }
+
+  const options = {
+    chart: {
+      type: 'line',
+      height: 350,
+      animations: {
+        enabled: true,
+        easing: 'linear',
+        dynamicAnimation: {
+          speed: 1000 // sincronizado con el intervalo
+        }
+      },
+      toolbar: { show: false },
+      zoom: { enabled: false }
+    },
+    series: [{
+      name: 'Altitud',
+      data: data
+    }],
+    xaxis: {
+      type: 'datetime',
+      range: 20000 // ventana visible (20 segundos)
+    },
+    yaxis: {
+      title: {
+        text: 'Altitud (m)'
+      }
+    },
+    stroke: {
+      curve: 'smooth'
+    }
+  };
+
+  const chart = new ApexCharts(document.querySelector("#chart"), options);
+  chart.render();
+
+  // actualización en tiempo real
+  setInterval(() => {
+    const newPoint = getNewPoint();
+
+    data.push(newPoint);
+
+    if (data.length > MAX_POINTS) {
+      data.shift(); // elimina el más antiguo (efecto cinta)
+    }
+
+    chart.updateSeries([{
+      data: data
+    }]);
+
+  }, 1000);
+</script>
+
 </body>
 </html>
