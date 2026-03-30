@@ -1,10 +1,10 @@
 const window_size = 60 * 1000;
 const ticks = 6;
 
-function createChart(element, title, xaxis, yaxis, color) {
+function createChart(element, title, xaxis, yaxis, color, type='line') {
 	return new ApexCharts(element, {
 		chart: {
-			type: 'line',
+			type: type,
 			animations: {
 				enabled: true,
 				easing: 'linear',
@@ -121,7 +121,8 @@ const charts = [
 				text: 'Presión (hPa)'
 			}
 		},
-		'#ff3b3b'
+		'#ff3b3b',
+		'scatter'
 	)
 ];
 
