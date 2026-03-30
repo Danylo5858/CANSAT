@@ -19,9 +19,11 @@ const options = {
 		zoom: {
 			enabled: false
 		},
+		selection: {
+			enabled: false
+		},
 		tooltip: {
 			theme: 'dark',
-			followCursor: true,
 			intersect: false,
 			shared: true,
 			fixed: {
