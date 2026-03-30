@@ -185,6 +185,9 @@ socket.on('BMP390_data', (data) => {
 		x: altitude,
 		y: pressure
 	});
+	if (no_realtime_data[0]['data'].length > 30) {
+  		no_realtime_data[0]['data'].shift();
+	}
 });
 
 setInterval(() => {
