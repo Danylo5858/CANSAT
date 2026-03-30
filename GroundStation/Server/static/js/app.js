@@ -134,6 +134,12 @@ for (const chart of charts) {
 const socket = io('http://localhost:5000');
 const loadingTime = 7 * 1000;
 let firstData = true
+let no_realtime_data = [
+	{
+		chart_index: 3,
+		data: []
+	}
+];
 
 setTimeout(() => {
 	document.querySelector('.loader-container').classList.add('hide');
@@ -176,10 +182,17 @@ socket.on('BMP390_data', (data) => {
 			y: pressure
 		}]
 	}]);
-	charts[3].appendData([{
-		data: [{
-			x: altitude,
-			y: pressure
-		}]
-	}]);
+	no_realtime_data[0]['data'].push({
+		x: altitude,
+		y: pressure
+	});
 });
+
+setInterval(() => {
+	no_realtime_data.forEach((data) => {
+		data['data'].sort((a, b) => { a.x - b.x });
+		charts[data['chart_index']].updateSeries([{
+			data: data['data']
+		}]);
+	});
+}, 3 * 1000);
