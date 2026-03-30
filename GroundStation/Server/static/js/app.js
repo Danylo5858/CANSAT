@@ -18,6 +18,11 @@ const options = {
 		},
 		zoom: {
 			enabled: false
+		},
+		tooltip: {
+			theme: 'dark',
+			intersect: false,
+			shared: true
 		}
 	},
 	series: [{
@@ -47,7 +52,7 @@ const options = {
 	},
 	stroke: {
 		curve: 'smooth',
-		width: 2
+		width: 3
 	}
 };
 
@@ -70,7 +75,7 @@ setInterval(() => {
 
 const socket = io('http://localhost:5000');
 let firstData = true
-const loadingTime = 3.5 * 1000;
+const loadingTime = 4 * 1000;
 
 setTimeout(() => {
 	document.querySelector('.loader-container').classList.add('hide');
