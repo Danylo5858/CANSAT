@@ -121,8 +121,7 @@ const charts = [
 				text: 'Presión (hPa)'
 			}
 		},
-		'#ff3b3b',
-		'scatter'
+		'#ff3b3b'
 	)
 ];
 
