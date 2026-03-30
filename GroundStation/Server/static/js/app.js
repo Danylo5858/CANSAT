@@ -1,7 +1,7 @@
 const WINDOW_SIZE = 60 * 1000;
 const TICKS = 6;
 
-function createChart(element, title, yLabel, color, window_size, ticks) {
+function createChart(element, title, xaxis, yaxis, color, window_size, ticks) {
 	return new ApexCharts(element, {
 		chart: {
 			type: 'line',
@@ -46,27 +46,8 @@ function createChart(element, title, yLabel, color, window_size, ticks) {
 			data: [],
 			color: color
 		}],
-		xaxis: {
-			type: 'datetime',
-			range: window_size,
-			tickAmount: ticks,
-			labels: {
-				datetimeUTC: false,
-				formatter: function (value, timestamp) {
-					const d = new Date(timestamp);
-					return d.toLocaleTimeString([], {
-						hour: '2-digit',
-						minute: '2-digit',
-						second: '2-digit'
-					});
-				}
-			}
-		},
-		yaxis: {
-			title: {
-				text: yLabel
-			}
-		},
+		xaxis: xaxis,
+		yaxis: yaxis,
 		stroke: {
 			curve: 'smooth',
 			width: 2
@@ -74,11 +55,83 @@ function createChart(element, title, yLabel, color, window_size, ticks) {
 	});
 }
 
+const timeXaxis = {
+	type: 'datetime',
+	range: window_size,
+	tickAmount: ticks,
+	labels: {
+		datetimeUTC: false,
+		formatter: function (value, timestamp) {
+			const d = new Date(timestamp);
+			return d.toLocaleTimeString([], {
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit'
+			});
+		}
+	}
+};
+
 const charts = [
-	createChart(document.querySelector("#chart_a"), 'Altitud del CanSat en tiempo real', 'Altitud (m)', '#7c4dff', WINDOW_SIZE, TICKS),
-	createChart(document.querySelector("#chart_t"), 'Temperatura del CanSat en tiempo real', 'Temperatura (Celsius)', '#00e5ff', WINDOW_SIZE, TICKS),
-	createChart(document.querySelector("#chart_p"), 'Presión del CanSat en tiempo real', 'Presión (hPa)', '#00ff88', WINDOW_SIZE, TICKS)
-]; // #ff3b3b
+	createChart(
+		document.querySelector("#chart_a"),
+		'Altitud del CanSat en tiempo real',
+		timeXaxis,
+		{
+			title: {
+				text: 'Altitud (m)'
+			}
+		},
+		'#7c4dff',
+		WINDOW_SIZE,
+		TICKS
+	),
+	createChart(
+		document.querySelector("#chart_t"),
+		'Temperatura del CanSat en tiempo real',
+		timeXaxis,
+		{
+			title: {
+				text: 'Temperatura (Celsius)'
+			}
+		},
+		'#00e5ff',
+		WINDOW_SIZE,
+		TICKS
+	),
+	createChart(document.querySelector("#chart_p"),
+		'Presión del CanSat en tiempo real',
+		timeXaxis,
+		{
+			title: {
+				text: 'Presión (hPa)'
+			}
+		},
+		'#00ff88',
+		WINDOW_SIZE,
+		TICKS
+	),
+	createChart(document.querySelector("#chart_p"),
+		'Presión - Altitud, en tiempo real',
+		{
+			type: 'numeric',
+  			title: {
+    			text: 'Altitud (m)'
+  			},
+  			labels: {
+    			formatter: (val) => `${Math.round(val)} m`
+  			}
+  		},
+		{
+			title: {
+				text: 'Presión (hPa)'
+			}
+		},
+		'#ff3b3b',
+		WINDOW_SIZE,
+		TICKS
+	)
+];
 
 for (const chart of charts) {
 	chart.render();
@@ -86,7 +139,7 @@ for (const chart of charts) {
 
 
 const socket = io('http://localhost:5000');
-const loadingTime = 4 * 1000;
+const loadingTime = 7 * 1000;
 let firstData = true
 
 setTimeout(() => {
@@ -127,6 +180,12 @@ socket.on('BMP390_data', (data) => {
 	charts[2].appendData([{
 		data: [{
 			x: time,
+			y: pressure
+		}]
+	}]);
+	charts[3].appendData([{
+		data: [{
+			x: altitude,
 			y: pressure
 		}]
 	}]);
