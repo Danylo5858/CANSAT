@@ -1,70 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Large Subtle Loader</title>
-
-<style>
-body {
-  background: #0a0f14;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-}
-
-/* Contenedor */
-.loader {
-  display: flex;
-  gap: 10px; /* más espacio */
-}
-
-/* Cuadrados */
-.loader div {
-  width: 22px;
-  height: 22px;
-  background: #1a2a2f;
-  border-radius: 3px;
-  opacity: 0.35;
-  animation: fade 1.6s ease-in-out infinite;
-}
-
-/* Delay progresivo */
-.loader div:nth-child(1) { animation-delay: 0s; }
-.loader div:nth-child(2) { animation-delay: 0.2s; }
-.loader div:nth-child(3) { animation-delay: 0.4s; }
-.loader div:nth-child(4) { animation-delay: 0.6s; }
-.loader div:nth-child(5) { animation-delay: 0.8s; }
-.loader div:nth-child(6) { animation-delay: 1s; }
-.loader div:nth-child(7) { animation-delay: 1.2s; }
-.loader div:nth-child(8) { animation-delay: 1.4s; }
-
-/* Animación */
-@keyframes fade {
-  0%, 100% {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 1;
-    background: #4fd1c5; /* verde suave */
-  }
-}
-
-</style>
+  	<meta charset="UTF-8">
+  	<title>GuazaSat</title>
+  	<!-- Chart.js -->
+  	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+  	<script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  	<!-- ApexCharts -->
+  	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  	<!-- Socket.IO -->
+  	<script src="https://cdn.socket.io/4.8.3/socket.io.min.js" integrity="sha384-kzavj5fiMwLKzzD1f8S7TeoVIEi7uKHvbTA3ueZkrzYq75pNQUiUi6Dy98Q3fxb0" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-
-<div class="loader">
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-  <div></div>
-</div>
-
+	<div class="charts-grid">
+		<div id="chart"></div>
+	</div>
+    <div class="loader-container">
+        <div class="loader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
