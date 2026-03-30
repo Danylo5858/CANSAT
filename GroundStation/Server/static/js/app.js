@@ -132,7 +132,7 @@ test.render();
 
 setInterval(function () {
 	getNewSeries(lastDate, { min: 10, max: 90 });
-	chart.updateSeries([{ data: data }]);
+	test.updateSeries([{ data: data }]);
 }, 1000);
 
 // SOCKETIO
