@@ -20,7 +20,12 @@ const options = {
 			enabled: false
 		}
 	},
+	title: {
+		text: 'Altitud del CanSat en tiempo real',
+		align: 'center'
+	}
 	tooltip: {
+		enabled: false,
 		theme: 'dark',
 		followCursor: true,
 		intersect: false,
