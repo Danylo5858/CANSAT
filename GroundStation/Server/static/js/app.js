@@ -7,7 +7,7 @@ const options = {
 			enabled: true,
 			easing: 'linear',
 			dynamicAnimation: {
-				speed: 1000 // SINCRONIZAR CON LOS DATOS
+				speed: 700 // SINCRONIZAR CON LOS DATOS
 			},
 			animateGradually: {
 				enabled: false
@@ -27,7 +27,7 @@ const options = {
 	xaxis: {
 		type: 'datetime',
 		range: WINDOW_SIZE,
-		tickAmount: 3,
+		tickAmount: 5,
 		labels: {
 			datetimeUTC: false,
 			formatter: function (value, timestamp) {
@@ -71,6 +71,10 @@ setInterval(() => {
 const socket = io('http://localhost:5000');
 let firstData = true
 const loadingTime = 3.5 * 1000;
+
+setTimeout(() => {
+	document.querySelector('.loader-container').classList.add('hide');
+}, loadingTime);
 
 socket.on('connect', () => {
 	console.log('Conectado al servidor');
