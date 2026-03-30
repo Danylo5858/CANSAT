@@ -1,3 +1,5 @@
+from queue import Empty
+
 def run(queue):
 	import eventlet
 	eventlet.monkey_patch()
@@ -12,10 +14,13 @@ def run(queue):
 
 	def forward():
 		while True:
-			eventlet.sleep(0)
-			name, data = queue.get()
-			print("Emitiendo datos:", name)
-			socketio.emit(name, data)
+			try:
+				name, data = queue.get_nowait()
+				print("Emitiendo datos:", name)
+				socketio.emit(name, data)
+			except Empty:
+				pass
+			socketio.sleep(0.05)
 
 	@app.route("/")
 	def index():

@@ -5,153 +5,21 @@
   	<title>GuazaSat</title>
   	<!-- Chart.js -->
   	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-  	<!-- Socket.IO -->
-  	<script src="https://cdn.socket.io/4.8.3/socket.io.min.js" integrity="sha384-kzavj5fiMwLKzzD1f8S7TeoVIEi7uKHvbTA3ueZkrzYq75pNQUiUi6Dy98Q3fxb0" crossorigin="anonymous"></script>
   	<script src="https://cdn.jsdelivr.net/npm/date-fns"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
-	<style>
-		.charts-grid {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			grid-template-rows: 1fr 1fr;
-			height: 100vh;
-		}
-
-		.charts-grid > div {
-			position: relative;
-		}
-
-		canvas {
-			width: 100% !important;
-			height: 100% !important;
-		}
-	</style>
+  	<!-- ApexCharts -->
+  	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  	<!-- Socket.IO -->
+  	<script src="https://cdn.socket.io/4.8.3/socket.io.min.js" integrity="sha384-kzavj5fiMwLKzzD1f8S7TeoVIEi7uKHvbTA3ueZkrzYq75pNQUiUi6Dy98Q3fxb0" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
 	<div class="charts-grid">
+		<div id="chart"></div>
 		<div><canvas id="chart_a"></canvas></div>
 		<div><canvas id="chart_t"></canvas></div>
 		<div><canvas id="chart_p"></canvas></div>
 	</div>
-<script>
-// CHART.JS
-const ctx_a = document.getElementById('chart_a');
-const ctx_t = document.getElementById('chart_t');
-const ctx_p = document.getElementById('chart_p');
-
-data_template = {
-	datasets: [{
-		label: 'Placeholder',
-		data: [],
-		borderColor: 'rgb(75, 192, 192)',
-		tension: 0.5,
-   		cubicInterpolationMode: 'monotone',
-  		borderWidth: 2
-	}]
-};
-
-config_template = {
-	type: 'line',
-	data: {},
-	options: {
-		responsive: true,
-		animation: {
-    		duration: 600,
-    		easing: 'linear'
-  		},
-		scales: {
-			x: {
-				type: 'time',
-				time: {
-					unit: 'second'
-				},
-				offset: true,
-				title: {
-					display: true,
-					text: 'Tiempo'
-				}
-			},
-			y: {
-				title: {
-					display: true,
-					text: 'Placeholder'
-				}
-			}
-		},
-		layout: {
-    		padding: {
-      			left: 10,
-      			right: 10
-    		}
-  		}
-	}
-};
-
-const data_a = structuredClone(data_template);
-data_a['datasets'][0]['label'] = 'Altitud del CanSat en tiempo real';
-data_a['datasets'][0]['borderColor'] = 'rgb(75, 192, 192)';
-
-const data_t = structuredClone(data_template);
-data_t['datasets'][0]['label'] = 'Temperatura del CanSat en tiempo real';
-data_t['datasets'][0]['borderColor'] = 'rgb(75, 192, 75)';
-
-const data_p = structuredClone(data_template);
-data_p['datasets'][0]['label'] = 'Presión del CanSat en tiempo real';
-data_p['datasets'][0]['borderColor'] = 'rgb(75, 75, 192)';
-
-
-const config_a = structuredClone(config_template);
-config_a['options']['scales']['y']['title']['text'] = 'Altitud (m)';
-config_a['data'] = data_a;
-
-const config_t = structuredClone(config_template);
-config_t['options']['scales']['y']['title']['text'] = 'Temperatura (Celsius)';
-config_t['data'] = data_t;
-
-const config_p = structuredClone(config_template);
-config_p['options']['scales']['y']['title']['text'] = 'Presión (hPa)';
-config_p['data'] = data_p;
-
-const charts = [
-	new Chart(ctx_a, config_a),
-	new Chart(ctx_t, config_t),
-	new Chart(ctx_p, config_p)
-];
-
-// SOCKETIO
-const socket = io("http://localhost:5000");
-
-socket.on("connect", () => {
-	console.log("Conectado al servidor");
-});
-
-socket.on("BMP390_data", (data) => {
-	console.log("Datos recibidos:", data);
-
-	const now = new Date();
-	const altitude = data['altitude'];
-	const temperature = data['temperature'];
-	const pressure = data['pressure'];
-
-	charts[0].data.datasets[0].data.push({
-		x: now,
-		y: altitude
-	});
-	charts[1].data.datasets[0].data.push({
-		x: now,
-		y: temperature
-	});
-	charts[2].data.datasets[0].data.push({
-		x: now,
-		y: pressure
-	});
-
-	for (const chart of charts) {
-		chart.options.scales.x.min = () => Date.now() - 60 * 1000;
-		chart.options.scales.x.max = () => Date.now();
-		chart.update();
-	};
-});
-</script>
+	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

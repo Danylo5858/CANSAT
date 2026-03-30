@@ -5,7 +5,7 @@ import graph_manager as gm
 import weather_data_fetcher as wdf
 import log_manager as lm
 import wireless_communication_gs as wcom_gs
-import Server.app as app
+import Server.main as app
 
 server_queue = Queue()
 server = Process(target=app.run, args=(server_queue,))
