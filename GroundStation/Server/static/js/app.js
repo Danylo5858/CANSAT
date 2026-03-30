@@ -87,71 +87,53 @@ const charts = [
 	//createChart(document.getElementById('chart_p'), 'Presión del CanSat', 'rgb(75, 75, 192)', 'Presión (hPa)')
 ];
 
-// APEXCHARTS
-let series = [{
-	name: "Altitud",
-	data: []
-}];
+let lastDate = 0;
+let data = [];
+let TICKINTERVAL = 1000;
+let XAXISRANGE = 60 * 1000;
 
-const XAXISRANGE = 60;
+function getNewSeries(baseval, yrange) {
+	let newDate = baseval + TICKINTERVAL;
+	lastDate = newDate;
+	for (let i = 0; i < data.length - 10; i++) {
+		data[i].x = newDate - XAXISRANGE - TICKINTERVAL;
+		data[i].y = 0;
+	}
+	data.push({
+		x: newDate,
+		y: Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min
+	});
+}
 
 const options = {
-	series: series,
 	chart: {
-		id: 'realtime',
 		type: 'line',
 		animations: {
 			enabled: true,
-			easing: 'linear',
 			dynamicAnimation: {
 				speed: 1000
 			}
 		},
 		toolbar: {
 			show: false
-		},
-		zoom: {
-			enabled: false
 		}
-	},
-	title: {
-		text: 'Altitud del CanSat en tiempo real',
-		align: 'left'
 	},
 	xaxis: {
 		type: 'datetime',
 		range: XAXISRANGE
-		//min: Date.now() - WINDOW,
-		//max: Date.now(),
-		//labels: {
-		//	datetimeFormatter: {
-		//		hour: 'HH:mm:ss',
-		//		minute: 'HH:mm:ss',
-		//		second: 'HH:mm:ss'
-		//	}
-		//}
 	},
 	yaxis: {
-		title: {
-			text: 'Altitud (m)'
-		}
-	},
-	grid: {
-		show: true
-	},
-	stroke: {
-		curve: 'smooth'
-	},
-	legend: {
-		show: false
-	},
-	markers: {
-		size: 0
+		max: 100
 	}
 };
 
 const test = new ApexCharts(document.querySelector('#chart'), options);
 test.render();
+
+setInterval(function () {
+	getNewSeries(lastDate, { min: 10, max: 90 });
+	chart.updateSeries([{ data: data }]);
+}, 1000);
 
 // SOCKETIO
 const socket = io("http://localhost:5000");
@@ -168,12 +150,12 @@ socket.on("BMP390_data", (data) => {
 	const temperature = data['temperature'];
 	const pressure = data['pressure'];
 
-	series[0].data.push({
-		x: now,
-		y: data.altitude
-	});
+	//series[0].data.push({
+	//	x: now,
+	//	y: data.altitude
+	//});
 
-	test.updateSeries(series);
+	//test.updateSeries(series);
 
 	//charts[0].data.datasets[0].data.push({
 	//	x: now,
