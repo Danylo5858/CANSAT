@@ -189,7 +189,7 @@ socket.on('BMP390_data', (data) => {
 
 setInterval(() => {
 	no_realtime_data.forEach((data) => {
-		data['data'].sort((a, b) => { a.x - b.x });
+		data['data'].sort((a, b) => a.x - b.x);
 		charts[data['chart_index']].updateSeries([{
 			data: data['data']
 		}]);
