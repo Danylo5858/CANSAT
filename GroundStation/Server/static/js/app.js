@@ -106,6 +106,9 @@ function getNewSeries(baseval, yrange) {
 }
 
 const options = {
+	series: [{
+		data: []
+	}],
 	chart: {
 		type: 'line',
 		animations: {
