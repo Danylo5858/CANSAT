@@ -4,10 +4,6 @@ body {
 	background: #0a0f14;
 }
 
-div {
-	min-height: 0 !important;
-}
-
 .hide {
 	display: none !important;
 }
