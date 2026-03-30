@@ -14,24 +14,13 @@ const options = {
 			}
 		},
 		toolbar: {
-			show: false
+			show: true
 		},
 		zoom: {
-			enabled: false
-		},
-		selection: {
-			enabled: false
+			enabled: true
 		},
 		tooltip: {
-			theme: 'dark',
-			intersect: false,
-			shared: true,
-			fixed: {
-				enabled: true,
-				position: 'topRight',
-				offsetX: 0,
-				offsetY: 0
-			}
+			enabled: false
 		}
 	},
 	series: [{
