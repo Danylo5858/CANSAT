@@ -2,19 +2,19 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Realtime Altitude Chart</title>
+  <title>Realtime 60s Tape Chart</title>
 
   <!-- ApexCharts CDN -->
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
       background: #111;
       color: #fff;
+      font-family: Arial, sans-serif;
     }
     #chart {
-      max-width: 800px;
+      max-width: 900px;
       margin: 40px auto;
     }
   </style>
@@ -24,7 +24,7 @@
 <div id="chart"></div>
 
 <script>
-  const WINDOW_SIZE = 20000; // 20s visibles
+  const WINDOW_SIZE = 60000; // 60 segundos
 
   const options = {
     chart: {
@@ -34,27 +34,50 @@
         enabled: true,
         easing: 'linear',
         dynamicAnimation: {
-          speed: 1000
+          speed: 1000 // sincronizado con los datos
+        },
+        animateGradually: {
+          enabled: false
         }
       },
       toolbar: { show: false },
       zoom: { enabled: false }
     },
+
     series: [{
       name: 'Altitud',
       data: []
     }],
+
     xaxis: {
       type: 'datetime',
-      range: WINDOW_SIZE // 🔥 CLAVE: ventana fija
+      range: WINDOW_SIZE,
+
+      tickAmount: 2, // 👈 solo inicio y fin
+
+      labels: {
+        datetimeUTC: false,
+        formatter: function (value, timestamp) {
+          const d = new Date(timestamp);
+
+          // formato estable y limpio
+          return d.toLocaleTimeString([], {
+            minute: '2-digit',
+            second: '2-digit'
+          });
+        }
+      }
     },
+
     yaxis: {
       title: {
         text: 'Altitud (m)'
       }
     },
+
     stroke: {
-      curve: 'smooth'
+      curve: 'smooth',
+      width: 2
     }
   };
 
@@ -73,6 +96,7 @@
       data: [getNewPoint()]
     }]);
   }, 1000);
+
 </script>
 
 </body>
