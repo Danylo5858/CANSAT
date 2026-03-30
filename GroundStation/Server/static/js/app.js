@@ -111,7 +111,7 @@ const charts = [
 		WINDOW_SIZE,
 		TICKS
 	),
-	createChart(document.querySelector("#chart_p"),
+	createChart(document.querySelector("#chart_pa"),
 		'Presión - Altitud, en tiempo real',
 		{
 			type: 'numeric',
