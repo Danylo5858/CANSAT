@@ -8,6 +8,13 @@ body {
 	display: none !important;
 }
 
+.center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
 .charts-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -26,10 +33,10 @@ canvas {
 
 .loader-container {
 	position: absolute;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	width: 100vw;
 	height: 100vh;
+	top: 0;
+	left: 0;
 	background: #0a0f14;
 }
 
