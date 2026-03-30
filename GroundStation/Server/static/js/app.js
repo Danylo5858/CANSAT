@@ -23,19 +23,13 @@ const options = {
 			theme: 'dark',
 			followCursor: true,
 			intersect: false,
-			shared: true
-		},
-		states: {
-		  	hover: {
-		    	filter: {
-		      		type: 'none'
-		    	}
-		  	},
-		  	active: {
-		    	filter: {
-		      		type: 'none'
-		    	}
-		  	}
+			shared: true,
+			fixed: {
+				enabled: true,
+				position: 'topRight',
+				offsetX: 0,
+				offsetY: 0
+			}
 		}
 	},
 	series: [{
@@ -45,7 +39,7 @@ const options = {
 	xaxis: {
 		type: 'datetime',
 		range: WINDOW_SIZE,
-		tickAmount: 5,
+		tickAmount: 6,
 		labels: {
 			datetimeUTC: false,
 			formatter: function (value, timestamp) {
