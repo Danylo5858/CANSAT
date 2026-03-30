@@ -1,7 +1,7 @@
-const WINDOW_SIZE = 60 * 1000;
-const TICKS = 6;
+const window_size = 60 * 1000;
+const ticks = 6;
 
-function createChart(element, title, xaxis, yaxis, color, window_size, ticks) {
+function createChart(element, title, xaxis, yaxis, color) {
 	return new ApexCharts(element, {
 		chart: {
 			type: 'line',
@@ -82,9 +82,7 @@ const charts = [
 				text: 'Altitud (m)'
 			}
 		},
-		'#7c4dff',
-		WINDOW_SIZE,
-		TICKS
+		'#7c4dff'
 	),
 	createChart(
 		document.querySelector("#chart_t"),
@@ -95,9 +93,7 @@ const charts = [
 				text: 'Temperatura (Celsius)'
 			}
 		},
-		'#00e5ff',
-		WINDOW_SIZE,
-		TICKS
+		'#00e5ff'
 	),
 	createChart(document.querySelector("#chart_p"),
 		'Presión del CanSat en tiempo real',
@@ -107,9 +103,7 @@ const charts = [
 				text: 'Presión (hPa)'
 			}
 		},
-		'#00ff88',
-		WINDOW_SIZE,
-		TICKS
+		'#00ff88'
 	),
 	createChart(document.querySelector("#chart_pa"),
 		'Presión - Altitud, en tiempo real',
@@ -127,9 +121,7 @@ const charts = [
 				text: 'Presión (hPa)'
 			}
 		},
-		'#ff3b3b',
-		WINDOW_SIZE,
-		TICKS
+		'#ff3b3b'
 	)
 ];
 
