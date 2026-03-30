@@ -24,16 +24,7 @@
 <div id="chart"></div>
 
 <script>
-  const WINDOW_SIZE = 20000; // 20 segundos visibles
-
-  let data = [];
-
-  function getNewPoint() {
-    return {
-      x: new Date().getTime(),
-      y: Math.floor(Math.random() * 1000) + 100
-    };
-  }
+  const WINDOW_SIZE = 20000; // 20s visibles
 
   const options = {
     chart: {
@@ -46,14 +37,16 @@
           speed: 1000
         }
       },
-      toolbar: { show: false }
+      toolbar: { show: false },
+      zoom: { enabled: false }
     },
     series: [{
       name: 'Altitud',
-      data: data
+      data: []
     }],
     xaxis: {
-      type: 'datetime'
+      type: 'datetime',
+      range: WINDOW_SIZE // 🔥 CLAVE: ventana fija
     },
     yaxis: {
       title: {
@@ -68,23 +61,17 @@
   const chart = new ApexCharts(document.querySelector("#chart"), options);
   chart.render();
 
+  function getNewPoint() {
+    return {
+      x: new Date().getTime(),
+      y: Math.floor(Math.random() * 1000) + 100
+    };
+  }
+
   setInterval(() => {
-    const newPoint = getNewPoint();
-    data.push(newPoint);
-
-    const now = newPoint.x;
-
-    chart.updateOptions({
-      xaxis: {
-        min: now - WINDOW_SIZE,
-        max: now
-      }
-    });
-
-    chart.updateSeries([{
-      data: data
+    chart.appendData([{
+      data: [getNewPoint()]
     }]);
-
   }, 1000);
 </script>
 
