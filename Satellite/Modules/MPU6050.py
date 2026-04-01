@@ -21,7 +21,6 @@ def init(i2c, address, lock):
     mpu = adafruit_mpu6050.MPU6050(i2c, address=address)
     if save_data:
         threading.Thread(target=SaveData, daemon=True).start()
-    threading.Thread(target=update_motion_state, daemon=True).start()
 
 def GetData():
     with i2c_lock:
@@ -39,6 +38,7 @@ def GetData():
         "gyro": gyro
     }
     data_queue.put(data)
+    update_motion_state()
 
 def SaveData():
     with open('./Data/MPU6050_data.csv', 'a', buffering=1, newline='') as f:
