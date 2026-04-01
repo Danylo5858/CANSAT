@@ -12,15 +12,6 @@
   	<!-- Socket.IO -->
   	<script src="https://cdn.socket.io/4.8.3/socket.io.min.js" integrity="sha384-kzavj5fiMwLKzzD1f8S7TeoVIEi7uKHvbTA3ueZkrzYq75pNQUiUi6Dy98Q3fxb0" crossorigin="anonymous"></script>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <!-- Three.js -->
-    <script type="importmap">
-    {
-      "imports": {
-        "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.js",
-        "three/addons/": "https://cdn.jsdelivr.net/npm/three@<version>/examples/jsm/"
-      }
-    }
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
@@ -60,6 +51,7 @@
             </div>
         </div>
     </div>
-	<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/3D_visualization.js') }}"></script>
 </body>
 </html>
