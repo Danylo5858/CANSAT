@@ -108,6 +108,11 @@ const charts = [
 	createChart(document.querySelector("#chart_pa"),
 		'Presión - Altitud',
 		{
+			title: {
+				text: 'Presión (hPa)'
+			}
+		},
+		{
 			type: 'numeric',
   			title: {
     			text: 'Altitud (m)'
@@ -116,12 +121,8 @@ const charts = [
     			formatter: (val) => `${Math.round(val)} m`
   			}
   		},
-		{
-			title: {
-				text: 'Presión (hPa)'
-			}
-		},
-		'#ff3b3b'
+		'#ff3b3b',
+		'bar'
 	)
 ];
 
