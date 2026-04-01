@@ -15,16 +15,14 @@ def update_graph(name, data):
         t = data["temperature"]
         h = data["humidity"]
         url = f"https://api.thingspeak.com/update?api_key=BTCDYRXPGC0PZOWK&field1={aq}&field2={t}&field3={h}"
+        res = requests.get(f"https://api.thingspeak.com/update?api_key=BTCDYRXPGC0PZOWK&field1={aq}&field2={t}&field3={h}")
     try:
-        res = requests.get(url)
+        #res = requests.get(url)
     except Exception as e:
         if log:
             log_queue.put(f"update_graph [{name}] error: {e}")
     if res and res.status_code == 200 and log:
         log_queue.put(f"Graficos [{name}] actualizados")
-        url = "https://api.thingspeak.com/channels/3283442/feeds.json?results=5"
-        res = requests.get(url)
-        log_queue.put(res.json())
     elif log:
         if res:
             log_queue.put(f"Error actualizando graficos [{name}]: {res.status_code}")
