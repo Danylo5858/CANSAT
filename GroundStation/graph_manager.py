@@ -3,7 +3,7 @@ import requests
 from log_manager import log_queue
 
 log = False
-
+res = None
 def update_graph(name, data):
     if name == "satellite":
         a = data["altitude"]
