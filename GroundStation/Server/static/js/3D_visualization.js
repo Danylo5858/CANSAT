@@ -21,7 +21,8 @@ function init() {
   	container.appendChild(renderer.domElement);
   	controls = new OrbitControls(camera, renderer.domElement);
   	controls.enableDamping = true;
-  	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.2, 32);
+  	controls.enablePan = false;
+  	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 24);
   	const material = new THREE.MeshBasicMaterial({ color: 0x4FD1C5, wireframe: true });
   	can = new THREE.Mesh(geometry, material);
   	scene.add(can);
