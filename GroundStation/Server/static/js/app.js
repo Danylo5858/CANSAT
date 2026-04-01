@@ -197,7 +197,7 @@ socket.on('reconnect', () => {
 });
 
 socket.on('BMP390_data', (data) => {
-	console.log('Datos recibidos (BMP390_data):', data);
+	//console.log('Datos recibidos (BMP390_data):', data);
 
 	if (firstData) {
 		setTimeout(() => {
@@ -238,7 +238,7 @@ socket.on('BMP390_data', (data) => {
 });
 
 socket.on('ground_data', (data) => {
-	console.log('Datos recibidos (ground_data):', data);
+	//console.log('Datos recibidos (ground_data):', data);
 
 	const time = new Date().getTime();
 	const air_quality = data['air_quality'];
@@ -266,7 +266,7 @@ socket.on('ground_data', (data) => {
 });
 
 socket.on('MPU6050_data', (data) => {
-	console.log('Datos recibidos (MPU6050_data)');
+	//console.log('Datos recibidos (MPU6050_data)');
 	onReceivePacket(data);
 });
 

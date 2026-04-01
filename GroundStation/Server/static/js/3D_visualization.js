@@ -58,6 +58,7 @@ function decodeMPU6050(bin) {
 
 export function onReceivePacket(bin) {
 	frames = decodeMPU6050(bin);
+	console.log(frames);
 	index = 0;
 }
 
