@@ -20,7 +20,8 @@ i2c = busio.I2C(board.SCL, board.SDA)
 with i2c_lock:
     print("Devices: ", [hex(device_address) for device_address in i2c.scan()])
 
-threading.Thread(target=lm.logger, daemon=True).start()
+logger_thread = threading.Thread(target=lm.logger, daemon=True)
+logger_thread.start()
 
 wcom_c.log = False
 wcom_c.init(1, 2, 868)

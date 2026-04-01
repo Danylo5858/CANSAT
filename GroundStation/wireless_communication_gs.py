@@ -21,5 +21,8 @@ def on_receive(raw_data):
 	received_data.put(data)
 
 def receiver():
-	while True:
-		radio.receive(on_receive)
+	try:
+		while True:
+			radio.receive(on_receive)
+	except KeyboardInterrupt:
+		return

@@ -15,10 +15,12 @@ server_queue = Queue()
 server = Process(target=app.run, args=(server_queue,))
 server.start()
 
-threading.Thread(target=lm.logger, daemon=True).start()
+logger_thread = threading.Thread(target=lm.logger, daemon=True)
+logger_thread.start()
 
 wcom_gs.init(2, 868)
-threading.Thread(target=wcom_gs.receiver, daemon=True).start()
+receiver_thread = threading.Thread(target=wcom_gs.receiver, daemon=True)
+receiver_thread.start()
 
 wdf.init()
 

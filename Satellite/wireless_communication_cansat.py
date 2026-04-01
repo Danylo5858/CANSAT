@@ -31,7 +31,6 @@ def send(str_msg):
         src_h, src_l, ch
     ]) + packet
     radio.send(data)
-    log_queue.put("DATO ENVIADO")
 
 def SendData():
     data = json.dumps(buffer)

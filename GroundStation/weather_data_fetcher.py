@@ -79,7 +79,7 @@ def GetTemperatureAndHumidity():
             log_queue.put(f"GetTemperatureAndHumidity Error: {e}")
     return None
 
-def fetch():
+def fetch2():
     with ThreadPoolExecutor() as executor:
         future_a = executor.submit(GetAirQuality)
         future_th = executor.submit(GetTemperatureAndHumidity)
@@ -89,6 +89,15 @@ def fetch():
         temperature, humidity = None, None
     else:
         temperature, humidity = result_th
+    return {
+        "air_quality": air_quality,
+        "temperature": temperature,
+        "humidity": humidity
+    }
+
+def fetch():
+    air_quality = GetAirQuality()
+    temperature, humidity = GetTemperatureAndHumidity()
     return {
         "air_quality": air_quality,
         "temperature": temperature,
