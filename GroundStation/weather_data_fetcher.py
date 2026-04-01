@@ -8,9 +8,6 @@ lat = 0
 lon = 0
 
 token = "db94e4c768d260335021f2dbc8dfc088345d6bab"
-air_quality = None
-temperature = None
-humidity = None
 
 def init():
     global openmeteo
@@ -21,7 +18,6 @@ def init():
             log_queue.put(f"weather_data_fetcher init error: {e}")
 
 def GetAirQuality():
-    global air_quality
     if lat == 0 and lon == 0:
         url = f"https://api.waqi.info/feed/@6779/?token={token}"
     else:
@@ -40,6 +36,7 @@ def GetAirQuality():
             air_quality = air_quality
             if log:
                 log_queue.put(f"Calidad del aire: {air_quality}")
+            return air_quality
         else:
             if log:
                 log_queue.put(f"API Error fetching air quality: {data['message']}")
@@ -49,9 +46,9 @@ def GetAirQuality():
                 log_queue.put(f"HTTP Error fetching air quality: {res.status_code}")
             else:
                 log_queue.put("HTTP Error fetching air quality")
+    return None
 
 def GetTemperatureAndHumidity():
-    global temperature, humidity
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
         "latitude": lat,
@@ -63,12 +60,12 @@ def GetTemperatureAndHumidity():
         if not res:
             if log:
                 log_queue.put(f"GetTemperatureAndHumidity Error: 'res' is None")
-            return
+            return None
         current = res[0].Current()
         if not current:
             if log:
                 log_queue.put(f"GetTemperatureAndHumidity Error: 'current' is None")
-            return
+            return None
         temperature = round(current.Variables(0).Value())
         humidity = round(current.Variables(1).Value())
         temperature = temperature
@@ -76,16 +73,15 @@ def GetTemperatureAndHumidity():
         if log:
             log_queue.put(f"Temperatura: {str(temperature)} C")
             log_queue.put(f"Humedad: {str(humidity)}%")
+        return temperature, humidity
     except Exception as e:
         if log:
             log_queue.put(f"GetTemperatureAndHumidity Error: {e}")
+    return None
 
 def fetch():
-    air_quality = None
-    temperature = None
-    humidity = None
-    GetAirQuality()
-    GetTemperatureAndHumidity()
+    air_quality = GetAirQuality()
+    temperature, humidity = GetTemperatureAndHumidity()
     data = {
         "air_quality": air_quality,
         "temperature": temperature,
