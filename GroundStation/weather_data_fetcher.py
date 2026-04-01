@@ -19,7 +19,8 @@ def init():
     try:
         openmeteo = openmeteo_requests.Client()
     except Exception as e:
-        log_queue.put(f"weather_data_fetcher init error: {e}")
+        if log:
+            log_queue.put(f"weather_data_fetcher init error: {e}")
 
 def GetAirQuality():
     air_quality = None
@@ -27,7 +28,11 @@ def GetAirQuality():
         url = f"https://api.waqi.info/feed/@6779/?token={token}"
     else:
         url = f"https://api.waqi.info/feed/geo:{lat};{lon}/?token={token}"
-    res = requests.get(url)
+    try:
+        res = requests.get(url)
+    except Exception as e:
+        if log:
+            log_queue.put(f"GetAirQuality Error: {e}")
     if res.status_code == 200:
         data = res.json()
         if data["status"] == "ok":
@@ -72,7 +77,8 @@ def GetTemperatureAndHumidity():
             log_queue.put(f"Temperatura: {str(temperature)} C")
             log_queue.put(f"Humedad: {str(humidity)}%")
     except Exception as e:
-        log_queue.put(f"GetTemperatureAndHumidity Error: {e}")
+        if log:
+            log_queue.put(f"GetTemperatureAndHumidity Error: {e}")
 
 def DataFetcher():
     while True:

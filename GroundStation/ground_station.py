@@ -13,7 +13,7 @@ server.start()
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
-wcom_gs.log = True
+wcom_gs.log = False
 wcom_gs.init(2, 868)
 threading.Thread(target=wcom_gs.receiver, daemon=True).start()
 
