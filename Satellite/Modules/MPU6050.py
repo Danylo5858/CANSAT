@@ -51,6 +51,10 @@ def SaveData():
                 data["gyro"]
             ])
 
+SAMPLE_RATE = 60
+DT = 1.0 / SAMPLE_RATE
+deg_to_rad = np.pi / 180.0
+
 def quat_mul(a, b):
     w1, x1, y1, z1 = a
     w2, x2, y2, z2 = b
@@ -79,10 +83,6 @@ def normalize(q):
 def update_motion_state():
     global packet
 
-    SAMPLE_RATE = 60
-    DT = 1.0 / SAMPLE_RATE
-    ALPHA = 0.98
-    deg_to_rad = np.pi / 180.0
     q = np.array([1.0, 0.0, 0.0, 0.0])
     buffer = []
 
@@ -104,6 +104,5 @@ def update_motion_state():
         for v in q:
             packed = int(v * 32767)
             packet += struct.pack('<h', packed)
-    buffer.clear()
     if log:
         log_queue.put(f"Paquete MPU6050 comprimido y listo para enviar: {len(packet)} bytes")
