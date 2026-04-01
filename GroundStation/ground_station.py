@@ -42,6 +42,6 @@ except KeyboardInterrupt:
 	print("\nCerrando todos los procesos...")
 finally:
 	if server is not None and server.is_alive():
-		print("Apagando servidor...") # NO SE EJECUTA, capaz por el ThreadPool de wdf
+		print("Apagando servidor...")
 		server.terminate()
 		server.join()
