@@ -72,8 +72,7 @@ def GetTemperatureAndHumidity():
         temperature = temperature
         humidity = humidity
         if log:
-            log_queue.put(f"Temperatura: {str(temperature)} C")
-            log_queue.put(f"Humedad: {str(humidity)}%")
+            log_queue.put(f"Temperatura: {str(temperature)} C\nHumedad: {str(humidity)}%")
         return temperature, humidity
     except Exception as e:
         if log:
