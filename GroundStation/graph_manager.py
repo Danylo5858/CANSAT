@@ -24,7 +24,7 @@ def update_graph(name, data):
         log_queue.put(f"Graficos [{name}] actualizados")
         url = "https://api.thingspeak.com/channels/3283442/feeds.json?results=5"
         res = requests.get(url)
-        log_queue.put(res)
+        log_queue.put(res.json())
     elif log:
         if res:
             log_queue.put(f"Error actualizando graficos [{name}]: {res.status_code}")
