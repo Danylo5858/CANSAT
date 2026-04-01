@@ -117,9 +117,9 @@ const charts = [
   			title: {
     			text: 'Altitud (m)'
   			},
-  			labels: {
-    			formatter: (val) => `${Math.round(val)} m`
-  			}
+  			//labels: {
+    		//	formatter: (val) => `${Math.round(val)} m`
+  			//}
   		},
 		'#ff3b3b',
 		'bar'
@@ -183,12 +183,12 @@ socket.on('BMP390_data', (data) => {
 		}]
 	}]);
 	no_realtime_data[0]['data'].push({
-		x: altitude,
-		y: pressure
+		x: pressure,
+		y: altitude
 	});
-	if (no_realtime_data[0]['data'].length > 30) {
-  		no_realtime_data[0]['data'].shift();
-	}
+	//if (no_realtime_data[0]['data'].length > 30) {
+  	//	no_realtime_data[0]['data'].shift();
+	//}
 });
 
 setInterval(() => {
