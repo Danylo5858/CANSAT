@@ -61,12 +61,12 @@ def GetTemperatureAndHumidity():
         if not res:
             if log:
                 log_queue.put(f"GetTemperatureAndHumidity Error: 'res' is None")
-            return None
+            return None, None
         current = res[0].Current()
         if not current:
             if log:
                 log_queue.put(f"GetTemperatureAndHumidity Error: 'current' is None")
-            return None
+            return None, None
         temperature = round(current.Variables(0).Value())
         humidity = round(current.Variables(1).Value())
         temperature = temperature
@@ -77,7 +77,7 @@ def GetTemperatureAndHumidity():
     except Exception as e:
         if log:
             log_queue.put(f"GetTemperatureAndHumidity Error: {e}")
-    return None
+    return None, None
 
 #def fetch():
 #    with ThreadPoolExecutor() as executor:
