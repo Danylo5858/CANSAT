@@ -309,7 +309,7 @@ function handleSidebarAction(button) {
 let scene, camera, renderer, controls, can;
 
 init();
-animate();
+//animate();
 
 function init() {
 	scene = new THREE.Scene();
