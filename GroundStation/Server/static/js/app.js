@@ -106,7 +106,7 @@ const charts = [
 		'#00ff88'
 	),
 	createChart(document.querySelector("#chart_pa"),
-		'Presión - Altitud, en tiempo real',
+		'Presión - Altitud',
 		{
 			type: 'numeric',
   			title: {

@@ -1,63 +1,87 @@
 import time
 import requests
-import threading
-import asyncio
 import openmeteo_requests
 import graph_manager as gm
+from log_manager import log_queue
 
-openmeteo = openmeteo_requests.Client()
 log = False
-SleepTime = 10
+SleepTime = 5
+lat = 0
+lon = 0
 
-print_lock = threading.Lock()
+token = "db94e4c768d260335021f2dbc8dfc088345d6bab"
+air_quality = None
+temperature = None
+humidity = None
 
-def start():
-    while True:
-        asyncio.run(main())
+def init():
+    global openmeteo
+    try:
+        openmeteo = openmeteo_requests.Client()
+    except Exception as e:
+        log_queue.put(f"weather_data_fetcher init error: {e}")
 
-async def main():
-    t1 = asyncio.create_task(GetAirQuality())
-    t2 = asyncio.create_task(GetTemperatureAndHumidity())
-    wait = asyncio.create_task(WaitTime())
-    await wait
-
-async def WaitTime():
-    await asyncio.sleep(SleepTime)
-
-async def GetAirQuality():
-    global air_quality, latitude, longitude
-    url = "https://api.waqi.info/feed/@6779/?token=db94e4c768d260335021f2dbc8dfc088345d6bab"
+def GetAirQuality():
+    air_quality = None
+    if lat == 0 and lon == 0:
+        url = f"https://api.waqi.info/feed/@6779/?token={token}"
+    else:
+        url = f"https://api.waqi.info/feed/geo:{lat};{lon}/?token={token}"
     res = requests.get(url)
     if res.status_code == 200:
         data = res.json()
-        air_quality = data["data"]["aqi"]
-        latitude = int(data["data"]["city"]["geo"][0])
-        longitude = int(data["data"]["city"]["geo"][1])
-        gm.air_quality = air_quality
-        if log:
-            with print_lock:
-                print("Calidad del aire:", air_quality)
+        if data["status"] == "ok":
+            air_quality = data["data"]["aqi"]
+            #lat = int(data["data"]["city"]["geo"][0])
+            #lon = int(data["data"]["city"]["geo"][1])
+            air_quality = air_quality
+            if log:
+                log_queue(f"Calidad del aire: {air_quality}")
+        else:
+            if log:
+                log_queue.put(f"API Error fetching air quality: {data["message"]}")
     else:
-        gm.air_quality = None
         if log:
-            with print_lock:
-                print("Error fetching air quality:", res.status_code)
+            log_queue.put(f"HTTP Error fetching air quality: {res.status_code}")
 
-async def GetTemperatureAndHumidity():
-    global temperature, humidity
+def GetTemperatureAndHumidity():
+    temperature = None
+    humidity = None
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
-        "latitude": latitude,
-        "longitude": longitude,
+        "latitude": lat,
+        "longitude": lon,
         "current": ["temperature_2m", "relative_humidity_2m"]
     }
-    res = openmeteo.weather_api(url, params=params)
-    current = res[0].Current()
-    temperature = round(current.Variables(0).Value())
-    humidity = round(current.Variables(1).Value())
-    gm.temperature = temperature
-    gm.humidity = humidity
-    if log:
-        with print_lock:
-            print("Temperatura:", str(temperature) + " C")
-            print("Humedad:", str(humidity) + "%")
+    try:
+        res = openmeteo.weather_api(url, params=params)
+        if not res:
+            if log:
+                log_queue.put(f"GetTemperatureAndHumidity Error: 'res' is None")
+            return
+        current = res[0].Current()
+        if not current:
+            if log:
+                log_queue.put(f"GetTemperatureAndHumidity Error: 'current' is None")
+            return
+        temperature = round(current.Variables(0).Value())
+        humidity = round(current.Variables(1).Value())
+        temperature = temperature
+        humidity = humidity
+        if log:
+            log_queue.put(f"Temperatura: {str(temperature)} C")
+            log_queue.put(f"Humedad: {str(humidity)}%")
+    except Exception as e:
+        log_queue.put(f"GetTemperatureAndHumidity Error: {e}")
+
+def DataFetcher():
+    while True:
+        GetAirQuality()
+        GetTemperatureAndHumidity()
+        data = {
+            "air_quality": air_quality,
+            "temperature": temperature,
+            "humidity": humidity
+        }
+        gm.update_graph("ground", data)
+        time.sleep(SleepTime)
