@@ -304,3 +304,4 @@ function handleSidebarAction(button) {
   		document.querySelector('#cansat-charts').classList.remove('hide');
   	}
 }
+window.handleSidebarAction = handleSidebarAction;

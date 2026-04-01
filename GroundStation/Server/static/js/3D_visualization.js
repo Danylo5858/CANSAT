@@ -22,7 +22,7 @@ function init() {
   	controls = new OrbitControls(camera, renderer.domElement);
   	controls.enableDamping = true;
   	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.2, 32);
-  	const material = new THREE.MeshNormalMaterial();
+  	const material = new THREE.MeshBasicMaterial({ color: 0x4FD1C5, wireframe: true });
   	can = new THREE.Mesh(geometry, material);
   	scene.add(can);
   	scene.add(new THREE.AxesHelper(2));
