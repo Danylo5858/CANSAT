@@ -263,6 +263,15 @@ socket.on('ground_data', (data) => {
 	}]);
 });
 
+socket.on('MPU6050_data', (data) => {
+	console.log('Datos recibidos (MPU6050_data):', data);
+
+	const x = data['gyro'][0];
+	const y = data['gyro'][1];
+	const z = data['gyro'][2];
+	
+});
+
 
 function handleSidebarAction(button) {
   	document.querySelectorAll('.sidebar-btn').forEach(btn => {

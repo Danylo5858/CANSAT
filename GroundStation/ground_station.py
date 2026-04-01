@@ -27,10 +27,11 @@ wdf.init()
 try:
 	while True:
 		cansat_data = wcom_gs.received_data.get()
+		server_queue.put(("MPU6050_data", cansat_data["MPU6050"]))
+		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
 		wdf.lat = cansat_data["GPS"]["latitude"]
 		wdf.lon = cansat_data["GPS"]["longitude"]
 		ground_data = wdf.fetch()
-		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
 		server_queue.put(("ground_data", ground_data))
 		threads = [
 			threading.Thread(target=gm.update_graph, args=(cansat_data["BMP390"], ground_data), daemon=True)
