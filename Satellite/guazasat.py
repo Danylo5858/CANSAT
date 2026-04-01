@@ -11,7 +11,6 @@ import log_manager as lm
 import wireless_communication_cansat as wcom_c
 
 GlobalSleepTime = 1
-threads = None
 
 os.makedirs("Data", exist_ok=True)
 
@@ -23,7 +22,7 @@ with i2c_lock:
 logger_thread = threading.Thread(target=lm.logger, daemon=True)
 logger_thread.start()
 
-wcom_c.log = False
+wcom_c.log = True
 wcom_c.init(1, 2, 868)
 
 bmp.log = True
