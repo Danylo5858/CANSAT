@@ -132,7 +132,13 @@ for (const chart of charts) {
 }
 
 
-const socket = io('http://localhost:5000');
+const socket = io('http://localhost:5000', {
+	reconnection: true,
+	reconnectionAttempts: Infinity,
+	reconnectionDelay: 1000,
+	reconnectionDelayMax: 5000,
+	timeout: 20000,
+});
 const loadingTime = 7 * 1000;
 let firstData = true
 
@@ -142,6 +148,18 @@ setTimeout(() => {
 
 socket.on('connect', () => {
 	console.log('Conectado al servidor');
+});
+
+socket.on("disconnect", (reason) => {
+  console.log("Desconectado:", reason);
+});
+
+socket.on("reconnect_attempt", (attempt) => {
+  console.log("Intento de reconexión:", attempt);
+});
+
+socket.on("reconnect", () => {
+  console.log("Reconectado");
 });
 
 socket.on('BMP390_data', (data) => {
