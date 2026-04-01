@@ -281,8 +281,8 @@ function decodeMPU6050(binBuffer) {
 socket.on('MPU6050_data', (data) => {
 	console.log('Datos recibidos (MPU6050_data)');
 
-	const quats = decodeMPU6050(data);
-	console.log(quats)
+	//const quats = decodeMPU6050(data);
+	console.log(data)
 });
 
 
