@@ -51,7 +51,7 @@ function decodeMPU6050(bin) {
 		const x = view.getInt16(i+2, true) / 32767;
 		const y = view.getInt16(i+4, true) / 32767;
 		const z = view.getInt16(i+6, true) / 32767;
-		quats.push(new THREE.Quaternion(x, y, z, w));
+		quats.push(new THREE.Quaternion(x*100, y*100, z*100, w*100));
 	}
 	return quats;
 }
