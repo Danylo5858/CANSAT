@@ -84,7 +84,7 @@ canvas {
 	display: flex;
 	flex-direction: column;
 	padding: 20px;
-	gap: 13px;
+	gap: 12px;
 	z-index: 1;
 	top: 0;
 	right: 0;
@@ -94,6 +94,12 @@ canvas {
 
 .sidebar-gyro-visualization {
 	flex: 1;
+	border: 2px solid rgba(79, 209, 197, 0.45);
+	transition: all 0.2s ease;
+}
+
+.sidebar-gyro-visualization:hover {
+	border-color: rgba(79, 209, 197, 0.9);
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
