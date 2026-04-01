@@ -51,6 +51,31 @@ def SaveData():
                 data["gyro"]
             ])
 
+def quat_mul(a, b):
+    w1, x1, y1, z1 = a
+    w2, x2, y2, z2 = b
+    return np.array([
+        w1*w2 - x1*x2 - y1*y2 - z1*z2,
+        w1*x2 + x1*w2 + y1*z2 - z1*y2,
+        w1*y2 - x1*z2 + y1*w2 + z1*x2,
+        w1*z2 + x1*y2 - y1*x2 + z1*w2
+    ])
+
+def gyro_to_quat(gx, gy, gz):
+    gx *= deg_to_rad
+    gy *= deg_to_rad
+    gz *= deg_to_rad
+    half_dt = DT / 2.0
+    return np.array([
+        1.0,
+        gx * half_dt,
+        gy * half_dt,
+        gz * half_dt
+    ])
+
+def normalize(q):
+    return q / np.linalg.norm(q)
+
 def update_motion_state():
     global packet
 
@@ -61,50 +86,24 @@ def update_motion_state():
     q = np.array([1.0, 0.0, 0.0, 0.0])
     buffer = []
 
-    def quat_mul(a, b):
-        w1, x1, y1, z1 = a
-        w2, x2, y2, z2 = b
-        return np.array([
-            w1*w2 - x1*x2 - y1*y2 - z1*z2,
-            w1*x2 + x1*w2 + y1*z2 - z1*y2,
-            w1*y2 - x1*z2 + y1*w2 + z1*x2,
-            w1*z2 + x1*y2 - y1*x2 + z1*w2
-        ])
+    for _ in range(SAMPLE_RATE):
+        with i2c_lock:
+            gyro = mpu.gyro
+            accel = mpu.acceleration
+        gx, gy, gz = gyro
+        dq = gyro_to_quat(gx, gy, gz)
+        q = quat_mul(q, dq)
+        q = normalize(q)
+        buffer.append(q.copy())
+        if len(buffer) > SAMPLE_RATE:
+            buffer.pop(0)
+        time.sleep(DT)
 
-    def gyro_to_quat(gx, gy, gz):
-        gx *= deg_to_rad
-        gy *= deg_to_rad
-        gz *= deg_to_rad
-        half_dt = DT / 2.0
-        return np.array([
-            1.0,
-            gx * half_dt,
-            gy * half_dt,
-            gz * half_dt
-        ])
-
-    def normalize(q):
-        return q / np.linalg.norm(q)
-
-    while True:
-        for _ in range(SAMPLE_RATE):
-            with i2c_lock:
-                gyro = mpu.gyro
-                accel = mpu.acceleration
-            gx, gy, gz = gyro
-            dq = gyro_to_quat(gx, gy, gz)
-            q = quat_mul(q, dq)
-            q = normalize(q)
-            buffer.append(q.copy())
-            if len(buffer) > SAMPLE_RATE:
-                buffer.pop(0)
-            time.sleep(DT)
-
-        packet = bytearray()
-        for q in buffer:
-            for v in q:
-                packed = int(v * 32767)
-                packet += struct.pack('<h', packed)
-        buffer.clear()
-        if log:
-            log_queue.put(f"Paquete MPU6050 comprimido y listo para enviar: {len(packet)} bytes")
+    packet = bytearray()
+    for q in buffer:
+        for v in q:
+            packed = int(v * 32767)
+            packet += struct.pack('<h', packed)
+    buffer.clear()
+    if log:
+        log_queue.put(f"Paquete MPU6050 comprimido y listo para enviar: {len(packet)} bytes")
