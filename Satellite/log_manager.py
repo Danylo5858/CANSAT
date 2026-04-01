@@ -8,4 +8,5 @@ def logger():
             msg = log_queue.get()
             print(msg)
     except KeyboardInterrupt:
+        print("KeyboardInterrupt")
         return
