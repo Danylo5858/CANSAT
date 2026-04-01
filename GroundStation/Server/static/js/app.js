@@ -74,7 +74,7 @@ const timeXaxis = {
 
 const charts = [
 	createChart(
-		document.querySelector("#chart_a"),
+		document.querySelector('#chart_a'),
 		'Altitud del CanSat en tiempo real',
 		timeXaxis,
 		{
@@ -85,7 +85,7 @@ const charts = [
 		'#7c4dff'
 	),
 	createChart(
-		document.querySelector("#chart_t"),
+		document.querySelector('#chart_t'),
 		'Temperatura del CanSat en tiempo real',
 		timeXaxis,
 		{
@@ -95,7 +95,7 @@ const charts = [
 		},
 		'#00e5ff'
 	),
-	createChart(document.querySelector("#chart_p"),
+	createChart(document.querySelector('#chart_p'),
 		'Presión del CanSat en tiempo real',
 		timeXaxis,
 		{
@@ -105,7 +105,7 @@ const charts = [
 		},
 		'#00ff88'
 	),
-	createChart(document.querySelector("#chart_pa"),
+	createChart(document.querySelector('#chart_pa'),
 		'Altitud - Presión',
 		{
 			title: {
@@ -150,16 +150,16 @@ socket.on('connect', () => {
 	console.log('Conectado al servidor');
 });
 
-socket.on("disconnect", (reason) => {
-  console.log("Desconectado:", reason);
+socket.on('disconnect', (reason) => {
+  console.log('Desconectado:', reason);
 });
 
-socket.on("reconnect_attempt", (attempt) => {
-  console.log("Intento de reconexión:", attempt);
+socket.on('reconnect_attempt', (attempt) => {
+  console.log('Intento de reconexión:', attempt);
 });
 
-socket.on("reconnect", () => {
-  console.log("Reconectado");
+socket.on('reconnect', () => {
+  console.log('Reconectado');
 });
 
 socket.on('BMP390_data', (data) => {
@@ -202,3 +202,20 @@ socket.on('BMP390_data', (data) => {
 		}]
 	}]);
 });
+
+
+function handleSidebarAction(button) {
+  	document.querySelectorAll('.sidebar-btn').forEach(btn => {
+    	btn.classList.remove('active');
+  	});
+  	button.classList.add('active');
+
+  	if (button.getAttribute('id') === 'ground-charts-btn') {
+  		document.querySelector('#cansat-charts').classList.add('hide');
+  		document.querySelector('#ground-charts').classList.remove('hide');
+  	}
+  	else if (button.getAttribute('id') === 'cansat-charts-btn') {
+  		document.querySelector('#ground-charts').classList.add('hide');
+  		document.querySelector('#cansat-charts').classList.remove('hide');
+  	}
+}

@@ -14,24 +14,21 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-	<div class="charts-grid">
+	<div id="cansat-charts" class="charts-grid">
         <div id="chart_a"></div>
         <div id="chart_t"></div>
         <div id="chart_p"></div>
 		<div id="chart_pa"></div>
 	</div>
+    <div id="ground-charts hide" class="charts-grid">
+        
+    </div>
     <div class="sidebar">
-        <button class="sidebar-btn" onclick="handleSidebarAction(this)">
+        <button id="cansat-charts-btn" class="sidebar-btn active" onclick="handleSidebarAction(this)">
             Mostrar gráficos del CanSat
         </button>
-        <button class="sidebar-btn" onclick="handleSidebarAction(this)">
-            Mostrar gráficos del CanSat
-        </button>
-        <button class="sidebar-btn" onclick="handleSidebarAction(this)">
-            Mostrar gráficos del CanSat
-        </button>
-        <button class="sidebar-btn" onclick="handleSidebarAction(this)">
-            Mostrar gráficos del CanSat
+        <button id="ground-charts-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
+            Mostrar gráficos de la estación de tierra
         </button>
     </div>
     <div class="loader-container">
