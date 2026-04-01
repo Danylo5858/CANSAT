@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from csv import writer
 import threading
