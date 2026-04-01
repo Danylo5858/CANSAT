@@ -1,0 +1,1 @@
+Los datos recibidos por ground_station se quedan en cola porque fetch() tarda demasiado y provoca delay

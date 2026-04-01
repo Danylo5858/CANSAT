@@ -124,6 +124,38 @@ const charts = [
 		'#ff3b3b',
 		'line',
 		'straight'
+	),
+	createChart(
+		document.querySelector('#chart_aq'),
+		'Calidad del aire desde estación de tierra',
+		timeXaxis,
+		{
+			title: {
+				text: 'Calidad del aire'
+			}
+		},
+		'#7c4dff'
+	),
+	createChart(
+		document.querySelector('#chart_t_g'),
+		'Temperatura desde estación de tierra',
+		timeXaxis,
+		{
+			title: {
+				text: 'Temperatura (Celsius)'
+			}
+		},
+		'#00e5ff'
+	),
+	createChart(document.querySelector('#chart_h'),
+		'Humedad desde estación de tierra',
+		timeXaxis,
+		{
+			title: {
+				text: 'Humedad'
+			}
+		},
+		'#00ff88'
 	)
 ];
 
@@ -163,7 +195,7 @@ socket.on('reconnect', () => {
 });
 
 socket.on('BMP390_data', (data) => {
-	console.log('Datos recibidos:', data);
+	console.log('Datos recibidos (BMP390_data):', data);
 
 	if (firstData) {
 		setTimeout(() => {
@@ -199,6 +231,34 @@ socket.on('BMP390_data', (data) => {
 		data: [{
 			x: pressure,
 			y: altitude
+		}]
+	}]);
+});
+
+socket.on('ground_data', (data) => {
+	console.log('Datos recibidos (ground_data):', data);
+
+	const time = new Date().getTime();
+	const air_quality = data['air_quality'];
+	const temperature = data['temperature'];
+	const humidity = data['humidity'];
+
+	charts[4].appendData([{
+		data: [{
+			x: time,
+			y: air_quality
+		}]
+	}]);
+	charts[5].appendData([{
+		data: [{
+			x: time,
+			y: temperature
+		}]
+	}]);
+	charts[6].appendData([{
+		data: [{
+			x: time,
+			y: humidity
 		}]
 	}]);
 });
