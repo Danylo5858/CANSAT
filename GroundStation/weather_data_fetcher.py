@@ -89,7 +89,7 @@ def fetch():
     if result_th is None:
         temperature, humidity = None, None
     else:
-        temperature, humidity = result
+        temperature, humidity = result_th
     return {
         "air_quality": air_quality,
         "temperature": temperature,
