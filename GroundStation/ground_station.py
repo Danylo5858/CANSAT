@@ -27,7 +27,7 @@ wdf.init()
 try:
 	while True:
 		cansat_data = wcom_gs.received_data.get()
-		server_queue.put(("MPU6050_data", cansat_data["MPU6050"]))
+		#server_queue.put(("MPU6050_data", cansat_data["MPU6050_BIN"]))
 		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
 		wdf.lat = cansat_data["GPS"]["latitude"]
 		wdf.lon = cansat_data["GPS"]["longitude"]
