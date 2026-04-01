@@ -18,9 +18,7 @@ def pack(data):
     compressed = gzip.compress(data)
     return compressed
 
-def send(str_msg):
-    msg = str_msg.encode("utf-8")
-    packet = pack(msg)
+def send_raw(packet):
     dest_h = (dest_addr >> 8) & 0xFF
     dest_l = dest_addr & 0xFF
     src_h = (radio.addr >> 8) & 0xFF
@@ -38,3 +36,19 @@ def SendData():
         log_queue.put("Enviando datos: " + data)
     send(data)
     buffer.clear()
+
+def SendData():
+    binary = buffer.get("MPU6050_BIN", b"")
+    clean = { k:v for k,v in buffer.items() if k != "MPU6050_BIN" }
+    str_clean = json.dumps(clean)
+    json_part = str_clean.encode("utf-8")
+    size = struct.pack("<I", len(binary))
+    payload = json_part + b"|||" + size + binary
+    compressed = gzip.compress(payload)
+    send_raw(compressed)
+    buffer.clear()
+    if log:
+        if binary != b"":
+            log_queue.put(f"Datos enviados: {str_clean} + MPU6050_BIN")
+        else:
+            log_queue.put(f"Datos enviados: {str_clean}")

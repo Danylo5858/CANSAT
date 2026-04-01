@@ -22,23 +22,27 @@ def init(i2c, address, lock):
     if save_data:
         threading.Thread(target=SaveData, daemon=True).start()
 
+#def GetData():
+#    with i2c_lock:
+#        gx, gy, gz = [round(v, 5) for v in mpu.gyro]
+#    gyro = [gx, gy, gz]
+#    if log:
+#        log_queue.put(f"Giroscopio: {gyro}")
+#    if send_data:
+#        buffer["MPU6050"] = {
+#            "gyro": gyro
+#        }
+#        #buffer.append(gyro)
+#    data = {
+#        "time": datetime.now(),
+#        "gyro": gyro
+#    }
+#    data_queue.put(data)
+
 def GetData():
-    with i2c_lock:
-        gx, gy, gz = [round(v, 5) for v in mpu.gyro]
-    gyro = [gx, gy, gz]
-    if log:
-        log_queue.put(f"Giroscopio: {gyro}")
+    packet = update_motion_state()
     if send_data:
-        buffer["MPU6050"] = {
-            "gyro": gyro
-        }
-        #buffer.append(gyro)
-    data = {
-        "time": datetime.now(),
-        "gyro": gyro
-    }
-    data_queue.put(data)
-    update_motion_state()
+        buffer["MPU6050_BIN"] = packet
 
 def SaveData():
     with open('./Data/MPU6050_data.csv', 'a', buffering=1, newline='') as f:
@@ -81,8 +85,6 @@ def normalize(q):
     return q / np.linalg.norm(q)
 
 def update_motion_state():
-    global packet
-
     q = np.array([1.0, 0.0, 0.0, 0.0])
     buffer = []
 
@@ -106,3 +108,4 @@ def update_motion_state():
             packet += struct.pack('<h', packed)
     if log:
         log_queue.put(f"Paquete MPU6050 comprimido y listo para enviar: {len(packet)} bytes")
+    return packet

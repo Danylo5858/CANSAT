@@ -44,7 +44,7 @@ try:
     while True:
         threads = [
             threading.Thread(target=bmp.GetData, daemon=True),
-            threading.Thread(target=mpu.GetData, daemon=True),
+            threading.Thread(target=mpu.GetData, daemon=True), # update_motion_state => 1 second
             threading.Thread(target=gps.GetData, daemon=True)
         ]
         for t in threads:
