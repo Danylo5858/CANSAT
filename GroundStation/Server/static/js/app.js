@@ -106,7 +106,7 @@ const charts = [
 		'#00ff88'
 	),
 	createChart(document.querySelector("#chart_pa"),
-		'Presión - Altitud',
+		'Altitud - Presión',
 		{
 			title: {
 				text: 'Presión (hPa)'
