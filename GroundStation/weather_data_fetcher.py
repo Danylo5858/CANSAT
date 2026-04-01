@@ -36,7 +36,7 @@ def GetAirQuality():
             #lon = int(data["data"]["city"]["geo"][1])
             air_quality = air_quality
             if log:
-                log_queue(f"Calidad del aire: {air_quality}")
+                log_queue.put(f"Calidad del aire: {air_quality}")
         else:
             if log:
                 log_queue.put(f"API Error fetching air quality: {data['message']}")
