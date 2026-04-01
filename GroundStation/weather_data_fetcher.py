@@ -33,7 +33,7 @@ def GetAirQuality():
     except Exception as e:
         if log:
             log_queue.put(f"GetAirQuality Error: {e}")
-    if res.status_code == 200:
+    if res and res.status_code == 200:
         data = res.json()
         if data["status"] == "ok":
             air_quality = data["data"]["aqi"]
@@ -47,7 +47,10 @@ def GetAirQuality():
                 log_queue.put(f"API Error fetching air quality: {data['message']}")
     else:
         if log:
-            log_queue.put(f"HTTP Error fetching air quality: {res.status_code}")
+            if res:
+                log_queue.put(f"HTTP Error fetching air quality: {res.status_code}")
+            else:
+                log_queue.put("HTTP Error fetching air quality")
 
 def GetTemperatureAndHumidity():
     temperature = None
