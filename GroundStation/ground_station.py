@@ -7,31 +7,30 @@ import log_manager as lm
 import wireless_communication_gs as wcom_gs
 import Server.main as app
 
+wcom_gs.log = False
+wdf.log = True
+gm.log = True
+
 server_queue = Queue()
 server = Process(target=app.run, args=(server_queue,))
-#server.start()
+server.start()
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
-wcom_gs.log = False
 wcom_gs.init(2, 868)
 threading.Thread(target=wcom_gs.receiver, daemon=True).start()
 
-wdf.log = True
-wdf.SleepTime = 0
 wdf.init()
-threading.Thread(target=wdf.DataFetcher, daemon=True).start()
-
-gm.log = True
 
 try:
 	while True:
-		data = wcom_gs.received_data.get()
-		server_queue.put(("BMP390_data", data["BMP390"]))
-		wdf.lat = data["GPS"]["latitude"]
-		wdf.lon = data["GPS"]["longitude"]
+		cansat_data = wcom_gs.received_data.get()
+		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
+		wdf.lat = cansat_data["GPS"]["latitude"]
+		wdf.lon = cansat_data["GPS"]["longitude"]
+		ground_data = wdf.fetch()
 		threads = [
-			#threading.Thread(target=gm.update_graph, args=("satellite", data["BMP390"]), daemon=True)
+			threading.Thread(target=gm.update_graph, args=(cansat_data["BMP390"], ground_data), daemon=True)
 		]
 		for t in threads:
 			t.start()

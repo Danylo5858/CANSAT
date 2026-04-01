@@ -1,11 +1,9 @@
 import time
 import requests
 import openmeteo_requests
-import graph_manager as gm
 from log_manager import log_queue
 
 log = False
-SleepTime = 5
 lat = 0
 lon = 0
 
@@ -83,14 +81,12 @@ def GetTemperatureAndHumidity():
         if log:
             log_queue.put(f"GetTemperatureAndHumidity Error: {e}")
 
-def DataFetcher():
-    while True:
-        GetAirQuality()
-        GetTemperatureAndHumidity()
-        data = {
-            "air_quality": air_quality,
-            "temperature": temperature,
-            "humidity": humidity
-        }
-        gm.update_graph("ground", data)
-        time.sleep(SleepTime)
+def fetch():
+    GetAirQuality()
+    GetTemperatureAndHumidity()
+    data = {
+        "air_quality": air_quality,
+        "temperature": temperature,
+        "humidity": humidity
+    }
+    return data
