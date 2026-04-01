@@ -1,7 +1,7 @@
 const window_size = 60 * 1000;
 const ticks = 6;
 
-function createChart(element, title, xaxis, yaxis, color, type='line') {
+function createChart(element, title, xaxis, yaxis, color, type='line', curve='smooth') {
 	return new ApexCharts(element, {
 		chart: {
 			type: type,
@@ -9,7 +9,7 @@ function createChart(element, title, xaxis, yaxis, color, type='line') {
 				enabled: true,
 				easing: 'linear',
 				dynamicAnimation: {
-					speed: 700 // SINCRONIZAR CON LOS DATOS
+					speed: 700
 				},
 				animateGradually: {
 					enabled: false
@@ -49,7 +49,7 @@ function createChart(element, title, xaxis, yaxis, color, type='line') {
 		xaxis: xaxis,
 		yaxis: yaxis,
 		stroke: {
-			curve: 'smooth',
+			curve: curve,
 			width: 2
 		}
 	});
@@ -121,7 +121,9 @@ const charts = [
     			formatter: (val) => `${Math.round(val)} m`
   			}
   		},
-		'#ff3b3b'
+		'#ff3b3b',
+		'line',
+		'straight'
 	)
 ];
 
