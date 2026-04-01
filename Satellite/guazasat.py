@@ -56,9 +56,6 @@ try:
         time.sleep(GlobalSleepTime)
 except KeyboardInterrupt:
     print("\nCerrando todos los procesos...")
-finally:
-    for t in threads:
-        t.join()
 
 #GPIO.setmode(GPIO.BCM)
 #GPIO.setup(17, GPIO.OUT)    # LED
