@@ -111,14 +111,16 @@ const charts = [
 			title: {
 				text: 'Presión (hPa)'
 			},
-			min: 0,
-			max: 700
+			forceNiceScale: true,
+			range: undefined
 		},
 		{
 			type: 'numeric',
   			title: {
     			text: 'Altitud (m)'
   			},
+			forceNiceScale: true,
+			range: undefined
   			//labels: {
     		//	formatter: (val) => `${Math.round(val)} m`
   			//}
@@ -195,7 +197,7 @@ socket.on('BMP390_data', (data) => {
 
 setInterval(() => {
 	no_realtime_data.forEach((data) => {
-		data['data'].sort((a, b) => a.x - b.x);
+		data['data'].sort((a, b) => a.y - b.y);
 		charts[data['chart_index']].updateSeries([{
 			data: data['data']
 		}]);
