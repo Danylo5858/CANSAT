@@ -111,22 +111,21 @@ const charts = [
 			title: {
 				text: 'Presión (hPa)'
 			},
-			forceNiceScale: true,
-			range: undefined
+			min: 700,
+			max: 1015
 		},
 		{
 			type: 'numeric',
   			title: {
     			text: 'Altitud (m)'
   			},
-			forceNiceScale: true,
-			range: undefined
+  			min: 0,
+  			max: 1000
   			//labels: {
     		//	formatter: (val) => `${Math.round(val)} m`
   			//}
   		},
-		'#ff3b3b',
-		'bar'
+		'#ff3b3b'
 	)
 ];
 
