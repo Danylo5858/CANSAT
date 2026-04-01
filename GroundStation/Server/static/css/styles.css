@@ -91,60 +91,79 @@ canvas {
 	width: 30%;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
 .sidebar-btn {
-	width: 100%;
-	height: 50px;
-	display: flex;
-	align-items: center;
-	padding: 12px 14px;
-	border-radius: 10px;
-	background: rgba(255, 255, 255, 0.03);
-	border: 1px solid rgba(255, 255, 255, 0.06);
-	color: #cbd5e1;
-	font-size: 14px;
-	font-weight: 500;
-	cursor: pointer;
-	transition: all 0.2s ease;
-	position: relative;
-	overflow: hidden;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 🔥 centrado perfecto */
+
+  padding: 12px 14px;
+  border-radius: 10px;
+
+  background: transparent;
+
+  border: 1.5px solid rgba(79, 209, 197, 0.35);
+
+  color: #4fd1c5;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
 }
 
+/* glow sutil interno */
 .sidebar-btn::before {
-  	content: "";
-  	position: absolute;
-  	left: 0;
-	top: 0;
-  	height: 100%;
-  	width: 3px;
-  	background: rgba(255, 255, 255, 0.08);
-  	transition: all 0.2s ease;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(79, 209, 197, 0.08),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
 
+/* hover elegante */
 .sidebar-btn:hover {
-  	background: rgba(0, 229, 255, 0.06);
-  	border-color: rgba(0, 229, 255, 0.25);
-  	transform: translateX(2px);
-  	color: #e2e8f0;
+  border-color: rgba(79, 209, 197, 0.8);
+  color: #ffffff;
+  transform: translateY(-1px);
 }
 
 .sidebar-btn:hover::before {
-  	background: linear-gradient(180deg, #00e5ff, #7c4dff);
-  	width: 4px;
-  	opacity: 1;
+  opacity: 1;
 }
 
+/* active state */
 .sidebar-btn.active {
-  	background: rgba(0, 229, 255, 0.08);
-  	border-color: rgba(0, 229, 255, 0.35);
-  	color: #ffffff;
+  background: rgba(79, 209, 197, 0.08);
+  border-color: #4fd1c5;
+  color: #ffffff;
 }
 
-.sidebar-btn.active::before {
-  	width: 4px;
-  	background: linear-gradient(180deg, #00e5ff, #7c4dff);
-  	opacity: 1;
+/* línea lateral minimal */
+.sidebar-btn.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 20%;
+  height: 60%;
+  width: 2px;
+  background: #4fd1c5;
+  border-radius: 2px;
 }
 
+/* click feedback */
 .sidebar-btn:active {
-  	transform: translateX(2px) scale(0.98);
+  transform: translateY(0px) scale(0.98);
 }
