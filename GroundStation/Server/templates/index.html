@@ -20,7 +20,6 @@
           }
         }
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 	<div id="cansat-charts" class="charts-grid">
@@ -44,6 +43,7 @@
         <button id="backup-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
             Generar gráficos a partir de una copia de seguridad
         </button>
+        <div id="viewer" class="sidebar-gyro-visualization"></div>
     </div>
     <div class="loader-container">
         <div class="center">
@@ -59,7 +59,7 @@
             </div>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/3D_visualization.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
