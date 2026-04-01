@@ -7,7 +7,7 @@ import log_manager as lm
 import wireless_communication_gs as wcom_gs
 import Server.main as app
 
-wcom_gs.log = False
+wcom_gs.log = True
 wdf.log = True
 gm.log = True
 
