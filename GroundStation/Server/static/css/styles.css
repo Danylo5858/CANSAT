@@ -79,6 +79,7 @@ canvas {
 }
 
 .sidebar {
+	box-sizing: border-box;
 	position: absolute;
 	display: flex;
 	flex-direction: column;
