@@ -264,13 +264,12 @@ socket.on('ground_data', (data) => {
 });
 
 function decodeMPU6050(bin) {
-	const view = new DataView(
-		bin.buffer,
-		bin.byteOffset,
-		bin.byteLength
-	);
+	const buffer = new Uint8Array(bin).slice().buffer;
+	const view = new DataView(buffer);
 	const quats = [];
-	for (let i = 0; i < view.byteLength; i += 8) {
+	const stride = 8;
+	const max = view.byteLength - (view.byteLength % stride);
+	for (let i = 0; i < max; i += stride) {
 		const w = view.getInt16(i, true) / 32767;
 		const x = view.getInt16(i+2, true) / 32767;
 		const y = view.getInt16(i+4, true) / 32767;
