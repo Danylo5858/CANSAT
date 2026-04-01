@@ -81,16 +81,6 @@ def GetTemperatureAndHumidity():
     return None
 
 def fetch():
-    air_quality = GetAirQuality()
-    temperature, humidity = GetTemperatureAndHumidity()
-    data = {
-        "air_quality": air_quality,
-        "temperature": temperature,
-        "humidity": humidity
-    }
-    return data
-
-def fetch():
     with ThreadPoolExecutor() as executor:
         future_a = executor.submit(GetAirQuality)
         future_th = executor.submit(GetTemperatureAndHumidity)
