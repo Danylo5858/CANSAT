@@ -9,7 +9,7 @@ import Server.main as app
 
 server_queue = Queue()
 server = Process(target=app.run, args=(server_queue,))
-server.start()
+#server.start()
 
 threading.Thread(target=lm.logger, daemon=True).start()
 
@@ -18,7 +18,7 @@ wcom_gs.init(2, 868)
 threading.Thread(target=wcom_gs.receiver, daemon=True).start()
 
 wdf.log = True
-wdf.SleepTime = 1
+wdf.SleepTime = 0
 wdf.init()
 threading.Thread(target=wdf.DataFetcher, daemon=True).start()
 
