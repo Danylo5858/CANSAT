@@ -1,3 +1,5 @@
+import { onReceivePacket } from './3D_visualization.js'
+
 const window_size = 60 * 1000;
 const ticks = 6;
 
@@ -263,29 +265,9 @@ socket.on('ground_data', (data) => {
 	}]);
 });
 
-function decodeMPU6050(bin) {
-	const buffer = new Uint8Array(bin).slice().buffer;
-	const view = new DataView(buffer);
-	const quats = [];
-	const stride = 8;
-	const max = view.byteLength - (view.byteLength % stride);
-	for (let i = 0; i < max; i += stride) {
-		const w = view.getInt16(i, true) / 32767;
-		const x = view.getInt16(i+2, true) / 32767;
-		const y = view.getInt16(i+4, true) / 32767;
-		const z = view.getInt16(i+6, true) / 32767;
-		quats.push({
-			x, y, z, w
-		});
-	}
-	return quats;
-}
-
 socket.on('MPU6050_data', (data) => {
 	console.log('Datos recibidos (MPU6050_data)');
-
-	const quats = decodeMPU6050(data);
-	//updateGyro(quats);
+	onReceivePacket(data);
 });
 
 

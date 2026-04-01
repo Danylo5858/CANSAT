@@ -2,6 +2,9 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let scene, camera, renderer, controls, can;
+let frames = [];
+let index = 0;
+let currentQuat = new THREE.Quaternion();
 
 init();
 animate();
@@ -22,7 +25,7 @@ function init() {
   	controls = new OrbitControls(camera, renderer.domElement);
   	controls.enableDamping = true;
   	controls.enablePan = false;
-  	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 24);
+  	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 16);
   	const material = new THREE.MeshBasicMaterial({ color: 0x4FD1C5, wireframe: true });
   	can = new THREE.Mesh(geometry, material);
   	scene.add(can);
@@ -37,8 +40,36 @@ function onResize() {
 	renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
+function decodeMPU6050(bin) {
+	const buffer = new Uint8Array(bin).slice().buffer;
+	const view = new DataView(buffer);
+	const quats = [];
+	const stride = 8;
+	const max = view.byteLength - (view.byteLength % stride);
+	for (let i = 0; i < max; i += stride) {
+		const w = view.getInt16(i, true) / 32767;
+		const x = view.getInt16(i+2, true) / 32767;
+		const y = view.getInt16(i+4, true) / 32767;
+		const z = view.getInt16(i+6, true) / 32767;
+		quats.push(new THREE.Quaternion(x, y, z, w));
+	}
+	return quats;
+}
+
+export function onReceivePacket(bin) {
+	frames = decodeMPU6050(bin);
+	index = 0;
+}
+
 function animate() {
 	requestAnimationFrame(animate);
+	if (frames.length > 0) {
+		const target = frames[index];
+		currentQuat.slerp(target, 0.2);
+		can.quaternion.copy(currentQuat);
+		index++;
+		if (index >= frames.length) index = 0;
+	}
   	controls.update();
   	renderer.render(scene, camera);
 }
