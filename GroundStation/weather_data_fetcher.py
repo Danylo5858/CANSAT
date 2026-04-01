@@ -21,7 +21,7 @@ def init():
             log_queue.put(f"weather_data_fetcher init error: {e}")
 
 def GetAirQuality():
-    air_quality = None
+    global air_quality
     if lat == 0 and lon == 0:
         url = f"https://api.waqi.info/feed/@6779/?token={token}"
     else:
@@ -51,8 +51,7 @@ def GetAirQuality():
                 log_queue.put("HTTP Error fetching air quality")
 
 def GetTemperatureAndHumidity():
-    temperature = None
-    humidity = None
+    global temperature, humidity
     url = "https://api.open-meteo.com/v1/forecast"
     params = {
         "latitude": lat,
@@ -82,6 +81,9 @@ def GetTemperatureAndHumidity():
             log_queue.put(f"GetTemperatureAndHumidity Error: {e}")
 
 def fetch():
+    air_quality = None
+    temperature = None
+    humidity = None
     GetAirQuality()
     GetTemperatureAndHumidity()
     data = {
