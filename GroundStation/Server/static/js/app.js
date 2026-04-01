@@ -110,7 +110,9 @@ const charts = [
 		{
 			title: {
 				text: 'Presión (hPa)'
-			}
+			},
+			min: 0,
+			max: 700
 		},
 		{
 			type: 'numeric',
