@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 console.log('3D');
 
 let scene, camera, renderer, controls, can;
@@ -18,7 +19,7 @@ function init() {
 	renderer = new THREE.WebGLRenderer({ antialias: true });
   	renderer.setSize(window.innerWidth, window.innerHeight);
   	document.body.appendChild(renderer.domElement);
-  	controls = new THREE.OrbitControls(camera, renderer.domElement);
+  	controls = new OrbitControls(camera, renderer.domElement);
   	controls.enableDamping = true;
   	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.2, 32);
   	const material = new THREE.MeshBasicMaterial({ color: 0x00aaff, wireframe: true });
