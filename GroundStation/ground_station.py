@@ -18,7 +18,7 @@ wcom_gs.init(2, 868)
 threading.Thread(target=wcom_gs.receiver, daemon=True).start()
 
 wdf.log = True
-wdf.SleepTime = 3
+wdf.SleepTime = 1
 wdf.init()
 threading.Thread(target=wdf.DataFetcher, daemon=True).start()
 
@@ -31,7 +31,7 @@ try:
 		wdf.lat = data["GPS"]["latitude"]
 		wdf.lon = data["GPS"]["longitude"]
 		threads = [
-			threading.Thread(target=gm.update_graph, args=("satellite", data["BMP390"]), daemon=True)
+			#threading.Thread(target=gm.update_graph, args=("satellite", data["BMP390"]), daemon=True)
 		]
 		for t in threads:
 			t.start()
