@@ -100,6 +100,11 @@ canvas {
 
 .sidebar-gyro-visualization:hover {
 	border-color: rgba(79, 209, 197, 0.9);
+	cursor: grab;
+}
+
+.sidebar-gyro-visualization:active {
+	cursor: grabbing;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
