@@ -39,7 +39,7 @@ def GetAirQuality():
                 log_queue(f"Calidad del aire: {air_quality}")
         else:
             if log:
-                log_queue.put(f"API Error fetching air quality: {data["message"]}")
+                log_queue.put(f"API Error fetching air quality: {data['message']}")
     else:
         if log:
             log_queue.put(f"HTTP Error fetching air quality: {res.status_code}")
