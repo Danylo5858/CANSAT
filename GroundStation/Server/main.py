@@ -1,6 +1,6 @@
 from queue import Empty
 
-def run(queue):
+def run(queue, log):
 	import eventlet
 	eventlet.monkey_patch()
 
@@ -16,7 +16,8 @@ def run(queue):
 		while True:
 			try:
 				name, data = queue.get_nowait()
-				print("Emitiendo datos:", name)
+				if log:
+					print("Emitiendo datos:", name)
 				socketio.emit(name, data)
 			except Empty:
 				pass

@@ -263,13 +263,26 @@ socket.on('ground_data', (data) => {
 	}]);
 });
 
-socket.on('MPU6050_data', (data) => {
-	console.log('Datos recibidos (MPU6050_data):', data);
+function decodeMPU6050(binBuffer) {
+	const view = new DataView(binBuffer);
+	const quats = [];
+	for (let i = 0; i < view.byteLength; i += 8) {
+		const w = view.getInt16(i, true) / 32767;
+		const x = view.getInt16(i+2, true) / 32767;
+		const y = view.getInt16(i+4, true) / 32767;
+		const z = view.getInt16(i+6, true) / 32767;
+		quats.push({
+			x, y, z, w
+		});
+	}
+	return quats;
+}
 
-	const x = data['gyro'][0];
-	const y = data['gyro'][1];
-	const z = data['gyro'][2];
-	
+socket.on('MPU6050_data', (data) => {
+	console.log('Datos recibidos (MPU6050_data)');
+
+	const quats = decodeMPU6050(data);
+	console.log(quats)
 });
 
 

@@ -7,12 +7,13 @@ import log_manager as lm
 import wireless_communication_gs as wcom_gs
 import Server.main as app
 
-wcom_gs.log = True
+wcom_gs.log = False
 wdf.log = True
 gm.log = True
+server_log = False
 
 server_queue = Queue()
-server = Process(target=app.run, args=(server_queue,))
+server = Process(target=app.run, args=(server_queue, server_log))
 server.start()
 
 logger_thread = threading.Thread(target=lm.logger, daemon=True)
@@ -27,7 +28,7 @@ wdf.init()
 try:
 	while True:
 		cansat_data = wcom_gs.received_data.get()
-		#server_queue.put(("MPU6050_data", cansat_data["MPU6050_BIN"]))
+		server_queue.put(("MPU6050_data", cansat_data["MPU6050_BIN"]))
 		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
 		wdf.lat = cansat_data["GPS"]["latitude"]
 		wdf.lon = cansat_data["GPS"]["longitude"]
