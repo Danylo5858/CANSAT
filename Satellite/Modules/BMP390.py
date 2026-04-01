@@ -49,6 +49,7 @@ def SaveData():
         data_writer = writer(f)
         while True:
             data = data_queue.get()
+            log_queue.put("DATO ESCRITO")
             data_writer.writerow([
                 data["time"].strftime("%d-%m-%Y"),
                 data["time"].strftime("%H:%M:%S"),
