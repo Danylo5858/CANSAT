@@ -263,8 +263,12 @@ socket.on('ground_data', (data) => {
 	}]);
 });
 
-function decodeMPU6050(binBuffer) {
-	const view = new DataView(binBuffer);
+function decodeMPU6050(bin) {
+	const view = new DataView(
+		bin.buffer,
+		bin.byteOffset,
+		bin.byteLength
+	);
 	const quats = [];
 	for (let i = 0; i < view.byteLength; i += 8) {
 		const w = view.getInt16(i, true) / 32767;
@@ -281,8 +285,8 @@ function decodeMPU6050(binBuffer) {
 socket.on('MPU6050_data', (data) => {
 	console.log('Datos recibidos (MPU6050_data)');
 
-	//const quats = decodeMPU6050(data);
-	console.log(data)
+	const quats = decodeMPU6050(data);
+	console.log(quats)
 });
 
 
