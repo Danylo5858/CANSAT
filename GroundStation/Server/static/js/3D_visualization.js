@@ -31,7 +31,7 @@ function init() {
 
 function onResize() {
 	const container = document.getElementById('viewer');
-	camer.aspect = container.clientWidth / container.clientHeight;
+	camera.aspect = container.clientWidth / container.clientHeight;
 	camera.updateProjectionMatrix();
 	renderer.setSize(container.clientWidth, container.clientHeight);
 }
