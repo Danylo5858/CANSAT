@@ -18,9 +18,9 @@ def update_graph(cansat_data, ground_data):
         if log:
             log_queue.put(f"Error updating graph: {e}")
     if res and res.status_code == 200 and log:
-        log_queue.put(f"Graficos [{name}] actualizados")
+        log_queue.put(f"Graficos actualizados")
     elif log:
         if res:
-            log_queue.put(f"Error updating graph [{name}]: {res.status_code}")
+            log_queue.put(f"Error updating graph: {res.status_code}")
         else:
-            log_queue.put(f"Error updating graph [{name}]")
+            log_queue.put(f"Error updating graph")
