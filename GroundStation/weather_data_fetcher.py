@@ -1,4 +1,5 @@
 import time
+from concurrent.futures import ThreadPoolExecutor
 import requests
 import openmeteo_requests
 from log_manager import log_queue
@@ -88,3 +89,19 @@ def fetch():
         "humidity": humidity
     }
     return data
+
+def fetch():
+    with ThreadPoolExecutor() as executor:
+        future_a = executor.submit(GetAirQuality)
+        future_th = executor.submit(GetTemperatureAndHumidity)
+        air_quality = future_a.result()
+        result_th = future_th.result()
+    if result_th is None:
+        temperature, humidity = None, None
+    else:
+        temperature, humidity = result
+    return {
+        "air_quality": air_quality,
+        "temperature": temperature,
+        "humidity": humidity
+    }
