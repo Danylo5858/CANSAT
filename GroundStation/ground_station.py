@@ -10,7 +10,7 @@ import Server.main as app
 wcom_gs.log = False
 wdf.log = True
 gm.log = True
-server_log = False
+server_log = True
 
 server_queue = Queue()
 server = Process(target=app.run, args=(server_queue, server_log))
