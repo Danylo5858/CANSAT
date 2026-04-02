@@ -112,7 +112,7 @@ def update_motion_state():
                 log_queue.put(f"MPU6050:\nQ1: {utils.to_xyzw_rounded(q1)}\nQ2: {utils.to_xyzw_rounded(q2)}\nQ3: {utils.to_xyzw_rounded(q3)}\nQ4: {utils.to_xyzw_rounded(q4)}")
 
             buffer = []
-            return None
+            return bytearray()
 
 
 # SAMPLE_RATE = 60
