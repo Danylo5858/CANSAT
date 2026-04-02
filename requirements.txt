@@ -11,4 +11,3 @@ sx126x
 eventlet
 flask
 flask-socketio
-ahrs
