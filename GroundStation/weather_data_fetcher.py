@@ -79,7 +79,8 @@ def GetTemperatureAndHumidity():
     return None, None
 
 def fetch():
-    air_quality = GetAirQuality()
+    # air_quality = GetAirQuality()
+    air_quality = None
     temperature, humidity = GetTemperatureAndHumidity()
     return {
         "air_quality": air_quality,
