@@ -4,10 +4,15 @@ import openmeteo_requests
 from log_manager import log_queue
 
 log = False
-lat = 28.097575134323208
-lon = -15.66631084838866
+lat = 28.139522075556187
+lon = -15.63302093138015
 
 # token = "db94e4c768d260335021f2dbc8dfc088345d6bab"
+_cache = {
+    "data": None,
+    "timestamp": 0
+}
+CACHE_TTL = 5
 
 def init():
     global openmeteo
@@ -106,10 +111,16 @@ def GetTemperatureAndHumidity():
     return None, None
 
 def fetch():
+    now = time.time()
+    if _cache["data"] and (now - _cache["timestamp"] < CACHE_TTL):
+        return _cache["data"]
     air_quality = GetAirQuality()
     temperature, humidity = GetTemperatureAndHumidity()
-    return {
+    data = {
         "air_quality": air_quality,
         "temperature": temperature,
         "humidity": humidity
     }
+    _cache["data"] = data
+    _cache["timestamp"] = now
+    return data
