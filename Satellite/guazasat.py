@@ -52,9 +52,9 @@ try:
             t.start()
         for t in threads:
             t.join()
+        print(f"DURATION: {time.time() - start}, TIME: {time.time()}")
         wcom_c.SendData()
         #time.sleep(GlobalSleepTime)
-        print(f"DURATION: {time.time() - start}, TIME: {time.time()}")
 except KeyboardInterrupt:
     print("\nCerrando todos los procesos...")
 
