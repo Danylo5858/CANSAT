@@ -42,6 +42,7 @@ gps.init(i2c, 0x10, i2c_lock)
 
 try:
     while True:
+        start = time.time()
         threads = [
             threading.Thread(target=bmp.GetData, daemon=True),
             threading.Thread(target=mpu.GetData, daemon=True), # update_motion_state => 1 second
@@ -53,6 +54,7 @@ try:
             t.join()
         wcom_c.SendData()
         #time.sleep(GlobalSleepTime)
+        print(f"DURATION: {time.time() - start}, TIME: {time.time()}")
 except KeyboardInterrupt:
     print("\nCerrando todos los procesos...")
 
