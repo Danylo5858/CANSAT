@@ -5,15 +5,19 @@ import busio
 import adafruit_mpu6050
 
 # =========================================================
-# BIAS DE CALIBRACIÓN (GYRO)
+# BIAS (PEGAR AQUÍ LOS VALORES DEL SCRIPT DE CALIBRACIÓN)
 # =========================================================
 
 BIAS_GX = -0.05663
 BIAS_GY =  0.04226
 BIAS_GZ = -0.00304
 
+BIAS_AX = 0.0
+BIAS_AY = 0.0
+BIAS_AZ = 0.0
+
 # =========================================================
-# MADGWICK IMU COMPLETO
+# MADGWICK
 # =========================================================
 
 class Madgwick:
@@ -64,18 +68,18 @@ class Madgwick:
 
 
 # =========================================================
-# QUATERNION UTILS
+# UTILS
 # =========================================================
 
 def dot(a,b):
     return sum(x*y for x,y in zip(a,b))
 
+def q_align(q, ref):
+    return [-x for x in q] if dot(q,ref)<0 else q
+
 def normalize(q):
     n = math.sqrt(sum(x*x for x in q))
     return [x/n for x in q]
-
-def q_align(q, ref):
-    return [-x for x in q] if dot(q,ref)<0 else q
 
 def q_mean(quats):
     ref = quats[0]
@@ -85,10 +89,6 @@ def q_mean(quats):
         for i in range(4):
             s[i]+=q[i]
     return normalize([x/len(quats) for x in s])
-
-# =========================================================
-# SLERP
-# =========================================================
 
 def slerp(q1, q2, t):
     cos_theta = dot(q1, q2)
@@ -107,10 +107,6 @@ def slerp(q1, q2, t):
     w2 = math.sin(t*theta) / sin_theta
 
     return [w1*a + w2*b for a,b in zip(q1,q2)]
-
-# =========================================================
-# FORMATO DE SALIDA
-# =========================================================
 
 def to_xyzw(q):
     w, x, y, z = q
@@ -156,13 +152,18 @@ while True:
     gx, gy, gz = mpu.gyro
 
     # =====================================================
-    # CALIBRACIÓN GYRO (BIAS COMPENSATION)
+    # CALIBRACIÓN
     # =====================================================
+
     gx -= BIAS_GX
     gy -= BIAS_GY
     gz -= BIAS_GZ
 
-    # anti-drift
+    ax -= BIAS_AX
+    ay -= BIAS_AY
+    az -= BIAS_AZ
+
+    # anti-drift gyro
     if abs(gx)<GYRO_THRESHOLD and abs(gy)<GYRO_THRESHOLD and abs(gz)<GYRO_THRESHOLD:
         gx *= 0.1
         gy *= 0.1
