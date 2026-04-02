@@ -113,11 +113,15 @@ def update_motion_state():
             q3 = utils.slerp(q_start, q_end, 0.5)
             q4 = utils.slerp(q_start, q_end, 1.75)
 
-            if log:
-                log_queue.put(f"MPU6050:\nQ1: {utils.to_xyzw_rounded(q1)}\nQ2: {utils.to_xyzw_rounded(q2)}\nQ3: {utils.to_xyzw_rounded(q3)}\nQ4: {utils.to_xyzw_rounded(q4)}")
-            buffer = []
-            return [q1, q2, q3, q4]
+            r1 = utils.to_xyzw_rounded(q1)
+            r2 = utils.to_xyzw_rounded(q2)
+            r3 = utils.to_xyzw_rounded(q3)
+            r4 = utils.to_xyzw_rounded(q4)
 
+            if log:
+                log_queue.put(f"MPU6050:\nQ1: {r1}\nQ2: {r2}\nQ3: {r3}\nQ4: {r4}")
+            buffer = []
+            return [r1, r2, r3, r4]
 
 # SAMPLE_RATE = 60
 # DT = 1.0 / SAMPLE_RATE
