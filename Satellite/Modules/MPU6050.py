@@ -41,9 +41,14 @@ def init(i2c, address, lock):
 #    data_queue.put(data)
 
 def GetData():
-    packet = update_motion_state()
+    quats = update_motion_state()
     if send_data:
-        buffer["MPU6050_BIN"] = packet
+        buffer["MPU6050"] = quats
+    data = {
+        "time": datetime.now(),
+        "quats": quats
+    }
+    data_queue.put(data)
 
 def SaveData():
     with open('./Data/MPU6050_data.csv', 'a', buffering=1, newline='') as f:
@@ -53,7 +58,7 @@ def SaveData():
             data_writer.writerow([
                 data["time"].strftime("%d-%m-%Y"),
                 data["time"].strftime("%H:%M:%S"),
-                data["gyro"]
+                data["quats"]
             ])
 
 def update_motion_state():
@@ -110,9 +115,8 @@ def update_motion_state():
 
             if log:
                 log_queue.put(f"MPU6050:\nQ1: {utils.to_xyzw_rounded(q1)}\nQ2: {utils.to_xyzw_rounded(q2)}\nQ3: {utils.to_xyzw_rounded(q3)}\nQ4: {utils.to_xyzw_rounded(q4)}")
-
             buffer = []
-            return bytearray()
+            return [q1, q2, q3, q4]
 
 
 # SAMPLE_RATE = 60
