@@ -8,13 +8,13 @@ import adafruit_mpu6050
 # BIAS (PEGAR AQUÍ LOS VALORES DEL SCRIPT DE CALIBRACIÓN)
 # =========================================================
 
-BIAS_GX = 0.0
-BIAS_GY = 0.0
-BIAS_GZ = 0.0
+BIAS_GX = -0.05587
+BIAS_GY = 0.04214
+BIAS_GZ = -0.00273
 
-BIAS_AX = 0.0
-BIAS_AY = 0.0
-BIAS_AZ = 0.0
+BIAS_AX = -7.86358
+BIAS_AY = 0.24833
+BIAS_AZ = -5.82959
 
 # =========================================================
 # MADGWICK FILTER
