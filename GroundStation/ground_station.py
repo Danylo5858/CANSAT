@@ -10,7 +10,7 @@ import Server.main as app
 wcom_gs.log = False
 wdf.log = False
 gm.log = False
-server_log = False
+server_log = True
 
 server_queue = Queue()
 server = Process(target=app.run, args=(server_queue, server_log))
@@ -28,8 +28,6 @@ wdf.init()
 try:
 	while True:
 		cansat_data = wcom_gs.received_data.get()
-		start = time.time()
-		print("RECEIVED")
 		server_queue.put(("MPU6050_data", cansat_data["MPU6050"]))
 		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
 		if cansat_data["GPS"]["latitude"] != 0 or cansat_data["GPS"]["longitude"] != 0:
@@ -37,7 +35,6 @@ try:
 			wdf.lon = cansat_data["GPS"]["longitude"]
 			lm.log_queue.put("GPS actualizo las coordenadas")
 		ground_data = wdf.fetch()
-		print("fetched")
 		server_queue.put(("ground_data", ground_data))
 		threads = [
 			threading.Thread(target=gm.update_graph, args=(cansat_data["BMP390"], ground_data), daemon=True)
@@ -46,8 +43,6 @@ try:
 			t.start()
 		for t in threads:
 			t.join()
-		print("updated")
-		print(time.time() - start)
 except KeyboardInterrupt:
 	print("\nCerrando todos los procesos...")
 finally:
