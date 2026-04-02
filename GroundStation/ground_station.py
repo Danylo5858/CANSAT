@@ -32,8 +32,10 @@ try:
 		print("RECEIVED")
 		server_queue.put(("MPU6050_data", cansat_data["MPU6050"]))
 		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
-		wdf.lat = cansat_data["GPS"]["latitude"]
-		wdf.lon = cansat_data["GPS"]["longitude"]
+		if cansat_data["GPS"]["latitude"] != 0 or cansat_data["GPS"]["longitude"] != 0:
+			wdf.lat = cansat_data["GPS"]["latitude"]
+			wdf.lon = cansat_data["GPS"]["longitude"]
+			lm.log_queue.put("GPS actualizo las coordenadas")
 		ground_data = wdf.fetch()
 		print("fetched")
 		server_queue.put(("ground_data", ground_data))

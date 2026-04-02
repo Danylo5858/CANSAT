@@ -4,8 +4,8 @@ import openmeteo_requests
 from log_manager import log_queue
 
 log = False
-lat = 0
-lon = 0
+lat = 28.097575134323208
+lon = -15.66631084838866
 
 # token = "db94e4c768d260335021f2dbc8dfc088345d6bab"
 
