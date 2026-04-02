@@ -24,7 +24,7 @@ def unpack_all(packet):
     altitude = unpacked[5] / 10
     quats_raw = unpacked[7:]
     quats = [quats_raw[i:i+4] for i in range(0, 16, 4)]
-    quats = [[x / 32767 for x in q] for q in quats]
+    quats = [[round(x / 32767, 5) for x in q] for q in quats]
     return {
         "GPS": {"latitude": lat, "longitude": lon, "satellites": sats},
         "BMP390": {"temperature": temp, "pressure": pressure, "altitude": altitude},
