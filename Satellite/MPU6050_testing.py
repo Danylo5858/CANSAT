@@ -5,6 +5,14 @@ import busio
 import adafruit_mpu6050
 
 # =========================================================
+# BIAS DE CALIBRACIÓN (GYRO)
+# =========================================================
+
+BIAS_GX = -0.05663
+BIAS_GY =  0.04226
+BIAS_GZ = -0.00304
+
+# =========================================================
 # MADGWICK IMU COMPLETO
 # =========================================================
 
@@ -101,8 +109,12 @@ def slerp(q1, q2, t):
     return [w1*a + w2*b for a,b in zip(q1,q2)]
 
 # =========================================================
-# FORMATO DE SALIDA (REDONDEO SOLO VISUAL)
+# FORMATO DE SALIDA
 # =========================================================
+
+def to_xyzw(q):
+    w, x, y, z = q
+    return (x, y, z, w)
 
 def to_xyzw_rounded(q, d=5):
     w, x, y, z = q
@@ -142,6 +154,13 @@ while True:
 
     ax, ay, az = mpu.acceleration
     gx, gy, gz = mpu.gyro
+
+    # =====================================================
+    # CALIBRACIÓN GYRO (BIAS COMPENSATION)
+    # =====================================================
+    gx -= BIAS_GX
+    gy -= BIAS_GY
+    gz -= BIAS_GZ
 
     # anti-drift
     if abs(gx)<GYRO_THRESHOLD and abs(gy)<GYRO_THRESHOLD and abs(gz)<GYRO_THRESHOLD:
