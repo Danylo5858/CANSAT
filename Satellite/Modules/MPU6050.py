@@ -15,13 +15,6 @@ send_data = False
 save_data = False
 
 data_queue = Queue()
-FS = 60
-DT = 1/FS
-WINDOW = 60
-GYRO_THRESHOLD = 0.02
-buffer = []
-last = time.time()
-madgwick = utils.Madgwick()
 
 def init(i2c, address, lock):
     global mpu, i2c_lock
@@ -64,6 +57,14 @@ def SaveData():
             ])
 
 def update_motion_state():
+    FS = 60
+    DT = 1/FS
+    WINDOW = 60
+    GYRO_THRESHOLD = 0.02
+    buffer = []
+    last = time.time()
+    madgwick = utils.Madgwick()
+
     while True:
         now = time.time()
         if now - last < DT:
