@@ -25,7 +25,7 @@ logger_thread.start()
 wcom_c.log = True
 wcom_c.init(1, 2, 868)
 
-bmp.log = True
+bmp.log = False
 bmp.send_data = True
 bmp.save_data = True
 bmp.init(i2c, 0x76, i2c_lock)
@@ -35,7 +35,7 @@ mpu.send_data = True
 mpu.save_data = True
 mpu.init(i2c, 0x68, i2c_lock)
 
-gps.log = True
+gps.log = False
 gps.send_data = True
 gps.save_data = True
 gps.init(i2c, 0x10, i2c_lock)
