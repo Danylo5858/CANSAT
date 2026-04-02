@@ -8,16 +8,16 @@ import adafruit_mpu6050
 # BIAS (PEGAR AQUÍ LOS VALORES DEL SCRIPT DE CALIBRACIÓN)
 # =========================================================
 
-BIAS_GX = -0.05663
-BIAS_GY =  0.04226
-BIAS_GZ = -0.00304
+BIAS_GX = 0.0
+BIAS_GY = 0.0
+BIAS_GZ = 0.0
 
 BIAS_AX = 0.0
 BIAS_AY = 0.0
 BIAS_AZ = 0.0
 
 # =========================================================
-# MADGWICK
+# MADGWICK FILTER
 # =========================================================
 
 class Madgwick:
@@ -29,14 +29,19 @@ class Madgwick:
 
         q1, q2, q3, q4 = self.q
 
+        # normalizar accel (dirección gravedad)
         norm = math.sqrt(ax*ax + ay*ay + az*az)
         if norm == 0:
             return self.q
+
         ax /= norm
         ay /= norm
         az /= norm
 
-        _2q1 = 2.0*q1; _2q2 = 2.0*q2; _2q3 = 2.0*q3; _2q4 = 2.0*q4
+        _2q1 = 2.0*q1
+        _2q2 = 2.0*q2
+        _2q3 = 2.0*q3
+        _2q4 = 2.0*q4
 
         f1 = _2q2*q4 - _2q1*q3 - ax
         f2 = _2q1*q2 + _2q3*q4 - ay
@@ -66,7 +71,6 @@ class Madgwick:
 
         return self.q
 
-
 # =========================================================
 # UTILS
 # =========================================================
@@ -74,12 +78,12 @@ class Madgwick:
 def dot(a,b):
     return sum(x*y for x,y in zip(a,b))
 
-def q_align(q, ref):
-    return [-x for x in q] if dot(q,ref)<0 else q
-
 def normalize(q):
     n = math.sqrt(sum(x*x for x in q))
     return [x/n for x in q]
+
+def q_align(q, ref):
+    return [-x for x in q] if dot(q,ref)<0 else q
 
 def q_mean(quats):
     ref = quats[0]
@@ -152,7 +156,7 @@ while True:
     gx, gy, gz = mpu.gyro
 
     # =====================================================
-    # CALIBRACIÓN
+    # APPLY BIAS CORRECTION
     # =====================================================
 
     gx -= BIAS_GX
@@ -169,10 +173,10 @@ while True:
         gy *= 0.1
         gz *= 0.1
 
-    q = madgwick.updateIMU(gx,gy,gz,ax,ay,az,DT)
+    q = madgwick.updateIMU(gx, gy, gz, ax, ay, az, DT)
     buffer.append(q)
 
-    if len(buffer)>=WINDOW:
+    if len(buffer) >= WINDOW:
 
         N = len(buffer)
 

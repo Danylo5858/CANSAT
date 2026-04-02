@@ -35,16 +35,16 @@ bias_gy = sum_gy / N
 bias_gz = sum_gz / N
 
 # =========================================================
-# ACCEL BIAS
-# IMPORTANTE: quitar gravedad en Z
+# ACCEL BIAS (NO GRAVITY REMOVAL)
 # =========================================================
 bias_ax = sum_ax / N
 bias_ay = sum_ay / N
-bias_az = (sum_az / N) - 9.81   # si tu librería usa m/s²
+bias_az = sum_az / N
 
-print("\n===== BIAS RESULT =====")
-print("Gyro bias:")
+print("\n===== RESULTADOS =====")
+
+print("\nGYRO BIAS:")
 print(bias_gx, bias_gy, bias_gz)
 
-print("\nAccel bias:")
+print("\nACCEL BIAS:")
 print(bias_ax, bias_ay, bias_az)
