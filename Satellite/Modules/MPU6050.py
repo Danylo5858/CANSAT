@@ -55,7 +55,7 @@ def SaveData():
                 data["gyro"]
             ])
 
-SAMPLE_RATE = 10
+SAMPLE_RATE = 60
 DT = 1.0 / SAMPLE_RATE
 deg_to_rad = np.pi / 180.0
 

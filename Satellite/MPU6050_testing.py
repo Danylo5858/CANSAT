@@ -189,9 +189,9 @@ while True:
         q_end = s4
 
         q1 = slerp(q_start, q_end, 0.0)
-        q2 = slerp(q_start, q_end, 0.33)
-        q3 = slerp(q_start, q_end, 0.66)
-        q4 = slerp(q_start, q_end, 1.0)
+        q2 = slerp(q_start, q_end, 0.25)
+        q3 = slerp(q_start, q_end, 0.5)
+        q4 = slerp(q_start, q_end, 1.75)
 
         print("\n==============================")
         print("Q1:", to_xyzw_rounded(q1))

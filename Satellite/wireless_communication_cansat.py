@@ -30,12 +30,12 @@ def send_raw(packet):
     ]) + packet
     radio.send(data)
 
-def SendData():
-    data = json.dumps(buffer)
-    if log:
-        log_queue.put("Enviando datos: " + data)
-    send(data)
-    buffer.clear()
+#def SendData():
+#    data = json.dumps(buffer)
+#    if log:
+#        log_queue.put("Enviando datos: " + data)
+#    send(data)
+#    buffer.clear()
 
 def SendData():
     binary = buffer.get("MPU6050_BIN", b"")

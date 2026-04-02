@@ -2,12 +2,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let scene, camera, renderer, controls, can;
-let frames = [];
-let index = 0;
-let currentQuat = new THREE.Quaternion();
 
 init();
-animate();
 
 function init() {
 	const container = document.getElementById('viewer');
@@ -40,6 +36,32 @@ function onResize() {
 	renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
+let queue = [];
+let qCurrent = new THREE.Quaternion();
+let qNext = new THREE.Quaternion();
+let qInterpolated = new THREE.Quaternion();
+let segmentStartTime = performance.now();
+const segmentDuration = 250; // ms (4 por segundo)
+
+function randomQuaternion() {
+	const u1 = Math.random();
+	const u2 = Math.random();
+	const u3 = Math.random();
+	const sqrt1MinusU1 = Math.sqrt(1 - u1);
+	const sqrtU1 = Math.sqrt(u1);
+  	return new THREE.Quaternion(
+    	sqrt1MinusU1 * Math.sin(2 * Math.PI * u2),
+    	sqrt1MinusU1 * Math.cos(2 * Math.PI * u2),
+    	sqrtU1 * Math.sin(2 * Math.PI * u3),
+    	sqrtU1 * Math.cos(2 * Math.PI * u3)
+  	);
+}
+
+setInterval(() => {
+  	const q = randomQuaternion();
+  	queue.push(q);
+}, 250);
+
 function decodeMPU6050(bin) {
 	const buffer = new Uint8Array(bin).slice().buffer;
 	const view = new DataView(buffer);
@@ -62,19 +84,26 @@ export function onReceivePacket(bin) {
 	index = 0;
 }
 
-function animate() {
-	requestAnimationFrame(animate);
-	if (frames.length > 0) {
-		const target = frames[index];
-		currentQuat.slerp(target, 0.2);
-		can.quaternion.copy(currentQuat);
-		index++;
-		if (index >= frames.length) index = 0;
-	}
-  	controls.update();
+qCurrent.copy(can.quaternion);
+qNext.copy(randomQuaternion());
+
+function animate(time) {
+  	requestAnimationFrame(animate);
+
+  	if (queue.length > 0 && time - segmentStartTime >= segmentDuration) {
+    	qCurrent.copy(qNext);
+    	qNext.copy(queue.shift());
+    	segmentStartTime = time;
+    	if (qCurrent.dot(qNext) < 0) {
+  			qNext.set(-qNext.x, -qNext.y, -qNext.z, -qNext.w);
+		}
+  	}
+
+  	let alpha = (time - segmentStartTime) / segmentDuration;
+  	alpha = Math.min(alpha, 1);
+  	qInterpolated.copy(qCurrent).slerp(qNext, alpha);
+  	can.quaternion.copy(qInterpolated);
   	renderer.render(scene, camera);
 }
 
-//const q = new THREE.Quaternion(0, 0, 0.7071068, 0.7071068);
-const q = new THREE.Quaternion(-0.11192, 0.57083, 0.05531, 0.81152);
-can.quaternion.copy(q);
+animate(performance.now());
