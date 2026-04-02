@@ -8,3 +8,7 @@ RPi.GPIO
 numpy
 plotly
 sx126x
+eventlet
+flask
+flask-socketio
+ahrs

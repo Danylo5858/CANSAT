@@ -178,7 +178,7 @@ let firstData = true
 
 setTimeout(() => {
 	document.querySelector('.loader-container').classList.add('hide');
-}, loadingTime);
+}, loadingTime); // ESTE TIMEOUT ESTÁ DUPLICADO
 
 socket.on('connect', () => {
 	console.log('Conectado al servidor');

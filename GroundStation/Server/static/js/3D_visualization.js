@@ -74,3 +74,6 @@ function animate() {
   	controls.update();
   	renderer.render(scene, camera);
 }
+
+const q = new THREE.Quaternion(0, 0, 0.7071068, 0.7071068);
+can.quaternion.copy(q);
