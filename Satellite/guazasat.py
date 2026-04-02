@@ -52,7 +52,7 @@ try:
             t.start()
         for t in threads:
             t.join()
-        wcom_c.SendData() # send => 0.2 sec
+        wcom_c.SendData() # send => 0.3 sec
         #time.sleep(GlobalSleepTime)
         lm.log_queue.put(time.time() - start)
 except KeyboardInterrupt:

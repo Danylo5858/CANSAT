@@ -7,7 +7,7 @@ import log_manager as lm
 import wireless_communication_gs as wcom_gs
 import Server.main as app
 
-wcom_gs.log = True
+wcom_gs.log = False
 wdf.log = False
 gm.log = False
 server_log = False
@@ -28,11 +28,14 @@ wdf.init()
 try:
 	while True:
 		cansat_data = wcom_gs.received_data.get()
+		start = time.time()
+		print("RECEIVED")
 		server_queue.put(("MPU6050_data", cansat_data["MPU6050"]))
 		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
 		wdf.lat = cansat_data["GPS"]["latitude"]
 		wdf.lon = cansat_data["GPS"]["longitude"]
 		ground_data = wdf.fetch()
+		print("fetched")
 		server_queue.put(("ground_data", ground_data))
 		threads = [
 			threading.Thread(target=gm.update_graph, args=(cansat_data["BMP390"], ground_data), daemon=True)
@@ -41,6 +44,8 @@ try:
 			t.start()
 		for t in threads:
 			t.join()
+		print("updated")
+		print(time.time() - start)
 except KeyboardInterrupt:
 	print("\nCerrando todos los procesos...")
 finally:
