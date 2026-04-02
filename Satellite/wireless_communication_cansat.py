@@ -1,6 +1,6 @@
-import json
+# import json
+# import gzip
 import struct
-import gzip
 from sx126x import sx126x
 from log_manager import log_queue
 
@@ -14,25 +14,49 @@ def init(self_address, destination_address, frequency):
     freq = frequency
     radio = sx126x("/dev/serial0", freq, self_address, 22, False)
 
-def send_raw(data):
+def pack_all(data):
+    gps = data["GPS"]
+    bmp = data["BMP390"]
+    quats = data["MPU6050"]
+    packet = struct.pack(
+        '<iiB hhh h' + '16h',
+        int(gps["latitude"] * 1e7),
+        int(gps["longitude"] * 1e7),
+        int(gps["satellites"]),
+        int(bmp["temperature"] * 100),
+        int(bmp["pressure"] * 10),
+        int(bmp["altitude"] * 10),
+        0,
+        *[int(x * 32767) for q in quats for x in q]
+    )
+    return packet
+
+def send_raw(packet):
     dest_h = (dest_addr >> 8) & 0xFF
     dest_l = dest_addr & 0xFF
     src_h = (radio.addr >> 8) & 0xFF
     src_l = radio.addr & 0xFF
     ch = radio.offset_freq
-    packet = bytes([
+    data = bytes([
         dest_h, dest_l, ch,
         src_h, src_l, ch
-    ]) + data
-    radio.send(packet)
+    ]) + packet
+    radio.send(data)
 
 def SendData():
-   str_data = json.dumps(buffer)
-   compressed = gzip.compress(str_data.encode("utf-8"))
-   send_raw(compressed)
-   buffer.clear()
-   if log:
-       log_queue.put("Enviando datos: " + str_data)
+    packet = pack_all(buffer)
+    send_raw(packet)
+    if log:
+        log_queue.put(f"Enviando datos: {buffer}")
+    buffer.clear()
+
+# def SendData():
+#    str_data = json.dumps(buffer)
+#    compressed = gzip.compress(str_data.encode("utf-8"))
+#    send_raw(compressed)
+#    buffer.clear()
+#    if log:
+#        log_queue.put("Enviando datos: " + str_data)
 
 # def SendData():
 #     binary = buffer.get("MPU6050_BIN", b"")
