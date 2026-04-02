@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let scene, camera, renderer, controls, can;
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 init();
 
@@ -57,52 +58,41 @@ function randomQuaternion() {
   	);
 }
 
-setInterval(() => {
-  	const q = randomQuaternion();
-  	queue.push(q);
-}, 250);
-
-function decodeMPU6050(bin) {
-	const buffer = new Uint8Array(bin).slice().buffer;
-	const view = new DataView(buffer);
-	const quats = [];
-	const stride = 8;
-	const max = view.byteLength - (view.byteLength % stride);
-	for (let i = 0; i < max; i += stride) {
-		const w = view.getInt16(i, true) / 32767;
-		const x = view.getInt16(i+2, true) / 32767;
-		const y = view.getInt16(i+4, true) / 32767;
-		const z = view.getInt16(i+6, true) / 32767;
-		quats.push(new THREE.Quaternion(x*100, y*100, z*100, w*100));
+export async function onReceiveQuats(quats) {
+	for (const q of quats) {
+		queue.push(new THREE.Quaternion(q[0], q[1], q[2], q[3]));
+		await sleep(250);
 	}
-	return quats;
-}
-
-export function onReceivePacket(bin) {
-	frames = decodeMPU6050(bin);
-	console.log(frames);
-	index = 0;
 }
 
 qCurrent.copy(can.quaternion);
-qNext.copy(randomQuaternion());
 
 function animate(time) {
   	requestAnimationFrame(animate);
+
+  	if (queue.length > 0 && qNext.lengthSq() === 0) {
+    	qNext.copy(queue.shift());
+    	qCurrent.copy(qNext);
+    	segmentStartTime = time;
+  	}
 
   	if (queue.length > 0 && time - segmentStartTime >= segmentDuration) {
     	qCurrent.copy(qNext);
     	qNext.copy(queue.shift());
     	segmentStartTime = time;
+
     	if (qCurrent.dot(qNext) < 0) {
-  			qNext.set(-qNext.x, -qNext.y, -qNext.z, -qNext.w);
-		}
+      		qNext.set(-qNext.x, -qNext.y, -qNext.z, -qNext.w);
+    	}
   	}
 
   	let alpha = (time - segmentStartTime) / segmentDuration;
   	alpha = Math.min(alpha, 1);
+
   	qInterpolated.copy(qCurrent).slerp(qNext, alpha);
   	can.quaternion.copy(qInterpolated);
+
+  	controls.update();
   	renderer.render(scene, camera);
 }
 

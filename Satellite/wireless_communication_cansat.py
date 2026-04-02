@@ -22,8 +22,8 @@ def pack_all(data):
         int(gps["longitude"] * 1e7),
         int(gps["satellites"]),
         int(bmp["temperature"] * 100),
-        int(bmp["pressure"] * 10),
-        int(bmp["altitude"] * 10),
+        int(bmp["pressure"] * 100),
+        int(bmp["altitude"] * 100),
         0,
         *[int(x * 32767) for q in quats for x in q]
     )

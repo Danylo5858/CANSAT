@@ -267,7 +267,7 @@ socket.on('ground_data', (data) => {
 
 socket.on('MPU6050_data', (data) => {
 	//console.log('Datos recibidos (MPU6050_data)');
-	onReceivePacket(data);
+	onReceiveQuats(data);
 });
 
 

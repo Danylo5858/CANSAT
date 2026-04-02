@@ -18,8 +18,8 @@ def unpack_all(packet):
     lon = unpacked[1] / 1e7
     sats = unpacked[2]
     temp = unpacked[3] / 100
-    pressure = unpacked[4] / 10
-    altitude = unpacked[5] / 10
+    pressure = unpacked[4] / 100
+    altitude = unpacked[5] / 100
     quats_raw = unpacked[7:]
     quats = [quats_raw[i:i+4] for i in range(0, 16, 4)]
     quats = [[round(x / 32767, 5) for x in q] for q in quats]
