@@ -42,17 +42,19 @@ gps.init(i2c, 0x10, i2c_lock)
 
 try:
     while True:
+        start = time.time()
         threads = [
             threading.Thread(target=bmp.GetData, daemon=True),
-            threading.Thread(target=mpu.GetData, daemon=True), # update_motion_state => 1 second
+            threading.Thread(target=mpu.GetData, daemon=True), # update_motion_state => 1 sec
             threading.Thread(target=gps.GetData, daemon=True)
         ]
         for t in threads:
             t.start()
         for t in threads:
             t.join()
-        wcom_c.SendData()
+        wcom_c.SendData() # send => 0.2 sec
         #time.sleep(GlobalSleepTime)
+        lm.log_queue.put(time.time() - start)
 except KeyboardInterrupt:
     print("\nCerrando todos los procesos...")
 
