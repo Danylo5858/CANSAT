@@ -1,4 +1,4 @@
-import { onReceivePacket } from './3D_visualization.js'
+import { onReceiveQuats } from './3D_visualization.js'
 
 const window_size = 60 * 1000;
 const ticks = 6;
