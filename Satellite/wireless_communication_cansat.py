@@ -49,6 +49,6 @@ def SendData():
     buffer.clear()
     if log:
         if binary != b"":
-            print(f"Datos enviados: {str_clean} + MPU6050_BIN")
+            log_queue.put(f"Datos enviados: {str_clean} + MPU6050_BIN")
         else:
             log_queue.put(f"Datos enviados: {str_clean}")

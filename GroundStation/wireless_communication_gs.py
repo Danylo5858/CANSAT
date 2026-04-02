@@ -32,7 +32,7 @@ def on_receive(packet_bytes):
 	data["MPU6050_BIN"] = bin_part
 	if log:
 		if bin_part != None:
-			log_queue.put(f"Datos recibidos: {str_clean} + MPU6050_BIN; TIME: {time.time()}")
+			log_queue.put(f"Datos recibidos: {str_clean} + MPU6050_BIN")
 		else:
 			log_queue.put(f"Datos recibidos: {str_clean}")
 	received_data.put(data)
