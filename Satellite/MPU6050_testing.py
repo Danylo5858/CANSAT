@@ -101,12 +101,12 @@ def slerp(q1, q2, t):
     return [w1*a + w2*b for a,b in zip(q1,q2)]
 
 # =========================================================
-# REDONDEO + NORMALIZACIÓN
+# FORMATO DE SALIDA (REDONDEO SOLO VISUAL)
 # =========================================================
 
-def q_round(q, d=5):
-    q = [round(x,d) for x in q]
-    return normalize(q)
+def to_xyzw_rounded(q, d=5):
+    w, x, y, z = q
+    return (round(x,d), round(y,d), round(z,d), round(w,d))
 
 # =========================================================
 # SENSOR
@@ -128,13 +128,7 @@ WINDOW = 60
 buffer = []
 last = time.time()
 
-# anti-drift thresholds
 GYRO_THRESHOLD = 0.02
-
-
-def to_xyzw(q):
-    w, x, y, z = q
-    return (x, y, z, w)
 
 # =========================================================
 # LOOP
@@ -149,9 +143,7 @@ while True:
     ax, ay, az = mpu.acceleration
     gx, gy, gz = mpu.gyro
 
-    # -------------------------
-    # anti-drift (detección reposo)
-    # -------------------------
+    # anti-drift
     if abs(gx)<GYRO_THRESHOLD and abs(gy)<GYRO_THRESHOLD and abs(gz)<GYRO_THRESHOLD:
         gx *= 0.1
         gy *= 0.1
@@ -164,13 +156,11 @@ while True:
 
         N = len(buffer)
 
-        # promedio por segmentos (robustez)
         s1 = q_mean(buffer[0:N//4])
         s2 = q_mean(buffer[N//4:N//2])
         s3 = q_mean(buffer[N//2:3*N//4])
         s4 = q_mean(buffer[3*N//4:N])
 
-        # SLERP global (suavizado)
         q_start = s1
         q_end = s4
 
@@ -179,16 +169,10 @@ while True:
         q3 = slerp(q_start, q_end, 0.66)
         q4 = slerp(q_start, q_end, 1.0)
 
-        # redondeo final
-        q1 = q_round(q1)
-        q2 = q_round(q2)
-        q3 = q_round(q3)
-        q4 = q_round(q4)
-
         print("\n==============================")
-        print("Q1:", to_xyzw(q1))
-        print("Q2:", to_xyzw(q2))
-        print("Q3:", to_xyzw(q3))
-        print("Q4:", to_xyzw(q4))
+        print("Q1:", to_xyzw_rounded(q1))
+        print("Q2:", to_xyzw_rounded(q2))
+        print("Q3:", to_xyzw_rounded(q3))
+        print("Q4:", to_xyzw_rounded(q4))
 
         buffer = []
