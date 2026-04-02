@@ -30,7 +30,7 @@ bmp.send_data = True
 bmp.save_data = True
 bmp.init(i2c, 0x76, i2c_lock)
 
-mpu.log = True
+mpu.log = False
 mpu.send_data = True
 mpu.save_data = True
 mpu.init(i2c, 0x68, i2c_lock)
