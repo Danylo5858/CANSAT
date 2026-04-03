@@ -59,6 +59,7 @@ def get_backup_data(req_data):
 		        }
 				if ValidateTime(req_data, data):
 					gps_data.append(data)
+	print("return")
 	return {
 		"success": True,
 		"data": {
