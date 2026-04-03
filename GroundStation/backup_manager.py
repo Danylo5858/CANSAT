@@ -12,16 +12,17 @@ def get_backup_data(req_data):
 			capture_output=True,
 			text=True
 		)
-		if log:
+		# if log:
 			log_queue.put("Copia de seguridad del CanSat recibida correctamente")
 	except subprocess.CalledProcessError as e:
-		if log:
+		# if log:
 			log_queue.put(f"Fallo recibiendo la copia de seguridad del CanSat:\nCodigo: {result.returncode}\nError: {result.stderr}")
 		return { "success": False }
 
 	bmp_data = []
 	mpu_data = []
 	gps_data = []
+	final_data = { "success": True, "data": {} }
 	if req_data["bmp"]:
 		with open('./BackupData/BMP390_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
@@ -35,6 +36,7 @@ def get_backup_data(req_data):
 		        }
 				if ValidateTime(req_data, data):
 					bmp_data.append(data)
+		final_data["data"]["BMP390"] = bmp_data
 	if req_data["mpu"]:
 		with open('./BackupData/MPU6050_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
@@ -46,6 +48,7 @@ def get_backup_data(req_data):
 		        }
 				if ValidateTime(req_data, data):
 					mpu_data.append(data)
+		final_data["data"]["MPU6050"] = mpu_data
 	if req_data["gps"]:
 		with open('./BackupData/GPS_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
@@ -59,14 +62,8 @@ def get_backup_data(req_data):
 		        }
 				if ValidateTime(req_data, data):
 					gps_data.append(data)
-	return {
-		"success": True,
-		"data": {
-			"BMP390": bmp_data,
-			"MPU6050": mpu_data,
-			"GPS": gps_data,
-		}
-	}
+		final_data["data"]["GPS"] = gps_data
+	return final_data
 
 def ValidateTime(req_data, data):
 	if req_data["start"] != 0 or req_data["end"] != 0:
