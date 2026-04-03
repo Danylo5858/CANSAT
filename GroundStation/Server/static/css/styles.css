@@ -299,6 +299,35 @@ canvas {
     border-color: #4fd1c5;
 }
 
+.input-shell {
+    position: relative;
+    padding: 6px 8px;
+    border-bottom: 2px solid rgba(79, 209, 197, 0.25);
+    transition: 0.25s;
+}
+
+.input-shell:hover {
+    border-color: rgba(79, 209, 197, 0.6);
+}
+
+.input-shell:focus-within {
+    border-color: #4fd1c5;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(65%) sepia(20%) saturate(500%) hue-rotate(120deg);
+    opacity: 0.7;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
 .flow-line {
     width: 2px;
     height: 30px;

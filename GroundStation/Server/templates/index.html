@@ -39,7 +39,13 @@
                 <div class="backup-header">
                     <h2>RECUPERACIÓN DE REGISTROS</h2>
                     <p>
-                        Extracción remota de datos del sistema embarcado mediante conexión segura y procesamiento local para generación de visualizaciones analíticas.
+                        Extracción remota de datos del sistema embarcado mediante conexión segura y procesamiento local para la generación de visualizaciones analíticas.
+
+                        El sistema se conecta al CanSat dentro de la misma red y accede a los registros almacenados durante la misión. Estos datos incluyen información de telemetría y estado del sistema, recogida a lo largo del vuelo.
+
+                        Una vez transferidos, los datos se procesan localmente para organizarlos y convertirlos en gráficos claros y útiles. Esto permite entender mejor cómo se ha comportado el sistema en distintos momentos.
+
+                        Puedes seleccionar un intervalo concreto para centrar el análisis en una fase específica, o procesar todos los datos disponibles para obtener una visión completa de la misión.
                     </p>
                 </div>
                 <div class="backup-flow">
@@ -58,8 +64,12 @@
                         <div class="block-label">Fin</div>
 
                         <div class="time-controls">
-                            <input type="date" id="end-date">
-                            <input type="time" id="end-time">
+                            <div class="input-shell">
+                                <input type="date" id="end-date">
+                            </div>
+                            <div class="input-shell">
+                                <input type="time" id="end-time">
+                            </div>
                         </div>
                     </div>
                 </div>
