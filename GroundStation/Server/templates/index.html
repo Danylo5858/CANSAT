@@ -34,7 +34,66 @@
         <div id="chart_h"></div>
     </div>
     <div id="backup-config" class="main-content hide">
-        
+        <div class="backup-panel">
+            <div class="backup-header">
+                <h2>Generación de gráficos desde copia de seguridad</h2>
+                <p>
+                    Este módulo permite la recuperación y análisis de datos históricos almacenados en el sistema del CanSat.
+                    Al iniciar el proceso, se establece una conexión segura mediante SSH con el dispositivo, siempre que se
+                    encuentre accesible dentro de la misma red local.
+                </p>
+                <p>
+                    Los archivos de registro son transferidos a un entorno de procesamiento local, donde se analizan y transforman
+                    en representaciones gráficas. Esto permite estudiar el comportamiento del sistema en intervalos específicos
+                    o a lo largo de toda la misión.
+                </p>
+            </div>
+
+            <div class="backup-controls">
+                <div class="datetime-group">
+                    <h3>Intervalo de análisis</h3>
+
+                    <div class="datetime-row">
+                        <div class="input-group">
+                            <label>Fecha de inicio</label>
+                            <input type="date" id="start-date">
+                        </div>
+                        <div class="input-group">
+                            <label>Hora de inicio</label>
+                            <input type="time" id="start-time">
+                        </div>
+                    </div>
+
+                    <div class="datetime-row">
+                        <div class="input-group">
+                            <label>Fecha de fin</label>
+                            <input type="date" id="end-date">
+                        </div>
+                        <div class="input-group">
+                            <label>Hora de fin</label>
+                            <input type="time" id="end-time">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="backup-actions">
+                    <button class="backup-btn-primary" onclick="generateInterval()">
+                        Generar gráficos en el intervalo seleccionado
+                    </button>
+
+                    <button class="backup-btn-secondary" onclick="generateFull()">
+                        Generar gráficos completos
+                    </button>
+                </div>
+
+                <div id="backup-loader" class="backup-loader hide">
+                    <div class="loader small">
+                        <div></div><div></div><div></div><div></div>
+                        <div></div><div></div><div></div><div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="sidebar">
         <button id="cansat-charts-btn" class="sidebar-btn active" onclick="handleSidebarAction(this)">

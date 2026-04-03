@@ -302,3 +302,30 @@ function handleSidebarAction(button) {
 	}
 }
 window.handleSidebarAction = handleSidebarAction;
+
+
+function disableInputs() {
+    document.querySelectorAll('#backup-config input').forEach(el => {
+        el.disabled = true;
+    });
+}
+
+function showLoader() {
+    document.getElementById('backup-loader').classList.remove('hide');
+}
+
+function generateInterval() {
+    disableInputs();
+    showLoader();
+
+    // aquí iría tu lógica real
+}
+window.generateInterval = generateInterval
+
+function generateFull() {
+    disableInputs();
+    showLoader();
+
+    // aquí iría tu lógica real
+}
+window.generateFull = generateFull
