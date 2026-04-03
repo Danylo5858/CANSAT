@@ -33,8 +33,8 @@ def get_backup_data(req_data):
 		            "pressure": float(row[3]),
 		            "altitude": float(row[4]),
 		        }
-		        if ValidateTime(req_data, data):
-		        	bmp_data.append(data)
+				if ValidateTime(req_data, data):
+					bmp_data.append(data)
 	if req_data["mpu"]:
 		with open('./BackupData/MPU6050_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
@@ -44,8 +44,8 @@ def get_backup_data(req_data):
 		            "time": row[1],
 		            "quats": row[2]
 		        }
-		        if ValidateTime(req_data, data):
-		        	mpu_data.append(data)
+				if ValidateTime(req_data, data):
+					mpu_data.append(data)
 	if req_data["gps"]:
 		with open('./BackupData/GPS_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
@@ -57,8 +57,8 @@ def get_backup_data(req_data):
 		            "longitude": float(row[3]),
 		            "satellites": float(row[4])
 		        }
-		        if ValidateTime(req_data, data):
-		        	gps_data.append(data)
+				if ValidateTime(req_data, data):
+					gps_data.append(data)
 	return {
 		"success": True,
 		"data": {
