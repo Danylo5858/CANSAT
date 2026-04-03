@@ -37,7 +37,7 @@ def run(queue, on_request, log):
 	def handle_backup_request(data):
 		if log:
 			print(f"BACKUP REQUEST: {data}")
-		socketio.start_background_task(on_request, "backup_request", data)
+		socketio.start_background_task(lambda: socketio.emit("backup_response", on_request("backup_request", data)))
 
 	if log:
 		print("SERVER RUNNING")
