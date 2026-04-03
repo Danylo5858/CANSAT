@@ -34,67 +34,63 @@
         <div id="chart_h"></div>
     </div>
     <div id="backup-config" class="main-content hide">
-        <div class="backup-panel-centered">
-    
-    <div class="backup-intro">
-        <h2>Procesamiento de datos históricos</h2>
-        <p>
-            Este módulo permite la adquisición remota de registros almacenados en el sistema embarcado del CanSat mediante conexión segura.
-        </p>
-        <p>
-            Los datos recuperados son transferidos a un entorno local de análisis, donde se procesan y representan gráficamente para su estudio detallado.
-        </p>
-    </div>
+        <div class="backup-wrapper">
 
-    <div class="backup-interval-container">
+    <div class="backup-card">
 
-        <!-- INICIO -->
-        <div class="interval-block">
-            <span class="interval-title">Inicio</span>
+        <div class="backup-header">
+            <h2>Recuperación y análisis de registros</h2>
+            <p>
+                Acceso remoto al sistema del CanSat mediante canal seguro para la extracción de datos históricos.
+                Los registros son procesados localmente y transformados en visualizaciones técnicas para su análisis.
+            </p>
+        </div>
 
-            <div class="custom-datetime">
-                <input type="date" id="start-date">
-                <div class="input-line"></div>
+        <div class="backup-body">
+
+            <!-- INICIO -->
+            <div class="time-section">
+                <div class="time-label">Punto de inicio</div>
+
+                <div class="time-controls">
+                    <input type="date" id="start-date">
+                    <input type="time" id="start-time">
+                </div>
             </div>
 
-            <div class="custom-datetime">
-                <input type="time" id="start-time">
-                <div class="input-line"></div>
+            <div class="time-separator"></div>
+
+            <!-- FIN -->
+            <div class="time-section">
+                <div class="time-label">Punto final</div>
+
+                <div class="time-controls">
+                    <input type="date" id="end-date">
+                    <input type="time" id="end-time">
+                </div>
+            </div>
+
+        </div>
+
+        <div class="backup-footer">
+
+            <button onclick="generateInterval()" class="action-btn primary">
+                Generar análisis por intervalo
+            </button>
+
+            <button onclick="generateFull()" class="action-btn secondary">
+                Analizar registro completo
+            </button>
+
+        </div>
+
+        <div id="backup-loader" class="backup-loader hide">
+            <div class="loader small">
+                <div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div>
             </div>
         </div>
 
-        <!-- FIN -->
-        <div class="interval-block">
-            <span class="interval-title">Fin</span>
-
-            <div class="custom-datetime">
-                <input type="date" id="end-date">
-                <div class="input-line"></div>
-            </div>
-
-            <div class="custom-datetime">
-                <input type="time" id="end-time">
-                <div class="input-line"></div>
-            </div>
-        </div>
-
-    </div>
-
-    <div class="backup-actions-centered">
-        <button onclick="generateInterval()" class="btn-main">
-            Generar en intervalo
-        </button>
-
-        <button onclick="generateFull()" class="btn-alt">
-            Procesar registro completo
-        </button>
-    </div>
-
-    <div id="backup-loader" class="backup-loader hide">
-        <div class="loader small">
-            <div></div><div></div><div></div><div></div>
-            <div></div><div></div><div></div><div></div>
-        </div>
     </div>
 
 </div>
