@@ -304,28 +304,10 @@ function handleSidebarAction(button) {
 window.handleSidebarAction = handleSidebarAction;
 
 
-
-let startTime = new Date();
-let endTime = new Date();
-
-function formatDate(d) {
-    return d.toLocaleString();
-}
-
-function updateDisplays() {
-    document.getElementById("start-display").textContent = formatDate(startTime);
-    document.getElementById("end-display").textContent = formatDate(endTime);
-}
-
-function adjustTime(type, delta) {
-    const target = type === "start" ? startTime : endTime;
-    target.setMinutes(target.getMinutes() + delta * 5);
-    updateDisplays();
-}
-window.adjustTime = adjustTime;
-
 function disableInputs() {
-    document.querySelectorAll('.time-controls button').forEach(b => b.disabled = true);
+    document.querySelectorAll('#backup-config input').forEach(el => {
+        el.disabled = true;
+    });
 }
 
 function showLoader() {
@@ -335,13 +317,15 @@ function showLoader() {
 function generateInterval() {
     disableInputs();
     showLoader();
+
+    // aquí iría tu lógica real
 }
-window.generateInterval = generateInterval;
+window.generateInterval = generateInterval
 
 function generateFull() {
     disableInputs();
     showLoader();
-}
-window.generateFull = generateFull;
 
-updateDisplays();
+    // aquí iría tu lógica real
+}
+window.generateFull = generateFull

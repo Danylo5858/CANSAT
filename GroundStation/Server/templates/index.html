@@ -35,82 +35,52 @@
     </div>
     <div id="backup-config" class="main-content hide">
         <div class="backup-wrapper">
-
-    <div class="backup-card">
-
-        <div class="backup-header">
-            <h2>Módulo de recuperación</h2>
-            <p>Extracción y reconstrucción temporal de telemetría almacenada</p>
-        </div>
-
-        <!-- TIMELINE VISUAL -->
-        <div class="timeline-bar">
-            <div class="timeline-fill" id="timeline-fill"></div>
-        </div>
-
-        <div class="backup-flow">
-
-            <!-- INICIO -->
-            <div class="time-module">
-                <div class="module-label">Inicio</div>
-
-                <div class="time-display" id="start-display">
-                    -- / -- / ----  --:--
+            <div class="backup-card">
+                <div class="backup-header">
+                    <h2>Recuperación de registros</h2>
+                    <p>
+                        Extracción remota de datos del sistema embarcado mediante conexión segura y procesamiento local
+                        para generación de visualizaciones analíticas.
+                    </p>
                 </div>
+                <div class="backup-flow">
+                    <div class="time-block start">
+                        <div class="block-label">Inicio</div>
 
-                <div class="time-controls">
-                    <button onclick="adjustTime('start', -1)">−</button>
-                    <button onclick="adjustTime('start', 1)">+</button>
+                        <div class="time-controls">
+                            <input type="date" id="start-date">
+                            <input type="time" id="start-time">
+                        </div>
+                    </div>
+                    <div class="flow-line">
+                        <div class="flow-dot"></div>
+                    </div>
+                    <div class="time-block end">
+                        <div class="block-label">Fin</div>
+
+                        <div class="time-controls">
+                            <input type="date" id="end-date">
+                            <input type="time" id="end-time">
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="backup-actions">
+                    <button onclick="generateInterval()" class="action-btn primary">
+                        Generar análisis en intervalo
+                    </button>
 
-            <!-- FLOW -->
-            <div class="flow-line">
-                <div class="flow-pulse"></div>
-            </div>
-
-            <!-- FIN -->
-            <div class="time-module">
-                <div class="module-label">Fin</div>
-
-                <div class="time-display" id="end-display">
-                    -- / -- / ----  --:--
+                    <button onclick="generateFull()" class="action-btn secondary">
+                        Procesar registro completo
+                    </button>
                 </div>
-
-                <div class="time-controls">
-                    <button onclick="adjustTime('end', -1)">−</button>
-                    <button onclick="adjustTime('end', 1)">+</button>
+                <div id="backup-loader" class="backup-loader hide">
+                    <div class="loader small">
+                        <div></div><div></div><div></div><div></div>
+                        <div></div><div></div><div></div><div></div>
+                    </div>
                 </div>
             </div>
-
         </div>
-
-        <!-- ERROR -->
-        <div class="backup-error">
-            Error de conexión: canal SSH no disponible.
-        </div>
-
-        <!-- BOTONES -->
-        <div class="backup-actions">
-            <button onclick="generateInterval()" class="action-btn">
-                Ejecutar análisis por intervalo
-            </button>
-
-            <button onclick="generateFull()" class="action-btn">
-                Ejecutar análisis completo
-            </button>
-        </div>
-
-        <div id="backup-loader" class="backup-loader hide">
-            <div class="loader small">
-                <div></div><div></div><div></div><div></div>
-                <div></div><div></div><div></div><div></div>
-            </div>
-        </div>
-
-    </div>
-
-</div>
     </div>
     <div class="sidebar">
         <button id="cansat-charts-btn" class="sidebar-btn active" onclick="handleSidebarAction(this)">
