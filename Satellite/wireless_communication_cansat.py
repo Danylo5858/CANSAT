@@ -41,7 +41,7 @@ def send_raw(packet):
     ]) + packet
     radio.send(data)
 
-def SendData():
+def send_data():
     packet = pack_all(buffer)
     send_raw(packet)
     if log:

@@ -22,16 +22,19 @@
     </script>
 </head>
 <body>
-	<div id="cansat-charts" class="charts-grid">
+	<div id="cansat-charts" class="main-content charts-grid">
         <div id="chart_a"></div>
         <div id="chart_t"></div>
         <div id="chart_p"></div>
 		<div id="chart_pa"></div>
 	</div>
-    <div id="ground-charts" class="charts-grid hide">
+    <div id="ground-charts" class="main-content charts-grid hide">
         <div id="chart_aq"></div>
         <div id="chart_t_g"></div>
         <div id="chart_h"></div>
+    </div>
+    <div id="backup-config" class="main-content hide">
+        
     </div>
     <div class="sidebar">
         <button id="cansat-charts-btn" class="sidebar-btn active" onclick="handleSidebarAction(this)">
@@ -60,6 +63,7 @@
         </div>
     </div>
     <script type="module" src="{{ url_for('static', filename='js/3D_visualization.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/backup.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>

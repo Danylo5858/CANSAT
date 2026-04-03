@@ -5,22 +5,19 @@ import busio
 import adafruit_mpu6050
 
 # =========================================================
-# BIAS (solo gyro recomendable, accel mejor NO tocarlo fuerte)
+# GYRO BIAS ONLY
 # =========================================================
 
 BIAS_GX = -0.05587
 BIAS_GY = 0.04214
 BIAS_GZ = -0.00273
 
-# ⚠️ IMPORTANTE:
-# No uses bias grande en acelerómetro → rompe la gravedad
-
 # =========================================================
-# MADGWICK FILTER
+# MADGWICK
 # =========================================================
 
 class Madgwick:
-    def __init__(self, beta=0.12):
+    def __init__(self, beta=0.08):
         self.beta = beta
         self.q = [1.0, 0.0, 0.0, 0.0]
 
@@ -28,7 +25,6 @@ class Madgwick:
 
         q1, q2, q3, q4 = self.q
 
-        # normalizar acelerómetro (gravedad)
         norm = math.sqrt(ax*ax + ay*ay + az*az)
         if norm == 0:
             return self.q
@@ -37,14 +33,14 @@ class Madgwick:
         ay /= norm
         az /= norm
 
-        _2q1 = 2.0*q1
-        _2q2 = 2.0*q2
-        _2q3 = 2.0*q3
-        _2q4 = 2.0*q4
+        _2q1 = 2*q1
+        _2q2 = 2*q2
+        _2q3 = 2*q3
+        _2q4 = 2*q4
 
         f1 = _2q2*q4 - _2q1*q3 - ax
         f2 = _2q1*q2 + _2q3*q4 - ay
-        f3 = 1.0 - _2q2*q2 - _2q3*q3 - az
+        f3 = 1 - _2q2*q2 - _2q3*q3 - az
 
         grad1 = -_2q3*f1 + _2q2*f2
         grad2 =  _2q4*f1 + _2q1*f2 - 4*q2*f3
@@ -82,18 +78,6 @@ def normalize(q):
     n = math.sqrt(sum(x*x for x in q))
     return [x/n for x in q]
 
-def q_align(q, ref):
-    return [-x for x in q] if dot(q,ref) < 0 else q
-
-def q_mean(quats):
-    ref = quats[0]
-    s = [0,0,0,0]
-    for q in quats:
-        q = q_align(q, ref)
-        for i in range(4):
-            s[i] += q[i]
-    return normalize([x/len(quats) for x in s])
-
 def slerp(q1, q2, t):
     cos_theta = dot(q1, q2)
 
@@ -112,13 +96,25 @@ def slerp(q1, q2, t):
 
     return [w1*a + w2*b for a,b in zip(q1,q2)]
 
-def to_xyzw_rounded(q, d=5):
-    w, x, y, z = q
-    return (round(x,d), round(y,d), round(z,d), round(w,d))
+
+def quat_conj(q):
+    w,x,y,z = q
+    return [w, -x, -y, -z]
+
+def quat_mul(a,b):
+    aw,ax,ay,az = a
+    bw,bx,by,bz = b
+
+    return [
+        aw*bw - ax*bx - ay*by - az*bz,
+        aw*bx + ax*bw + ay*bz - az*by,
+        aw*by - ax*bz + ay*bw + az*bx,
+        aw*bz + ax*by - ay*bx + az*bw
+    ]
 
 
 # =========================================================
-# SENSOR INIT
+# SENSOR
 # =========================================================
 
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -126,19 +122,12 @@ mpu = adafruit_mpu6050.MPU6050(i2c)
 
 madgwick = Madgwick()
 
-# =========================================================
-# CONFIG
-# =========================================================
-
 FS = 60
 DT = 1/FS
-WINDOW = 60
-GYRO_THRESHOLD = 0.02
 
-buffer = []
 last = time.time()
+buffer = []
 
-# referencia inicial (clave para eliminar “tilt fantasma”)
 q_ref = None
 
 
@@ -147,6 +136,7 @@ q_ref = None
 # =========================================================
 
 while True:
+
     now = time.time()
     if now - last < DT:
         continue
@@ -155,54 +145,53 @@ while True:
     ax, ay, az = mpu.acceleration
     gx, gy, gz = mpu.gyro
 
-    # =====================================================
-    # gyro bias
-    # =====================================================
     gx -= BIAS_GX
     gy -= BIAS_GY
     gz -= BIAS_GZ
 
-    # ⚠️ NO tocar acelerómetro fuerte
-    # solo usarlo como gravedad
-
-    # pequeño damping opcional (suave)
-    if abs(gx) < GYRO_THRESHOLD:
-        gx *= 0.3
-    if abs(gy) < GYRO_THRESHOLD:
-        gy *= 0.3
-    if abs(gz) < GYRO_THRESHOLD:
-        gz *= 0.3
-
     q = madgwick.updateIMU(gx, gy, gz, ax, ay, az, DT)
 
-    # guardar referencia inicial estable
+    # guardar referencia inicial (CLAVE)
     if q_ref is None:
         q_ref = q.copy()
 
-    buffer.append(q)
+    # convertir a world-lock (quita inclinación fantasma)
+    q_world = quat_mul(quat_conj(q_ref), q)
 
-    if len(buffer) >= WINDOW:
+    buffer.append(q_world)
 
-        N = len(buffer)
+    # =====================================================
+    # DETECTAR ESTADO QUIETO (auto-stabilization)
+    # =====================================================
 
-        s1 = q_mean(buffer[0:N//4])
-        s2 = q_mean(buffer[N//4:N//2])
-        s3 = q_mean(buffer[N//2:3*N//4])
-        s4 = q_mean(buffer[3*N//4:N])
+    still = abs(gx) + abs(gy) + abs(gz) < 0.06
 
-        q_start = s1
-        q_end = s4
+    if still and len(buffer) > 10:
+        # recentrar suavemente
+        q_world = buffer[-1]
 
-        # SLERP correcto (0 → 1)
-        q1 = slerp(q_start, q_end, 0.0)
-        q2 = slerp(q_start, q_end, 0.33)
-        q3 = slerp(q_start, q_end, 0.66)
-        q4 = slerp(q_start, q_end, 1.0)
+    # =====================================================
+    # OUTPUT SMOOTH
+    # =====================================================
 
-        print("\n==============================")
-        print("Q1:", to_xyzw_rounded(q1))
-        print("Q2:", to_xyzw_rounded(q2))
-        print("Q3:", to_xyzw_rounded(q3))
-        print("Q4:", to_xyzw_rounded(q4))
+    if len(buffer) >= 30:
+
+        def mean_quat(quats):
+            ref = quats[0]
+            s = [0,0,0,0]
+            for q in quats:
+                if dot(q, ref) < 0:
+                    q = [-x for x in q]
+                for i in range(4):
+                    s[i] += q[i]
+            n = len(quats)
+            return normalize([x/n for x in s])
+
+        q1 = mean_quat(buffer[:10])
+        q2 = mean_quat(buffer[10:20])
+        q3 = mean_quat(buffer[20:30])
+
+        print("\n===================")
+        print("Q:", [round(x,4) for x in q3])
 
         buffer = []

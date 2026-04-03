@@ -1,4 +1,5 @@
-import { onReceiveQuats } from './3D_visualization.js'
+import { onReceiveQuats } from './3D_visualization.js';
+import { backupRequest } from './backup.js';
 
 const window_size = 60 * 1000;
 const ticks = 6;
@@ -116,13 +117,13 @@ const charts = [
 		},
 		{
 			type: 'numeric',
-  			title: {
-    			text: 'Altitud (m)'
-  			},
-  			labels: {
-    			formatter: (val) => `${Math.round(val)} m`
-  			}
-  		},
+			title: {
+				text: 'Altitud (m)'
+			},
+			labels: {
+				formatter: (val) => `${Math.round(val)} m`
+			}
+		},
 		'#ff3b3b',
 		'line',
 		'straight'
@@ -166,7 +167,7 @@ for (const chart of charts) {
 }
 
 
-const socket = io('http://localhost:5000', {
+export const socket = io('http://localhost:5000', {
 	reconnection: true,
 	reconnectionAttempts: Infinity,
 	reconnectionDelay: 1000,
@@ -272,18 +273,22 @@ socket.on('MPU6050_data', (data) => {
 
 
 function handleSidebarAction(button) {
-  	document.querySelectorAll('.sidebar-btn').forEach(btn => {
-    	btn.classList.remove('active');
-  	});
-  	button.classList.add('active');
-
-  	if (button.getAttribute('id') === 'ground-charts-btn') {
-  		document.querySelector('#cansat-charts').classList.add('hide');
-  		document.querySelector('#ground-charts').classList.remove('hide');
-  	}
-  	else if (button.getAttribute('id') === 'cansat-charts-btn') {
-  		document.querySelector('#ground-charts').classList.add('hide');
-  		document.querySelector('#cansat-charts').classList.remove('hide');
-  	}
+	document.querySelectorAll('.sidebar-btn').forEach(btn => {
+		btn.classList.remove('active');
+	});
+	button.classList.add('active');
+	document.querySelectorAll('.main-content').forEach(el => {
+		el.classList.add('hide');
+	});
+	if (button.getAttribute('id') === 'ground-charts-btn') {
+		document.querySelector('#ground-charts').classList.remove('hide');
+	}
+	else if (button.getAttribute('id') === 'cansat-charts-btn') {
+		document.querySelector('#cansat-charts').classList.remove('hide');
+	}
+	else if (button.getAttribute('id') === 'backup-btn') {
+		document.querySelector('#backup-config').classList.remove('hide');
+		backupRequest();
+	}
 }
 window.handleSidebarAction = handleSidebarAction;

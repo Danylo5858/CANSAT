@@ -7,10 +7,13 @@ from log_manager import log_queue
 log = False
 
 received_data = Queue()
+TX = False
 
-def init(self_address, frequency):
-	global radio
-	radio = sx126x("/dev/serial0", frequency, self_address, 22, False)
+def init(self_address, destination_address, frequency):
+    global radio, dest_addr, freq
+    dest_addr = destination_address
+    freq = frequency
+    radio = sx126x("/dev/serial0", freq, self_address, 22, False)
 
 def unpack_all(packet):
     unpacked = struct.unpack('<iiB hhh h 16h', packet)
@@ -37,4 +40,10 @@ def on_receive(packet):
 
 def receiver():
 	while True:
-		radio.receive(on_receive)
+        if not TX:
+		  radio.receive(on_receive)
+        else:
+            continue
+
+def send_data(data):
+    TX = True

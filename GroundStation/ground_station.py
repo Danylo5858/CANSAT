@@ -13,13 +13,13 @@ gm.log = False
 server_log = True
 
 server_queue = Queue()
-server = Process(target=app.run, args=(server_queue, server_log))
+server = Process(target=app.run, args=(server_queue, on_request, server_log))
 server.start()
 
 logger_thread = threading.Thread(target=lm.logger, daemon=True)
 logger_thread.start()
 
-wcom_gs.init(2, 868)
+wcom_gs.init(2, 1, 868)
 receiver_thread = threading.Thread(target=wcom_gs.receiver, daemon=True)
 receiver_thread.start()
 
@@ -50,3 +50,7 @@ finally:
 		print("Apagando servidor...")
 		server.terminate()
 		server.join()
+
+def on_request(data):
+	if data["request_type"] == "backup_request":
+		wcom_gs.send_data(data)

@@ -1,4 +1,4 @@
-def run(queue, log):
+def run(queue, on_request, log):
 	import eventlet
 	eventlet.monkey_patch()
 
@@ -32,10 +32,16 @@ def run(queue, log):
 		if log:
 			print("CLIENTE CONECTADO")
 
+	@socketio.on("backup_request")
+	def handle_backup_request(data):
+		if log:
+			print(f"BACKUP REQUEST: {data}")
+		on_request(data)
+
 	if log:
 		print("SERVER RUNNING")
 	socketio.start_background_task(forward)
 	socketio.run(app, host="0.0.0.0", port=5000)
 
 if __name__ == "__main__":
-	run(None, True)
+	run(None, lambda data: None, True)
