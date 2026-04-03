@@ -1,12 +1,25 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let scene, camera, renderer, controls, can;
+let scene, camera, renderer, controls, mesh;
 
+let queue = [];
+
+let qA = new THREE.Quaternion();
+let qB = new THREE.Quaternion();
+let qOut = new THREE.Quaternion();
+
+let hasInit = false;
+
+let alpha = 0;
+const speed = 0.08; // suavidad (más bajo = más suave)
 
 // =======================
-// SETUP
+// INIT
 // =======================
+init();
+animate();
+
 function init() {
   const container = document.getElementById('viewer');
 
@@ -35,8 +48,8 @@ function init() {
     wireframe: true
   });
 
-  can = new THREE.Mesh(geometry, material);
-  scene.add(can);
+  mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
 
   scene.add(new THREE.AxesHelper(2));
 
@@ -52,69 +65,49 @@ function onResize() {
   renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
-
-// =======================
-// QUATERNION SMOOTH STATE
-// =======================
-let qA = new THREE.Quaternion();
-let qB = new THREE.Quaternion();
-let qOut = new THREE.Quaternion();
-
-let hasInit = false;
-
-let segmentStartTime = performance.now();
-const segmentDuration = 250; // 4 updates por segundo
-
-
-// =======================
-// INPUT (sensor)
-// =======================
 export function onReceiveQuats(quats) {
+  if (!quats || quats.length === 0) return;
+
   for (const q of quats) {
+    const quat = new THREE.Quaternion(q[0], q[1], q[2], q[3]);
+    quat.normalize(); // IMPORTANTÍSIMO
 
-    const newQ = new THREE.Quaternion(q[0], q[1], q[2], q[3]);
-
-    // inicialización
-    if (!hasInit) {
-      qA.copy(newQ);
-      qB.copy(newQ);
-      hasInit = true;
-      segmentStartTime = performance.now();
-      continue;
-    }
-
-    // mover ventana de interpolación
-    qA.copy(qB);
-    qB.copy(newQ);
-    segmentStartTime = performance.now();
-
-    // evitar flip (shortest path)
-    if (qA.dot(qB) < 0) {
-      qB.set(-qB.x, -qB.y, -qB.z, -qB.w);
-    }
+    queue.push(quat);
   }
 }
 
-
-// =======================
-// RENDER LOOP
-// =======================
-function animate(time) {
+function animate() {
   requestAnimationFrame(animate);
 
-  if (!hasInit) return;
+  if (!hasInit) {
+    if (queue.length === 0) {
+      renderer.render(scene, camera);
+      return;
+    }
 
-  let alpha = (time - segmentStartTime) / segmentDuration;
-  alpha = Math.min(Math.max(alpha, 0), 1);
+    qA.copy(queue.shift());
+    qB.copy(qA);
+    hasInit = true;
+  }
 
-  // SLERP correcto (API moderna)
-  qOut.copy(qA).slerp(qB, alpha);
+  // si hay nuevos datos, avanzamos target
+  if (queue.length > 0) {
+    const next = queue[0];
 
-  can.quaternion.copy(qOut);
+    // evitar flip (shortest path)
+    if (qB.dot(next) < 0) {
+      next.set(-next.x, -next.y, -next.z, -next.w);
+    }
+
+    qB.copy(next);
+    queue.shift();
+  }
+
+  // interpolación suave continua
+  qA.slerp(qB, speed);
+
+  mesh.quaternion.copy(qA);
 
   controls.update();
   renderer.render(scene, camera);
 }
-
-init();
-animate();
