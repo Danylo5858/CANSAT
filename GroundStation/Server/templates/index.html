@@ -41,46 +41,58 @@
         <div class="backup-header">
             <h2>Recuperación de registros</h2>
             <p>
-                Extracción remota de datos del sistema embarcado mediante conexión segura y procesamiento local
-                para generación de visualizaciones analíticas.
+                Extracción remota de datos y procesamiento analítico para generación de visualizaciones técnicas.
             </p>
         </div>
 
         <div class="backup-flow">
 
             <!-- INICIO -->
-            <div class="time-block start">
+            <div class="time-block">
                 <div class="block-label">Inicio</div>
 
                 <div class="time-controls">
-                    <input type="date" id="start-date">
-                    <input type="time" id="start-time">
+                    <div class="input-shell">
+                        <input type="date" id="start-date">
+                    </div>
+                    <div class="input-shell">
+                        <input type="time" id="start-time">
+                    </div>
                 </div>
             </div>
 
-            <!-- LINEA CENTRAL -->
+            <!-- FLOW -->
             <div class="flow-line">
-                <div class="flow-dot"></div>
+                <div class="flow-pulse"></div>
             </div>
 
             <!-- FIN -->
-            <div class="time-block end">
+            <div class="time-block">
                 <div class="block-label">Fin</div>
 
                 <div class="time-controls">
-                    <input type="date" id="end-date">
-                    <input type="time" id="end-time">
+                    <div class="input-shell">
+                        <input type="date" id="end-date">
+                    </div>
+                    <div class="input-shell">
+                        <input type="time" id="end-time">
+                    </div>
                 </div>
             </div>
 
         </div>
 
+        <!-- ERROR (VISIBLE POR DEFECTO PARA TEST) -->
+        <div class="backup-error">
+            Error de conexión: no se ha podido establecer comunicación con el dispositivo remoto.
+        </div>
+
         <div class="backup-actions">
-            <button onclick="generateInterval()" class="action-btn primary">
+            <button onclick="generateInterval()" class="action-btn">
                 Generar análisis en intervalo
             </button>
 
-            <button onclick="generateFull()" class="action-btn secondary">
+            <button onclick="generateFull()" class="action-btn">
                 Procesar registro completo
             </button>
         </div>
