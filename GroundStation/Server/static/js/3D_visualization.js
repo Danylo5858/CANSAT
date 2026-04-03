@@ -3,9 +3,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let scene, camera, renderer, controls, can;
 
-init();
-animate();
-
 
 // =======================
 // SETUP
@@ -118,3 +115,6 @@ function animate(time) {
   controls.update();
   renderer.render(scene, camera);
 }
+
+init();
+animate();
