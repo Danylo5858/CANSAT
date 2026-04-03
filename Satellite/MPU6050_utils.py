@@ -1,13 +1,23 @@
 import time
 import math
+import board
+import busio
+import adafruit_mpu6050
+
+# =========================================================
+# BIAS (solo gyro recomendable, accel mejor NO tocarlo fuerte)
+# =========================================================
 
 BIAS_GX = -0.05587
 BIAS_GY = 0.04214
 BIAS_GZ = -0.00273
 
-BIAS_AX = -7.86358
-BIAS_AY = 0.24833
-BIAS_AZ = -5.82959
+# ⚠️ IMPORTANTE:
+# No uses bias grande en acelerómetro → rompe la gravedad
+
+# =========================================================
+# MADGWICK FILTER
+# =========================================================
 
 class Madgwick:
     def __init__(self, beta=0.12):
@@ -18,7 +28,7 @@ class Madgwick:
 
         q1, q2, q3, q4 = self.q
 
-        # normalizar accel (dirección gravedad)
+        # normalizar acelerómetro (gravedad)
         norm = math.sqrt(ax*ax + ay*ay + az*az)
         if norm == 0:
             return self.q
@@ -60,6 +70,11 @@ class Madgwick:
 
         return self.q
 
+
+# =========================================================
+# UTILS
+# =========================================================
+
 def dot(a,b):
     return sum(x*y for x,y in zip(a,b))
 
@@ -68,7 +83,7 @@ def normalize(q):
     return [x/n for x in q]
 
 def q_align(q, ref):
-    return [-x for x in q] if dot(q,ref)<0 else q
+    return [-x for x in q] if dot(q,ref) < 0 else q
 
 def q_mean(quats):
     ref = quats[0]
@@ -76,7 +91,7 @@ def q_mean(quats):
     for q in quats:
         q = q_align(q, ref)
         for i in range(4):
-            s[i]+=q[i]
+            s[i] += q[i]
     return normalize([x/len(quats) for x in s])
 
 def slerp(q1, q2, t):
@@ -96,10 +111,6 @@ def slerp(q1, q2, t):
     w2 = math.sin(t*theta) / sin_theta
 
     return [w1*a + w2*b for a,b in zip(q1,q2)]
-
-def to_xyzw(q):
-    w, x, y, z = q
-    return (x, y, z, w)
 
 def to_xyzw_rounded(q, d=5):
     w, x, y, z = q

@@ -52,6 +52,7 @@ def update_motion_state():
     buffer = []
     last = time.time()
     madgwick = utils.Madgwick()
+    q_ref = None
 
     while True:
         now = time.time()
@@ -67,16 +68,25 @@ def update_motion_state():
         gy -= utils.BIAS_GY
         gz -= utils.BIAS_GZ
 
-        ax -= utils.BIAS_AX
-        ay -= utils.BIAS_AY
-        az -= utils.BIAS_AZ
+        # ax -= utils.BIAS_AX
+        # ay -= utils.BIAS_AY
+        # az -= utils.BIAS_AZ
 
-        if abs(gx)<GYRO_THRESHOLD and abs(gy)<GYRO_THRESHOLD and abs(gz)<GYRO_THRESHOLD:
-            gx *= 0.1
-            gy *= 0.1
-            gz *= 0.1
+        # if abs(gx)<GYRO_THRESHOLD and abs(gy)<GYRO_THRESHOLD and abs(gz)<GYRO_THRESHOLD:
+        #     gx *= 0.1
+        #     gy *= 0.1
+        #     gz *= 0.1
+
+        if abs(gx) < GYRO_THRESHOLD:
+            gx *= 0.3
+        if abs(gy) < GYRO_THRESHOLD:
+            gy *= 0.3
+        if abs(gz) < GYRO_THRESHOLD:
+            gz *= 0.3
 
         q = madgwick.updateIMU(gx, gy, gz, ax, ay, az, DT)
+        if q_ref is None:
+            q_ref = q.copy()
         buffer.append(q)
 
         if len(buffer) >= WINDOW:
@@ -91,10 +101,10 @@ def update_motion_state():
             q_start = s1
             q_end = s4
 
-            q1 = utils.slerp(q_start, q_end, 0.0)
-            q2 = utils.slerp(q_start, q_end, 0.25)
-            q3 = utils.slerp(q_start, q_end, 0.5)
-            q4 = utils.slerp(q_start, q_end, 1.75)
+            q1 = slerp(q_start, q_end, 0.0)
+            q2 = slerp(q_start, q_end, 0.33)
+            q3 = slerp(q_start, q_end, 0.66)
+            q4 = slerp(q_start, q_end, 1.0)
 
             r1 = utils.to_xyzw_rounded(q1)
             r2 = utils.to_xyzw_rounded(q2)

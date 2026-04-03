@@ -5,16 +5,15 @@ import busio
 import adafruit_mpu6050
 
 # =========================================================
-# BIAS (PEGAR AQUÍ LOS VALORES DEL SCRIPT DE CALIBRACIÓN)
+# BIAS (solo gyro recomendable, accel mejor NO tocarlo fuerte)
 # =========================================================
 
 BIAS_GX = -0.05587
 BIAS_GY = 0.04214
 BIAS_GZ = -0.00273
 
-BIAS_AX = -7.86358
-BIAS_AY = 0.24833
-BIAS_AZ = -5.82959
+# ⚠️ IMPORTANTE:
+# No uses bias grande en acelerómetro → rompe la gravedad
 
 # =========================================================
 # MADGWICK FILTER
@@ -29,7 +28,7 @@ class Madgwick:
 
         q1, q2, q3, q4 = self.q
 
-        # normalizar accel (dirección gravedad)
+        # normalizar acelerómetro (gravedad)
         norm = math.sqrt(ax*ax + ay*ay + az*az)
         if norm == 0:
             return self.q
@@ -71,6 +70,7 @@ class Madgwick:
 
         return self.q
 
+
 # =========================================================
 # UTILS
 # =========================================================
@@ -83,7 +83,7 @@ def normalize(q):
     return [x/n for x in q]
 
 def q_align(q, ref):
-    return [-x for x in q] if dot(q,ref)<0 else q
+    return [-x for x in q] if dot(q,ref) < 0 else q
 
 def q_mean(quats):
     ref = quats[0]
@@ -91,7 +91,7 @@ def q_mean(quats):
     for q in quats:
         q = q_align(q, ref)
         for i in range(4):
-            s[i]+=q[i]
+            s[i] += q[i]
     return normalize([x/len(quats) for x in s])
 
 def slerp(q1, q2, t):
@@ -112,16 +112,13 @@ def slerp(q1, q2, t):
 
     return [w1*a + w2*b for a,b in zip(q1,q2)]
 
-def to_xyzw(q):
-    w, x, y, z = q
-    return (x, y, z, w)
-
 def to_xyzw_rounded(q, d=5):
     w, x, y, z = q
     return (round(x,d), round(y,d), round(z,d), round(w,d))
 
+
 # =========================================================
-# SENSOR
+# SENSOR INIT
 # =========================================================
 
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -136,11 +133,14 @@ madgwick = Madgwick()
 FS = 60
 DT = 1/FS
 WINDOW = 60
+GYRO_THRESHOLD = 0.02
 
 buffer = []
 last = time.time()
 
-GYRO_THRESHOLD = 0.02
+# referencia inicial (clave para eliminar “tilt fantasma”)
+q_ref = None
+
 
 # =========================================================
 # LOOP
@@ -156,24 +156,29 @@ while True:
     gx, gy, gz = mpu.gyro
 
     # =====================================================
-    # APPLY BIAS CORRECTION
+    # gyro bias
     # =====================================================
-
     gx -= BIAS_GX
     gy -= BIAS_GY
     gz -= BIAS_GZ
 
-    ax -= BIAS_AX
-    ay -= BIAS_AY
-    az -= BIAS_AZ
+    # ⚠️ NO tocar acelerómetro fuerte
+    # solo usarlo como gravedad
 
-    # anti-drift gyro
-    if abs(gx)<GYRO_THRESHOLD and abs(gy)<GYRO_THRESHOLD and abs(gz)<GYRO_THRESHOLD:
-        gx *= 0.1
-        gy *= 0.1
-        gz *= 0.1
+    # pequeño damping opcional (suave)
+    if abs(gx) < GYRO_THRESHOLD:
+        gx *= 0.3
+    if abs(gy) < GYRO_THRESHOLD:
+        gy *= 0.3
+    if abs(gz) < GYRO_THRESHOLD:
+        gz *= 0.3
 
     q = madgwick.updateIMU(gx, gy, gz, ax, ay, az, DT)
+
+    # guardar referencia inicial estable
+    if q_ref is None:
+        q_ref = q.copy()
+
     buffer.append(q)
 
     if len(buffer) >= WINDOW:
@@ -188,10 +193,11 @@ while True:
         q_start = s1
         q_end = s4
 
+        # SLERP correcto (0 → 1)
         q1 = slerp(q_start, q_end, 0.0)
-        q2 = slerp(q_start, q_end, 0.25)
-        q3 = slerp(q_start, q_end, 0.5)
-        q4 = slerp(q_start, q_end, 1.75)
+        q2 = slerp(q_start, q_end, 0.33)
+        q3 = slerp(q_start, q_end, 0.66)
+        q4 = slerp(q_start, q_end, 1.0)
 
         print("\n==============================")
         print("Q1:", to_xyzw_rounded(q1))
