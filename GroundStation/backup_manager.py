@@ -13,10 +13,10 @@ def get_backup_data(req_data):
 			text=True
 		)
 		# if log:
-			log_queue.put("Copia de seguridad del CanSat recibida correctamente")
+		log_queue.put("Copia de seguridad del CanSat recibida correctamente")
 	except subprocess.CalledProcessError as e:
 		# if log:
-			log_queue.put(f"Fallo recibiendo la copia de seguridad del CanSat:\nCodigo: {result.returncode}\nError: {result.stderr}")
+		log_queue.put(f"Fallo recibiendo la copia de seguridad del CanSat:\nCodigo: {result.returncode}\nError: {result.stderr}")
 		return { "success": False }
 
 	bmp_data = []
