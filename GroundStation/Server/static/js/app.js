@@ -271,6 +271,16 @@ socket.on('MPU6050_data', (data) => {
 	onReceiveQuats(data);
 });
 
+socket.on('backup_response', (res) => {
+	if (res['success'] === true) {
+		console.log('Copia de seguridad del CanSat recibida correctamente');
+		console.log(res['data'])
+	}
+	else {
+		console.log('Fallo recibiendo la copia de seguridad del CanSat');
+	}
+});
+
 
 function handleSidebarAction(button) {
 	document.querySelectorAll('.sidebar-btn').forEach(btn => {
