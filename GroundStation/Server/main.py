@@ -15,6 +15,7 @@ def run(queue, on_request, log):
 		if queue is not None:
 			while True:
 				try:
+					print("waiting")
 					name, data = queue.get_nowait()
 					if log:
 						print("Emitiendo datos:", name)
