@@ -23,9 +23,11 @@ def get_backup_data(req_data):
 	mpu_data = []
 	gps_data = []
 	if req_data["bmp"]:
+		print("bmp")
 		with open('./BackupData/BMP390_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
 			for row in data_reader:
+				print("bmp_row")
 				data = {
 		            "date": row[0],
 		            "time": row[1],
