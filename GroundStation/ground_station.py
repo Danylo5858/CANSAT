@@ -18,6 +18,11 @@ server_log = True
 
 os.makedirs("BackupData", exist_ok=True)
 
+def on_request(request, req_data):
+	if request == "backup_request":
+		result = bm.get_backup_data(req_data)
+		server_queue.put(("backup_response", result))
+
 server_queue = Queue()
 server = Process(target=app.run, args=(server_queue, on_request, server_log))
 server.start()
@@ -56,8 +61,3 @@ finally:
 		print("Apagando servidor...")
 		server.terminate()
 		server.join()
-
-def on_request(request, req_data):
-	if request == "backup_request":
-		result = bm.get_backup_data(req_data)
-		server_queue.put(("backup_response", result))
