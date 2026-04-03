@@ -6,10 +6,12 @@ USER="pi"
 HOST="astro-pi-kit.local"
 PASSWORD="1234"
 
-REMOTE_PATH="~/Desktop/CANSAT/Satellite/Data"
-LOCAL_PATH="~/Desktop/CANSAT/GroundStation/BackupData"
+REMOTE_PATH="~/Desktop/CANSAT/Satellite/Data/*"
+LOCAL_PATH="BackupData"
 
 # =========================
+mkdir -p "$LOCAL_PATH"
+rm -rf "$LOCAL_PATH"/*
 
 echo "Conectando y copiando archivos..."
 
