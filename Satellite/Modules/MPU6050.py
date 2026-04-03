@@ -101,10 +101,10 @@ def update_motion_state():
             q_start = s1
             q_end = s4
 
-            q1 = slerp(q_start, q_end, 0.0)
-            q2 = slerp(q_start, q_end, 0.33)
-            q3 = slerp(q_start, q_end, 0.66)
-            q4 = slerp(q_start, q_end, 1.0)
+            q1 = utils.slerp(q_start, q_end, 0.0)
+            q2 = utils.slerp(q_start, q_end, 0.33)
+            q3 = utils.slerp(q_start, q_end, 0.66)
+            q4 = utils.slerp(q_start, q_end, 1.0)
 
             r1 = utils.to_xyzw_rounded(q1)
             r2 = utils.to_xyzw_rounded(q2)
