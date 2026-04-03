@@ -19,9 +19,9 @@ def get_backup_data(req_data):
 			log_queue.put(f"Fallo recibiendo la copia de seguridad del CanSat:\nCodigo: {result.returncode}\nError: {result.stderr}")
 		return { "success": False }
 
-	bmp = []
-	mpu = []
-	gps = []
+	bmp_data = []
+	mpu_data = []
+	gps_data = []
 	if req_data["bmp"]:
 		with open('./BackupData/BMP390_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
