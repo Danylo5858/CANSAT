@@ -38,9 +38,11 @@ def get_backup_data(req_data):
 				if ValidateTime(req_data, data):
 					bmp_data.append(data)
 	if req_data["mpu"]:
+		print("mpu")
 		with open('./BackupData/MPU6050_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
 			for row in data_reader:
+				print("mpu_row")
 				data = {
 		            "date": row[0],
 		            "time": row[1],
@@ -49,9 +51,11 @@ def get_backup_data(req_data):
 				if ValidateTime(req_data, data):
 					mpu_data.append(data)
 	if req_data["gps"]:
+		print("gps")
 		with open('./BackupData/GPS_data.csv', 'r', newline='') as f:
 			data_reader = reader(f)
 			for row in data_reader:
+				print("gps_row")
 				data = {
 		            "date": row[0],
 		            "time": row[1],
@@ -61,6 +65,8 @@ def get_backup_data(req_data):
 		        }
 				if ValidateTime(req_data, data):
 					gps_data.append(data)
+	print("return")
+	print(bmp_data)
 	return {
 		"success": True,
 		"data": {
