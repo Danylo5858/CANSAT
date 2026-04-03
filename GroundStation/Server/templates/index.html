@@ -39,18 +39,18 @@
     <div class="backup-card">
 
         <div class="backup-header">
-            <h2>Recuperación y análisis de registros</h2>
+            <h2>Recuperación de registros</h2>
             <p>
-                Acceso remoto al sistema del CanSat mediante canal seguro para la extracción de datos históricos.
-                Los registros son procesados localmente y transformados en visualizaciones técnicas para su análisis.
+                Extracción remota de datos del sistema embarcado mediante conexión segura y procesamiento local
+                para generación de visualizaciones analíticas.
             </p>
         </div>
 
-        <div class="backup-body">
+        <div class="backup-flow">
 
             <!-- INICIO -->
-            <div class="time-section">
-                <div class="time-label">Punto de inicio</div>
+            <div class="time-block start">
+                <div class="block-label">Inicio</div>
 
                 <div class="time-controls">
                     <input type="date" id="start-date">
@@ -58,11 +58,14 @@
                 </div>
             </div>
 
-            <div class="time-separator"></div>
+            <!-- LINEA CENTRAL -->
+            <div class="flow-line">
+                <div class="flow-dot"></div>
+            </div>
 
             <!-- FIN -->
-            <div class="time-section">
-                <div class="time-label">Punto final</div>
+            <div class="time-block end">
+                <div class="block-label">Fin</div>
 
                 <div class="time-controls">
                     <input type="date" id="end-date">
@@ -72,16 +75,14 @@
 
         </div>
 
-        <div class="backup-footer">
-
+        <div class="backup-actions">
             <button onclick="generateInterval()" class="action-btn primary">
-                Generar análisis por intervalo
+                Generar análisis en intervalo
             </button>
 
             <button onclick="generateFull()" class="action-btn secondary">
-                Analizar registro completo
+                Procesar registro completo
             </button>
-
         </div>
 
         <div id="backup-loader" class="backup-loader hide">
