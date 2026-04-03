@@ -50,7 +50,7 @@ def SaveData():
         while True:
             data = data_queue.get()
             data_writer.writerow([
-                data["time"].strftime("%d-%m-%Y"),
+                data["time"].strftime("%Y-%m-%d"),
                 data["time"].strftime("%H:%M:%S"),
                 data["temperature"],
                 data["pressure"],

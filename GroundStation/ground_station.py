@@ -1,16 +1,22 @@
+import os
 import time
 import threading
 from multiprocessing import Process, Queue
+import backup_manager as bm
 import graph_manager as gm
 import weather_data_fetcher as wdf
 import log_manager as lm
+from log_manager import log_queue
 import wireless_communication_gs as wcom_gs
 import Server.main as app
 
+bm.log = True
 wcom_gs.log = False
 wdf.log = False
 gm.log = False
 server_log = True
+
+os.makedirs("BackupData", exist_ok=True)
 
 server_queue = Queue()
 server = Process(target=app.run, args=(server_queue, on_request, server_log))
@@ -19,7 +25,7 @@ server.start()
 logger_thread = threading.Thread(target=lm.logger, daemon=True)
 logger_thread.start()
 
-wcom_gs.init(2, 1, 868)
+wcom_gs.init(2, 868)
 receiver_thread = threading.Thread(target=wcom_gs.receiver, daemon=True)
 receiver_thread.start()
 
@@ -33,7 +39,7 @@ try:
 		if cansat_data["GPS"]["latitude"] != 0 or cansat_data["GPS"]["longitude"] != 0:
 			wdf.lat = cansat_data["GPS"]["latitude"]
 			wdf.lon = cansat_data["GPS"]["longitude"]
-			lm.log_queue.put("GPS actualizo las coordenadas")
+			log_queue.put("GPS actualizo las coordenadas")
 		ground_data = wdf.fetch()
 		server_queue.put(("ground_data", ground_data))
 		threads = [
@@ -51,6 +57,7 @@ finally:
 		server.terminate()
 		server.join()
 
-def on_request(data):
-	if data["request_type"] == "backup_request":
-		wcom_gs.send_data(data)
+def on_request(request, req_data):
+	if request == "backup_request":
+		result = bm.get_backup_data(req_data)
+		server_queue.put(("backup_response", result))

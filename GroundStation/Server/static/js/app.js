@@ -288,7 +288,7 @@ function handleSidebarAction(button) {
 	}
 	else if (button.getAttribute('id') === 'backup-btn') {
 		document.querySelector('#backup-config').classList.remove('hide');
-		backupRequest();
+		backupRequest(true, true, true, '2026-04-01 00:00:00', '2026-04-05 00:00:00');
 	}
 }
 window.handleSidebarAction = handleSidebarAction;

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # ===== CONFIGURACIÓN =====
+set -e
 USER="pi"
 HOST="astro-pi-kit.local"
 PASSWORD="1234"

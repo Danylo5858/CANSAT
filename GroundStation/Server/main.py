@@ -36,7 +36,7 @@ def run(queue, on_request, log):
 	def handle_backup_request(data):
 		if log:
 			print(f"BACKUP REQUEST: {data}")
-		on_request(data)
+		on_request("backup_request", data)
 
 	if log:
 		print("SERVER RUNNING")
