@@ -190,12 +190,14 @@ canvas {
 
 
 .backup-wrapper {
-    width: 68%;
-    height: 100%;
-    margin: 0 auto;
+    width: 70vw;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .backup-card {
@@ -205,9 +207,8 @@ canvas {
     display: flex;
     flex-direction: column;
     gap: 35px;
-
-    border: 2px solid rgba(79, 209, 197, 0.2);
-    background: rgba(79, 209, 197, 0.02);
+    /*border: 2px solid rgba(79, 209, 197, 0.2);*/
+    /*background: rgba(79, 209, 197, 0.02);*/
     backdrop-filter: blur(4px);
 }
 
