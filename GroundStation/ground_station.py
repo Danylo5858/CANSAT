@@ -19,7 +19,6 @@ server_log = True
 os.makedirs("BackupData", exist_ok=True)
 
 def on_request(request, req_data):
-	print(request)
 	if request == "backup_request":
 		return bm.get_backup_data(req_data)
 

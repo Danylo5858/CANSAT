@@ -15,7 +15,6 @@ def run(queue, on_request, log):
 		if queue is not None:
 			while True:
 				try:
-					print("waiting")
 					name, data = queue.get_nowait()
 					if log:
 						print("Emitiendo datos:", name)
@@ -23,6 +22,11 @@ def run(queue, on_request, log):
 				except Empty:
 					pass
 				socketio.sleep(0.05)
+
+	def process_backup(data):
+		socketio.emit("backup_response", on_request("backup_request", data))
+		if log:
+			print("COPIA DE SEGURIDAD EMITIDA")
 
 	@app.route("/")
 	def index():
@@ -36,8 +40,8 @@ def run(queue, on_request, log):
 	@socketio.on("backup_request")
 	def handle_backup_request(data):
 		if log:
-			print(f"BACKUP REQUEST: {data}")
-		socketio.start_background_task(lambda: socketio.emit("backup_response", on_request("backup_request", data)))
+			print(f"PETICION DE COPIA DE SEGURIDAD: {data}")
+		socketio.start_background_task(process_backup, data)
 
 	if log:
 		print("SERVER RUNNING")
