@@ -18,6 +18,8 @@ server_log = True
 
 os.makedirs("BackupData", exist_ok=True)
 
+server_queue = Queue()
+
 def on_request(request, req_data):
 	print(request)
 	if request == "backup_request":
@@ -26,7 +28,6 @@ def on_request(request, req_data):
 		server_queue.put(("backup_response", result))
 		print("b")
 
-server_queue = Queue()
 server = Process(target=app.run, args=(server_queue, on_request, server_log))
 server.start()
 
