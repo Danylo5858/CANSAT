@@ -341,7 +341,7 @@ socket.on('backup_response', (res) => {
 	if (res['success'] === true) {
 		console.log('Copia de seguridad del CanSat recibida correctamente');
 		console.log(res['data'])
-		dataset = res['data']['BMP390'];
+		const dataset = res['data']['BMP390'];
 		const altitudeData = dataset.map(d => {
 			const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
 			return {
