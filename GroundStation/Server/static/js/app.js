@@ -81,7 +81,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_a'),
 		'Altitud del CanSat en tiempo real',
-		timeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Altitud (m)'
@@ -92,7 +92,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t'),
 		'Temperatura del CanSat en tiempo real',
-		timeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -102,7 +102,7 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_p'),
 		'Presión del CanSat en tiempo real',
-		timeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Presión (hPa)'
@@ -134,7 +134,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_aq'),
 		'Calidad del aire desde estación de tierra',
-		timeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Calidad del aire'
@@ -145,7 +145,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t_g'),
 		'Temperatura desde estación de tierra',
-		timeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -155,7 +155,7 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_h'),
 		'Humedad desde estación de tierra',
-		timeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Humedad'
@@ -166,7 +166,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_a_b'),
 		'Altitud del CanSat (Copia de seguridad)',
-		timeXaxis(undefined, undefined),
+		generateTimeXaxis(undefined, undefined),
 		{
 			title: {
 				text: 'Altitud (m)'
@@ -178,7 +178,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t_b'),
 		'Temperatura del CanSat (Copia de seguridad)',
-		timeXaxis(undefined, undefined),
+		generateTimeXaxis(undefined, undefined),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -189,7 +189,7 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_p_b'),
 		'Presión del CanSat (Copia de seguridad)',
-		timeXaxis(undefined, undefined),
+		generateTimeXaxis(undefined, undefined),
 		{
 			title: {
 				text: 'Presión (hPa)'
