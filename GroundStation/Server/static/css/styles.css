@@ -227,12 +227,12 @@ canvas {
     color: #4fd1c5;
     font-size: 20px;
     letter-spacing: 0.6px;
-    margin-bottom: 12px;
+    margin-top: 0;
 }
 
 .backup-header p {
     font-family: 'Inter', sans-serif;
-    color: rgba(79, 209, 197, 0.75);
+    color: rgba(79, 209, 197, 0.7);
     font-size: 14px;
     line-height: 1.6;
 }
@@ -244,6 +244,7 @@ canvas {
     justify-content: center;
     gap: 25px;
     width: 100%;
+    margin-bottom: 20px;
 }
 
 .time-block {
