@@ -369,10 +369,10 @@ socket.on('backup_response', (res) => {
 				y: d.altitude
 			};
 		});
-		charts[7].updateSeries([{ data: altitudeData }]);
-		charts[8].updateSeries([{ data: temperatureData }]);
-		charts[9].updateSeries([{ data: pressureData }]);
-		charts[10].updateSeries([{ data: pressureAltitudeData }]);
+		charts[7].updateSeries([{ data: altitudeData, color: '#7c4dff' }]);
+		charts[8].updateSeries([{ data: temperatureData, color: '#00e5ff' }]);
+		charts[9].updateSeries([{ data: pressureData, color: '#00ff88' }]);
+		charts[10].updateSeries([{ data: pressureAltitudeData, color: '#ff3b3b' }]);
 		setTimeout(() => {
 			hideBackupLoader();
 			document.querySelectorAll('.main-content').forEach(el => {
