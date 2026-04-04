@@ -142,15 +142,15 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 		}],
 		xaxis: {
 	      	type: 'datetime',
-	      	min: currentMin,
-	      	max: currentMax,
-	      	labels: {
-	        	datetimeUTC: false,
-	        	formatter: function (value, timestamp) {
-	          		const format = getDynamicTimeFormat(currentMin, currentMax);
-	          		return new Date(timestamp).toLocaleString([], format);
-	        	}
-	      	}
+	      	// min: currentMin,
+	      	// max: currentMax,
+	      	// labels: {
+	        // 	datetimeUTC: false,
+	        // 	formatter: function (value, timestamp) {
+	        //   		const format = getDynamicTimeFormat(currentMin, currentMax);
+	        //   		return new Date(timestamp).toLocaleString([], format);
+	        // 	}
+	      	// }
 	    },
 		yaxis: yaxis,
 		stroke: {
@@ -384,6 +384,18 @@ function hideBackupLoader() {
     document.getElementById('backup-loader').classList.add('hide');
 }
 
+function buildSeries(dataset, key) {
+  	let series = [];
+  	for (let i = 0; i < dataset.length; i++) {
+    	const d = dataset[i];
+    	const t = new Date(
+      		d.date + "T" + d.time.replace(/-/g, ":")
+    	).getTime();
+    	series.push([t, d[key]]);
+  	}
+  	return series;
+}
+
 socket.on('backup_response', (res) => {
 	if (res['success'] === true) {
 		console.log('Copia de seguridad del CanSat recibida correctamente');
@@ -444,27 +456,27 @@ socket.on('backup_response', (res) => {
 				false
 			)
 		];
-		const altitudeData = dataset.map(d => {
-			const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
-			return {
-				x: timestamp,
-				y: d.altitude
-			};
-		});
-		const temperatureData = dataset.map(d => {
-			const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
-			return {
-				x: timestamp,
-				y: d.temperature
-			};
-		});
-		const pressureData = dataset.map(d => {
-			const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
-			return {
-				x: timestamp,
-				y: d.pressure
-			};
-		});
+		// const altitudeData = dataset.map(d => {
+		// 	const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
+		// 	return {
+		// 		x: timestamp,
+		// 		y: d.altitude
+		// 	};
+		// });
+		// const temperatureData = dataset.map(d => {
+		// 	const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
+		// 	return {
+		// 		x: timestamp,
+		// 		y: d.temperature
+		// 	};
+		// });
+		// const pressureData = dataset.map(d => {
+		// 	const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
+		// 	return {
+		// 		x: timestamp,
+		// 		y: d.pressure
+		// 	};
+		// });
 		const pressureAltitudeData = dataset.map(d => {
 			return {
 				x: d.pressure,
@@ -474,9 +486,9 @@ socket.on('backup_response', (res) => {
 		for (const chart of charts_b) {
 			chart.render();
 		}
-		charts_b[0].updateSeries([{ data: altitudeData, color: '#7c4dff' }]);
-		charts_b[1].updateSeries([{ data: temperatureData, color: '#00e5ff' }]);
-		charts_b[2].updateSeries([{ data: pressureData, color: '#00ff88' }]);
+		charts_b[0].updateSeries([{ data: buildSeries(dataset, 'altitude'), color: '#7c4dff' }]);
+		charts_b[1].updateSeries([{ data: buildSeries(dataset, 'temperature'), color: '#00e5ff' }]);
+		charts_b[2].updateSeries([{ data: buildSeries(dataset, 'pressure'), color: '#00ff88' }]);
 		charts_b[3].updateSeries([{ data: pressureAltitudeData, color: '#ff3b3b' }]);
 		setTimeout(() => {
 			hideBackupLoader();
