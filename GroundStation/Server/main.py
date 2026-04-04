@@ -49,4 +49,4 @@ def run(queue, on_request, log):
 	socketio.run(app, host="0.0.0.0", port=5000)
 
 if __name__ == "__main__":
-	run(None, lambda data: None, True)
+	run(None, lambda request, req_data: None, True)

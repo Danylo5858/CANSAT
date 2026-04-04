@@ -4,12 +4,12 @@ import { backupRequest } from './backup.js';
 const window_size = 60 * 1000;
 const ticks = 6;
 
-function createChart(element, title, xaxis, yaxis, color, type='line', curve='smooth') {
+function createChart(element, title, xaxis, yaxis, color, animations=true, type='line', curve='smooth') {
 	return new ApexCharts(element, {
 		chart: {
 			type: type,
 			animations: {
-				enabled: true,
+				enabled: animations,
 				easing: 'linear',
 				dynamicAnimation: {
 					speed: 700
@@ -125,6 +125,7 @@ const charts = [
 			}
 		},
 		'#ff3b3b',
+		true,
 		'line',
 		'straight'
 	),
@@ -159,6 +160,62 @@ const charts = [
 			}
 		},
 		'#00ff88'
+	),
+	createChart(
+		document.querySelector('#chart_a_b'),
+		'Altitud del CanSat (Copia de seguridad)',
+		timeXaxis,
+		{
+			title: {
+				text: 'Altitud (m)'
+			}
+		},
+		'#7c4dff',
+		false
+	),
+	createChart(
+		document.querySelector('#chart_t_b'),
+		'Temperatura del CanSat (Copia de seguridad)',
+		timeXaxis,
+		{
+			title: {
+				text: 'Temperatura (Celsius)'
+			}
+		},
+		'#00e5ff',
+		false
+	),
+	createChart(document.querySelector('#chart_p_b'),
+		'Presión del CanSat (Copia de seguridad)',
+		timeXaxis,
+		{
+			title: {
+				text: 'Presión (hPa)'
+			}
+		},
+		'#00ff88',
+		false
+	),
+	createChart(document.querySelector('#chart_pa_b'),
+		'Altitud - Presión (Copia de seguridad)',
+		{
+			title: {
+				text: 'Presión (hPa)'
+			}
+		},
+		{
+			type: 'numeric',
+			title: {
+				text: 'Altitud (m)'
+			},
+			labels: {
+				formatter: (val) => `${Math.round(val)} m`
+			}
+		},
+		'#ff3b3b',
+		false,
+		'line',
+		'straight'
 	)
 ];
 
@@ -175,6 +232,7 @@ export const socket = io('http://localhost:5000', {
 	timeout: 20000,
 });
 const loadingTime = 7 * 1000;
+const backupLoadingTime = 3 * 1000;
 let firstData = true
 
 setTimeout(() => {
@@ -271,10 +329,57 @@ socket.on('MPU6050_data', (data) => {
 	onReceiveQuats(data);
 });
 
+function showBackupLoader() {
+    document.getElementById('backup-loader').classList.remove('hide');
+}
+
+function hideBackupLoader() {
+    document.getElementById('backup-loader').classList.add('hide');
+}
+
 socket.on('backup_response', (res) => {
 	if (res['success'] === true) {
 		console.log('Copia de seguridad del CanSat recibida correctamente');
 		console.log(res['data'])
+		dataset = res['data']['BMP390'];
+		const altitudeData = dataset.map(d => {
+			const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
+			return {
+				x: timestamp,
+				y: d.altitude
+			};
+		});
+		const temperatureData = dataset.map(d => {
+			const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
+			return {
+				x: timestamp,
+				y: d.temperature
+			};
+		});
+		const pressureData = dataset.map(d => {
+			const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
+			return {
+				x: timestamp,
+				y: d.pressure
+			};
+		});
+		const pressureAltitudeData = dataset.map(d => {
+			return {
+				x: d.pressure,
+				y: d.altitude
+			};
+		});
+		charts[7].updateSeries([{ data: altitudeData }]);
+		charts[8].updateSeries([{ data: temperatureData }]);
+		charts[9].updateSeries([{ data: pressureData }]);
+		charts[10].updateSeries([{ data: pressureAltitudeData }]);
+		setTimeout(() => {
+			hideBackupLoader();
+			document.querySelectorAll('.main-content').forEach(el => {
+				el.classList.add('hide');
+			});
+			document.querySelector('#backup-charts').classList.remove('hide');
+		}, backupLoadingTime);
 	}
 	else {
 		console.log('Fallo recibiendo la copia de seguridad del CanSat');
@@ -298,22 +403,31 @@ function handleSidebarAction(button) {
 	}
 	else if (button.getAttribute('id') === 'backup-btn') {
 		document.querySelector('#backup-config').classList.remove('hide');
-		backupRequest(true, true, false, '2026-04-03 23:15:00', '2026-04-03 23:17:35');
 	}
 }
 window.handleSidebarAction = handleSidebarAction;
 
-
-function showLoader() {
-    document.getElementById('backup-loader').classList.remove('hide');
-}
-
 function generateInterval() {
-    showLoader();
+    showBackupLoader();
+    const startDate = document.getElementById('start-date').value;
+    const startTime = document.getElementById('start-time').value;
+    const endDate = document.getElementById('end-date').value;
+    const endTime = document.getElementById('end-time').value;
+    if (!startDate || !startTime || !endDate || !endTime) {
+
+    }
+    else {
+    	const formattedStartTime = startTime.replace(':', '-') + '-00';
+    	const formattedEndTime = endTime.replace(':', '-') + '-00';
+    	const start = `${startDate} ${formattedStartTime}`;
+    	const end = `${endDate} ${formattedEndTime}`;
+		backupRequest(true, false, false, start, end);
+    }
 }
 window.generateInterval = generateInterval
 
 function generateFull() {
-    showLoader();
+    showBackupLoader();
+	backupRequest(true, false, false);
 }
 window.generateFull = generateFull
