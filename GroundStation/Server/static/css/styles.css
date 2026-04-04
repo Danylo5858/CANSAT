@@ -413,3 +413,8 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     background: #4fd1c5;
     opacity: 0.7;
 }
+
+.apexcharts-tooltip {
+  	box-shadow: none !important;
+  	filter: none !important;
+}
