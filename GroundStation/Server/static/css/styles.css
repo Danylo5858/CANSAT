@@ -244,7 +244,7 @@ canvas {
     justify-content: center;
     gap: 25px;
     width: 100%;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .time-block {
@@ -353,7 +353,8 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
+    margin-bottom: 25px;
 }
 
 .action-btn {
@@ -390,7 +391,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     justify-content: center;
     align-items: center;
     background: rgba(10, 15, 20, 0.35);
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(6px);
     z-index: 50;
     opacity: 0;
     pointer-events: none;
