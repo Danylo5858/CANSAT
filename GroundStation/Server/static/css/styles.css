@@ -239,9 +239,10 @@ canvas {
 
 .backup-flow {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 18px;
+    justify-content: center;
+    gap: 30px;
 }
 
 .time-block {
@@ -320,10 +321,10 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .flow-line {
-    width: 2px;
-    height: 30px;
+    width: 40px;
+    height: 2px;
     background: linear-gradient(
-        to bottom,
+        to right,
         transparent,
         rgba(79, 209, 197, 0.4),
         transparent
@@ -337,9 +338,9 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     background: #4fd1c5;
     border-radius: 50%;
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 40%;
+    top: 50%;
+    left: 40%;
+    transform: translateY(-50%);
     opacity: 0.7;
 }
 
@@ -351,7 +352,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .action-btn {
-    width: 80%;
+    width: 100%;
     padding: 12px;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
@@ -378,11 +379,34 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .backup-loader {
+    position: absolute;
+    inset: 0;
     display: flex;
     justify-content: center;
+    align-items: center;
+
+    background: rgba(10, 15, 20, 0.35);
+    backdrop-filter: blur(6px);
+
+    z-index: 50;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.25s;
+}
+
+.backup-loader:not(.hide) {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.loader.small {
+    transform: scale(0.9);
 }
 
 .loader.small div {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
+    background: #4fd1c5;
+    opacity: 0.7;
 }
