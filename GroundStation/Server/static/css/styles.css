@@ -244,7 +244,7 @@ canvas {
     justify-content: center;
     gap: 25px;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .time-block {
@@ -403,7 +403,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .loader.small {
-    transform: scale(1.1);
+    transform: scale(2);
 }
 
 .loader.small div {
