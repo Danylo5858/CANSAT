@@ -389,12 +389,9 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-
     background: rgba(10, 15, 20, 0.35);
     backdrop-filter: blur(6px);
-
     z-index: 50;
-
     opacity: 0;
     pointer-events: none;
     transition: 0.25s;
@@ -406,7 +403,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .loader.small {
-    transform: scale(0.9);
+    transform: scale(1.1);
 }
 
 .loader.small div {
