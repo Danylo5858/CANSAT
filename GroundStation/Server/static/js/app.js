@@ -4,7 +4,26 @@ import { backupRequest } from './backup.js';
 const WINDOW_SIZE = 60 * 1000;
 const TICKS = 6;
 
-function createChart(element, title, xaxis, yaxis, color, animations=true, type='line', curve='smooth') {
+function getDynamicTimeFormat(min, max) {
+  	const diff = max - min;
+
+  	const oneMinute = 60 * 1000;
+  	const oneHour = 60 * oneMinute;
+  	const oneDay = 24 * oneHour;
+  	const oneMonth = 30 * oneDay;
+
+  	if (diff <= oneHour) {
+    	return { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  	} else if (diff <= oneDay) {
+    	return { hour: '2-digit', minute: '2-digit' };
+  	} else if (diff <= oneMonth) {
+    	return { day: '2-digit', month: '2-digit' };
+  	} else {
+    	return { month: '2-digit', year: 'numeric' };
+  	}
+}
+
+function createChart(element, title, xaxis, yaxis, color, type='line', curve='smooth', animations=true) {
 	return new ApexCharts(element, {
 		chart: {
 			type: type,
@@ -58,7 +77,89 @@ function createChart(element, title, xaxis, yaxis, color, animations=true, type=
 	});
 }
 
-function generateTimeXaxis(range, ticks, timeConfig) {
+function createBackupChart(element, title, yaxis, color, dataset, type='line', curve='smooth') {
+	const timestamps = dataset.map(d =>
+    	new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime()
+  	);
+
+  	let currentMin = Math.min(...timestamps);
+  	let currentMax = Math.max(...timestamps);
+
+	return new ApexCharts(element, {
+		chart: {
+			type: type,
+			animations: {
+				enabled: false,
+				easing: 'linear',
+				dynamicAnimation: {
+					speed: 700
+				},
+				animateGradually: {
+					enabled: false
+				}
+			},
+			toolbar: {
+				show: false
+			},
+			zoom: {
+				enabled: true
+			},
+			events: {
+		        zoomed: function (ctx, { xaxis }) {
+		          	currentMin = xaxis.min;
+		          	currentMax = xaxis.max;
+		        },
+		        scrolled: function (ctx, { xaxis }) {
+		          	currentMin = xaxis.min;
+		          	currentMax = xaxis.max;
+		        }
+		    }
+		},
+		title: {
+			text: title,
+			align: 'center'
+		},
+		tooltip: {
+			enabled: false,
+			theme: 'dark',
+			followCursor: true,
+			intersect: false,
+			shared: true,
+			fixed: {
+				enabled: true,
+				position: 'topRight',
+				offsetX: 0,
+				offsetY: 0
+			}
+		},
+		grid: {
+			borderColor: '#1f2a37'
+		},
+		series: [{
+			data: [],
+			color: color
+		}],
+		xaxis: {
+	      	type: 'datetime',
+	      	min: currentMin,
+	      	max: currentMax,
+	      	labels: {
+	        	datetimeUTC: false,
+	        	formatter: function (value, timestamp) {
+	          		const format = getDynamicTimeFormat(currentMin, currentMax);
+	          		return new Date(timestamp).toLocaleString([], format);
+	        	}
+	      	}
+	    },
+		yaxis: yaxis,
+		stroke: {
+			curve: curve,
+			width: 2
+		}
+	});
+}
+
+function generateTimeXaxis(range, ticks) {
 	return {
 		type: 'datetime',
 		range: range,
@@ -67,7 +168,11 @@ function generateTimeXaxis(range, ticks, timeConfig) {
 			datetimeUTC: false,
 			formatter: function (value, timestamp) {
 				const d = new Date(timestamp);
-				return d.toLocaleTimeString([], timeConfig);
+				return d.toLocaleTimeString([], {
+					hour: '2-digit',
+					minute: '2-digit',
+					second: '2-digit'
+				});
 			}
 		}
 	};
@@ -77,11 +182,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_a'),
 		'Altitud del CanSat en tiempo real',
-		generateTimeXaxis(WINDOW_SIZE, TICKS, {
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Altitud (m)'
@@ -92,11 +193,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t'),
 		'Temperatura del CanSat en tiempo real',
-		generateTimeXaxis(WINDOW_SIZE, TICKS, {
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -106,11 +203,7 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_p'),
 		'Presión del CanSat en tiempo real',
-		generateTimeXaxis(WINDOW_SIZE, TICKS, {
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Presión (hPa)'
@@ -135,18 +228,13 @@ const charts = [
 			}
 		},
 		'#ff3b3b',
-		true,
 		'line',
 		'straight'
 	),
 	createChart(
 		document.querySelector('#chart_aq'),
 		'Calidad del aire desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS, {
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Calidad del aire'
@@ -157,11 +245,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t_g'),
 		'Temperatura desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS, {
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -171,94 +255,13 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_h'),
 		'Humedad desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS, {
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
+		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
 				text: 'Humedad'
 			}
 		},
 		'#00ff88'
-	),
-	createChart(
-		document.querySelector('#chart_a_b'),
-		'Altitud del CanSat (Copia de seguridad)',
-		generateTimeXaxis(undefined, undefined, {
-			year: '2-digit',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
-		{
-			title: {
-				text: 'Altitud (m)'
-			}
-		},
-		'#7c4dff',
-		false
-	),
-	createChart(
-		document.querySelector('#chart_t_b'),
-		'Temperatura del CanSat (Copia de seguridad)',
-		generateTimeXaxis(undefined, undefined, {
-			year: '2-digit',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
-		{
-			title: {
-				text: 'Temperatura (Celsius)'
-			}
-		},
-		'#00e5ff',
-		false
-	),
-	createChart(document.querySelector('#chart_p_b'),
-		'Presión del CanSat (Copia de seguridad)',
-		generateTimeXaxis(undefined, undefined, {
-			year: '2-digit',
-			month: '2-digit',
-			day: '2-digit',
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		}),
-		{
-			title: {
-				text: 'Presión (hPa)'
-			}
-		},
-		'#00ff88',
-		false
-	),
-	createChart(document.querySelector('#chart_pa_b'),
-		'Altitud - Presión (Copia de seguridad)',
-		{
-			title: {
-				text: 'Presión (hPa)'
-			}
-		},
-		{
-			type: 'numeric',
-			title: {
-				text: 'Altitud (m)'
-			},
-			labels: {
-				formatter: (val) => `${Math.round(val)} m`
-			}
-		},
-		'#ff3b3b',
-		false,
-		'line',
-		'straight'
 	)
 ];
 
@@ -385,6 +388,61 @@ socket.on('backup_response', (res) => {
 		console.log('Copia de seguridad del CanSat recibida correctamente');
 		console.log(res['data'])
 		const dataset = res['data']['BMP390'];
+		const charts_b = [
+			createBackupChart(
+				document.querySelector('#chart_a_b'),
+				'Altitud del CanSat (Copia de seguridad)',
+				{
+					title: {
+						text: 'Altitud (m)'
+					}
+				},
+				'#7c4dff',
+				dataset
+			),
+			createBackupChart(
+				document.querySelector('#chart_t_b'),
+				'Temperatura del CanSat (Copia de seguridad)',
+				{
+					title: {
+						text: 'Temperatura (Celsius)'
+					}
+				},
+				'#00e5ff',
+				dataset
+			),
+			createBackupChart(document.querySelector('#chart_p_b'),
+				'Presión del CanSat (Copia de seguridad)',
+				{
+					title: {
+						text: 'Presión (hPa)'
+					}
+				},
+				'#00ff88',
+				dataset
+			),
+			createChart(document.querySelector('#chart_pa_b'),
+				'Altitud - Presión (Copia de seguridad)',
+				{
+					title: {
+						text: 'Presión (hPa)'
+					}
+				},
+				{
+					type: 'numeric',
+					title: {
+						text: 'Altitud (m)'
+					},
+					labels: {
+						formatter: (val) => `${Math.round(val)} m`
+					}
+				},
+				'#ff3b3b',
+				'line',
+				'straight',
+				false
+			)
+		];
 		const altitudeData = dataset.map(d => {
 			const timestamp = new Date(`${d.date}T${d.time.replace(/-/g, ":")}`).getTime();
 			return {
@@ -412,10 +470,13 @@ socket.on('backup_response', (res) => {
 				y: d.altitude
 			};
 		});
-		charts[7].updateSeries([{ data: altitudeData, color: '#7c4dff' }]);
-		charts[8].updateSeries([{ data: temperatureData, color: '#00e5ff' }]);
-		charts[9].updateSeries([{ data: pressureData, color: '#00ff88' }]);
-		charts[10].updateSeries([{ data: pressureAltitudeData, color: '#ff3b3b' }]);
+		for (const chart of charts_b) {
+			chart.render();
+		}
+		charts_b[0].updateSeries([{ data: altitudeData, color: '#7c4dff' }]);
+		charts_b[1].updateSeries([{ data: temperatureData, color: '#00e5ff' }]);
+		charts_b[2].updateSeries([{ data: pressureData, color: '#00ff88' }]);
+		charts_b[3].updateSeries([{ data: pressureAltitudeData, color: '#ff3b3b' }]);
 		setTimeout(() => {
 			hideBackupLoader();
 			document.querySelectorAll('.main-content').forEach(el => {
