@@ -385,14 +385,16 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 
 .backup-loader {
     position: absolute;
-    width: 100vw;
+    width: 70vw;
     height: 100vh;
+    top: 0;
+    left: 0;
     inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     background: rgba(10, 15, 20, 0.35);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(7px);
     z-index: 2;
     opacity: 0;
     pointer-events: none;
@@ -402,15 +404,4 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 .backup-loader:not(.hide) {
     opacity: 1;
     pointer-events: all;
-}
-
-.loader.small {
-    transform: scale(2);
-}
-
-.loader.small div {
-    width: 17px;
-    height: 17px;
-    background: #4fd1c5;
-    opacity: 0.7;
 }
