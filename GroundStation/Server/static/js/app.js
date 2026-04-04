@@ -88,21 +88,22 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 	return new ApexCharts(element, {
 		chart: {
 			type: type,
-			animations: {
-				enabled: false,
-				easing: 'linear',
-				dynamicAnimation: {
-					speed: 700
-				},
-				animateGradually: {
-					enabled: false
-				}
-			},
+			// animations: {
+			// 	enabled: false,
+			// 	easing: 'linear',
+			// 	dynamicAnimation: {
+			// 		speed: 700
+			// 	},
+			// 	animateGradually: {
+			// 		enabled: false
+			// 	}
+			// },
 			toolbar: {
 				show: false
 			},
 			zoom: {
-				enabled: true
+				enabled: true,
+				autoScaleYaxis: true
 			},
 			events: {
 		        zoomed: function (ctx, { xaxis }) {
