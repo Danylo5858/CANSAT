@@ -58,7 +58,7 @@ function createChart(element, title, xaxis, yaxis, color, animations=true, type=
 	});
 }
 
-function generateTimeXaxis(range, ticks) {
+function generateTimeXaxis(range, ticks, timeConfig) {
 	return {
 		type: 'datetime',
 		range: range,
@@ -67,11 +67,7 @@ function generateTimeXaxis(range, ticks) {
 			datetimeUTC: false,
 			formatter: function (value, timestamp) {
 				const d = new Date(timestamp);
-				return d.toLocaleTimeString([], {
-					hour: '2-digit',
-					minute: '2-digit',
-					second: '2-digit'
-				});
+				return d.toLocaleTimeString([], timeConfig);
 			}
 		}
 	};
@@ -81,7 +77,11 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_a'),
 		'Altitud del CanSat en tiempo real',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS, {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Altitud (m)'
@@ -92,7 +92,11 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t'),
 		'Temperatura del CanSat en tiempo real',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS, {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -102,7 +106,11 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_p'),
 		'Presión del CanSat en tiempo real',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS, {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Presión (hPa)'
@@ -134,7 +142,11 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_aq'),
 		'Calidad del aire desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS, {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Calidad del aire'
@@ -145,7 +157,11 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t_g'),
 		'Temperatura desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS, {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -155,7 +171,11 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_h'),
 		'Humedad desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(WINDOW_SIZE, TICKS, {
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Humedad'
@@ -166,7 +186,14 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_a_b'),
 		'Altitud del CanSat (Copia de seguridad)',
-		generateTimeXaxis(undefined, undefined),
+		generateTimeXaxis(undefined, undefined, {
+			year: '2-digit',
+			month: '2-digit',
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Altitud (m)'
@@ -178,7 +205,14 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t_b'),
 		'Temperatura del CanSat (Copia de seguridad)',
-		generateTimeXaxis(undefined, undefined),
+		generateTimeXaxis(undefined, undefined, {
+			year: '2-digit',
+			month: '2-digit',
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -189,7 +223,14 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_p_b'),
 		'Presión del CanSat (Copia de seguridad)',
-		generateTimeXaxis(undefined, undefined),
+		generateTimeXaxis(undefined, undefined, {
+			year: '2-digit',
+			month: '2-digit',
+			day: '2-digit',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		}),
 		{
 			title: {
 				text: 'Presión (hPa)'
