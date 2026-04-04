@@ -99,7 +99,7 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 			// 	}
 			// },
 			toolbar: {
-				show: false
+				show: true
 			},
 			zoom: {
 				enabled: true,
@@ -121,17 +121,11 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 			align: 'center'
 		},
 		tooltip: {
-			enabled: false,
+			enabled: true,
 			theme: 'dark',
 			followCursor: true,
 			intersect: false,
-			shared: true,
-			fixed: {
-				enabled: true,
-				position: 'topRight',
-				offsetX: 0,
-				offsetY: 0
-			}
+			shared: true
 		},
 		grid: {
 			borderColor: '#1f2a37'
