@@ -189,7 +189,7 @@ const charts = [
 				text: 'Presión (hPa)'
 			},
 			labels: {
-				formatter: (val) => `${val} hPa`
+				formatter: (val) => `${Math.round(val)} hPa`
 			}
 		},
 		{
@@ -198,7 +198,7 @@ const charts = [
 				text: 'Altitud (m)'
 			},
 			labels: {
-				formatter: (val) => `${val} m`
+				formatter: (val) => `${Math.round(val)} m`
 			}
 		},
 		'#ff3b3b',
@@ -402,7 +402,7 @@ socket.on('backup_response', (res) => {
 						text: 'Presión (hPa)'
 					},
 					labels: {
-						formatter: (val) => `${val} hPa`
+						formatter: (val) => `${Math.round(val)} hPa`
 					}
 				},
 				{
@@ -411,7 +411,7 @@ socket.on('backup_response', (res) => {
 						text: 'Altitud (m)'
 					},
 					labels: {
-						formatter: (val) => `${val} m`
+						formatter: (val) => `${Math.round(val)} m`
 					}
 				},
 				'#ff3b3b',
@@ -454,7 +454,7 @@ socket.on('backup_response', (res) => {
 		charts_b[0].updateSeries([{ name: 'Altitud (m)', data: altitudeData, color: '#7c4dff' }]);
 		charts_b[1].updateSeries([{ name: 'Temperatura (Celsius)', data: temperatureData, color: '#00e5ff' }]);
 		charts_b[2].updateSeries([{ name: 'Presión (hPa)', data: pressureData, color: '#00ff88' }]);
-		charts_b[3].updateSeries([{ name: 'Altitud - Presión', data: pressureAltitudeData, color: '#ff3b3b' }]);
+		charts_b[3].updateSeries([{ name: 'Altitud (m)', data: pressureAltitudeData, color: '#ff3b3b' }]);
 		setTimeout(() => {
 			hideBackupLoader();
 			document.querySelectorAll('.main-content').forEach(el => {
