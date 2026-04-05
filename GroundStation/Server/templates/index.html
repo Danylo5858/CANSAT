@@ -93,6 +93,7 @@
             </div>
         </div>
     </div>
+    <div id="map-canvas" class="main-content hide"></div>
     <div class="sidebar">
         <button id="cansat-charts-btn" class="sidebar-btn active" onclick="handleSidebarAction(this)">
             Mostrar gráficos del CanSat
@@ -102,6 +103,9 @@
         </button>
         <button id="backup-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
             Generar gráficos a partir de una copia de seguridad
+        </button>
+        <button id="map-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
+            Seguir al CanSat en tiempo real
         </button>
         <div id="viewer" class="sidebar-gyro-visualization"></div>
     </div>
@@ -119,6 +123,8 @@
             </div>
         </div>
     </div>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=&callback=initialize"></script>
+    <script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/3D_visualization.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/backup.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>

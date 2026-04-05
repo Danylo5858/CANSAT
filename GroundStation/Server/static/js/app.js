@@ -1,5 +1,6 @@
 import { onReceiveQuats } from './3D_visualization.js';
 import { backupRequest } from './backup.js';
+import { updateMap } from './map.js';
 
 const WINDOW_SIZE = 60 * 1000;
 const TICKS = 6;
@@ -468,6 +469,16 @@ socket.on('backup_response', (res) => {
 	}
 });
 
+socket.on('GPS_data', (data) => {
+	if (data['latitude'] === 0 && data['longitude'] === 0) {
+		return;
+	}
+	else {
+		//console.log('Datos recibidos (GPS_data)');
+		updateMap(data['latitude'], data['longitude']);
+	}
+});
+
 
 function handleSidebarAction(button) {
 	document.querySelectorAll('.sidebar-btn').forEach(btn => {
@@ -486,19 +497,22 @@ function handleSidebarAction(button) {
 	else if (button.getAttribute('id') === 'backup-btn') {
 		document.querySelector('#backup-config').classList.remove('hide');
 	}
+	else if (button.getAttribute('id') === 'map-btn') {
+		document.querySelector('#map-canvas').classList.remove('hide');
+	}
 }
 window.handleSidebarAction = handleSidebarAction;
 
 function generateInterval() {
-    showBackupLoader();
     const startDate = document.getElementById('start-date').value;
     const startTime = document.getElementById('start-time').value;
     const endDate = document.getElementById('end-date').value;
     const endTime = document.getElementById('end-time').value;
     if (!startDate || !startTime || !endDate || !endTime) {
-
+    	console.log('Faltan campos por rellenar para generar un análisis en intervalo');
     }
     else {
+    	showBackupLoader();
     	const formattedStartTime = startTime.replace(':', '-') + '-00';
     	const formattedEndTime = endTime.replace(':', '-') + '-00';
     	const start = `${startDate} ${formattedStartTime}`;
