@@ -54,8 +54,8 @@ function createChart(element, title, xaxis, yaxis, color, type='line', curve='sm
 		tooltip: {
 			enabled: tooltip,
 			theme: 'dark',
-			intersect: false,
-			shared: true
+			//intersect: false,
+			//shared: true
 		},
 		grid: {
 			borderColor: '#1f2a37'
@@ -100,8 +100,8 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 		tooltip: {
 			enabled: true,
 			theme: 'dark',
-			intersect: false,
-			shared: true
+			//intersect: false,
+			//shared: true
 		},
 		grid: {
 			borderColor: '#1f2a37'
