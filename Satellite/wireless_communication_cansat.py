@@ -17,7 +17,7 @@ def pack_all(data):
     bmp = data["BMP390"]
     quats = data["MPU6050"]
     packet = struct.pack(
-        '<iiB hhh h' + '16h',
+        '<iiB i i i h' + '16h',
         int(gps["latitude"] * 1e7),
         int(gps["longitude"] * 1e7),
         int(gps["satellites"]),
