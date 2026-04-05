@@ -6,6 +6,8 @@ const TICKS = 6;
 
 function getDynamicTimeFormat(min, max) {
   	const diff = max - min;
+  	console.log(diff);
+  	console.log(60000 * 60 * 24);
 
   	const oneMinute = 60 * 1000;
   	const oneHour = 60 * oneMinute;
@@ -14,12 +16,15 @@ function getDynamicTimeFormat(min, max) {
 
   	if (diff <= oneHour) {
     	return { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-  	} else if (diff <= oneDay) {
+  	}
+  	else if (diff <= oneDay) {
     	return { hour: '2-digit', minute: '2-digit' };
-  	} else if (diff <= oneMonth) {
-    	return { day: '2-digit', month: '2-digit' };
-  	} else {
-    	return { month: '2-digit', year: 'numeric' };
+  	}
+  	else if (diff <= oneMonth) {
+    	return { day: '2-digit', month: 'short' };
+  	}
+  	else {
+    	return { month: 'short', year: 'numeric' };
   	}
 }
 
@@ -89,11 +94,11 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 		chart: {
 			type: type,
 			toolbar: {
-				show: true
+				show: false
 			},
 			zoom: {
 				type: 'x',
-				enabled: true,
+				enabled: false,
 				autoScaleYaxis: true
 			}
 		},
@@ -102,7 +107,7 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 			align: 'center'
 		},
 		tooltip: {
-			enabled: false,
+			enabled: true,
 			theme: 'dark',
 			intersect: false,
 			shared: true
@@ -122,7 +127,7 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 	        	datetimeUTC: false,
 	        	formatter: function (value, timestamp) {
 	          		const format = getDynamicTimeFormat(currentMin, currentMax);
-	          		return new Date(timestamp).toLocaleString([], format);
+	          		return new Date(timestamp).toLocaleString('es-ES', format);
 	        	}
 	      	}
 	    },
