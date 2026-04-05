@@ -194,7 +194,6 @@ canvas {
   	transform: scale(0.98);
 }
 
-
 .backup-wrapper {
     width: 70vw;
     height: 100vh;
@@ -215,7 +214,7 @@ canvas {
     gap: 55px;
     /*border: 2px solid rgba(79, 209, 197, 0.2);*/
     /*background: rgba(79, 209, 197, 0.02);*/
-    backdrop-filter: blur(4px);
+    /*backdrop-filter: blur(4px);*/
 }
 
 .backup-header {
@@ -387,7 +386,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 .backup-loader {
     position: absolute;
     inset: 0;
-    display: flex;
+    display: none;
     justify-content: center;
     align-items: center;
     background: rgba(10, 15, 20, 0.35);
@@ -399,6 +398,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
 }
 
 .backup-loader:not(.hide) {
+	display: flex;
     opacity: 1;
     pointer-events: all;
 }
