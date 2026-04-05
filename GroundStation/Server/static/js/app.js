@@ -187,6 +187,9 @@ const charts = [
 		{
 			title: {
 				text: 'Presión (hPa)'
+			},
+			labels: {
+				formatter: (val) => `${val} hPa`
 			}
 		},
 		{
@@ -195,7 +198,7 @@ const charts = [
 				text: 'Altitud (m)'
 			},
 			labels: {
-				formatter: (val) => `${Math.round(val)} m`
+				formatter: (val) => `${val} m`
 			}
 		},
 		'#ff3b3b',
@@ -397,6 +400,9 @@ socket.on('backup_response', (res) => {
 				{
 					title: {
 						text: 'Presión (hPa)'
+					},
+					labels: {
+						formatter: (val) => `${val} hPa`
 					}
 				},
 				{
@@ -405,7 +411,7 @@ socket.on('backup_response', (res) => {
 						text: 'Altitud (m)'
 					},
 					labels: {
-						formatter: (val) => `${Math.round(val)} m`
+						formatter: (val) => `${val} m`
 					}
 				},
 				'#ff3b3b',
