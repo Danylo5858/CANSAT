@@ -6,8 +6,6 @@ const TICKS = 6;
 
 function getDynamicTimeFormat(min, max) {
   	const diff = max - min;
-  	console.log(diff);
-  	console.log(60000 * 60 * 24);
 
   	const oneMinute = 60 * 1000;
   	const oneHour = 60 * oneMinute;
@@ -28,7 +26,7 @@ function getDynamicTimeFormat(min, max) {
   	}
 }
 
-function createChart(element, title, xaxis, yaxis, color, type='line', curve='smooth', animations=true) {
+function createChart(element, title, xaxis, yaxis, color, type='line', curve='smooth', animations=true, tooltip=false) {
 	return new ApexCharts(element, {
 		chart: {
 			type: type,
@@ -54,17 +52,10 @@ function createChart(element, title, xaxis, yaxis, color, type='line', curve='sm
 			align: 'center'
 		},
 		tooltip: {
-			enabled: false,
+			enabled: tooltip,
 			theme: 'dark',
-			followCursor: true,
 			intersect: false,
-			shared: true,
-			fixed: {
-				enabled: true,
-				position: 'topRight',
-				offsetX: 0,
-				offsetY: 0
-			}
+			shared: true
 		},
 		grid: {
 			borderColor: '#1f2a37'
@@ -420,7 +411,8 @@ socket.on('backup_response', (res) => {
 				'#ff3b3b',
 				'line',
 				'straight',
-				false
+				false,
+				true
 			)
 		];
 		const altitudeData = dataset.map(d => {
@@ -453,10 +445,10 @@ socket.on('backup_response', (res) => {
 		for (const chart of charts_b) {
 			chart.render();
 		}
-		charts_b[0].updateSeries([{ data: altitudeData, color: '#7c4dff' }]);
-		charts_b[1].updateSeries([{ data: temperatureData, color: '#00e5ff' }]);
-		charts_b[2].updateSeries([{ data: pressureData, color: '#00ff88' }]);
-		charts_b[3].updateSeries([{ data: pressureAltitudeData, color: '#ff3b3b' }]);
+		charts_b[0].updateSeries([{ name: 'Altitud (m)', data: altitudeData, color: '#7c4dff' }]);
+		charts_b[1].updateSeries([{ name: 'Temperatura (Celsius)', data: temperatureData, color: '#00e5ff' }]);
+		charts_b[2].updateSeries([{ name: 'Presión (hPa)', data: pressureData, color: '#00ff88' }]);
+		charts_b[3].updateSeries([{ name: 'Altitud - Presión', data: pressureAltitudeData, color: '#ff3b3b' }]);
 		setTimeout(() => {
 			hideBackupLoader();
 			document.querySelectorAll('.main-content').forEach(el => {
