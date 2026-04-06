@@ -5,8 +5,12 @@ def run(queue, on_request, log):
 	import os
 	import sys
 	from queue import Empty
+	from dotenv import load_dotenv
 	from flask import Flask, jsonify, render_template
 	from flask_socketio import SocketIO
+
+	load_dotenv()
+	GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
 	app = Flask(__name__)
 	socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
@@ -30,7 +34,7 @@ def run(queue, on_request, log):
 
 	@app.route("/")
 	def index():
-		return render_template("index.html")
+		return render_template("index.html", google_maps_api_key=GOOGLE_MAPS_API_KEY)
 
 	@socketio.on("connect")
 	def handle_connect():

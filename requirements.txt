@@ -11,3 +11,4 @@ sx126x
 eventlet
 flask
 flask-socketio
+python-dotenv

@@ -21,14 +21,25 @@ p {
 	height: 100vh;
 }
 
-#map-canvas {
+#map-view {
 	position: absolute;
 	top: 0;
 	left: 0;
 	height: 100vh;
 	width: 70%;
-	padding: 40px;
+	padding: 30px;
 	box-sizing: border-box;
+}
+
+#map-canvas {
+	width: 100%;
+	height: 100%;
+	border: 4px solid rgba(79, 209, 197, 0.45);
+	transition: all 0.2s ease;
+}
+
+#map-canvas:hover {
+	border: 4px solid rgba(79, 209, 197, 0.9);
 }
 
 .charts-grid {

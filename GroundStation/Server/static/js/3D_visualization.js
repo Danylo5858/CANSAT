@@ -35,11 +35,13 @@ function init() {
 	camera.position.set(2, 2, 3);
 
 	renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 	renderer.setSize(container.clientWidth, container.clientHeight);
 	container.appendChild(renderer.domElement);
 
 	controls = new OrbitControls(camera, renderer.domElement);
-	controls.enableDamping = true;
+	controls.enableDamping = false;
+	controls.rotateSpeed = 0.6;
 	controls.enablePan = false;
 
 	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 16);
@@ -63,6 +65,7 @@ function onResize() {
 	camera.updateProjectionMatrix();
 
 	renderer.setSize(container.clientWidth, container.clientHeight);
+	controls.update();
 }
 
 export function onReceiveQuats(quats) {

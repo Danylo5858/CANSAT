@@ -93,7 +93,9 @@
             </div>
         </div>
     </div>
-    <div id="map-canvas" class="main-content hide"></div>
+    <div id="map-view" class="main-content hide">
+        <div id="map-canvas"></div>
+    </div>
     <div class="sidebar">
         <button id="cansat-charts-btn" class="sidebar-btn active" onclick="handleSidebarAction(this)">
             Mostrar gráficos del CanSat
@@ -123,10 +125,10 @@
             </div>
         </div>
     </div>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=&callback=initialize"></script>
     <script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/3D_visualization.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/backup.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key={{ google_maps_api_key }}"></script>
 </body>
 </html>

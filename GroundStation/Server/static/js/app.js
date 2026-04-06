@@ -498,7 +498,7 @@ function handleSidebarAction(button) {
 		document.querySelector('#backup-config').classList.remove('hide');
 	}
 	else if (button.getAttribute('id') === 'map-btn') {
-		document.querySelector('#map-canvas').classList.remove('hide');
+		document.querySelector('#map-view').classList.remove('hide');
 	}
 }
 window.handleSidebarAction = handleSidebarAction;

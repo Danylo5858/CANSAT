@@ -6,3 +6,5 @@ __pycache__/
 Satellite/Data/*.csv
 GroundStation/BackupData/*.csv
 venv/
+
+.env
