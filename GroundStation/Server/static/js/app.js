@@ -209,7 +209,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_aq'),
 		'Calidad del aire desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(undefined, undefined),
 		{
 			title: {
 				text: 'Calidad del aire'
@@ -220,7 +220,7 @@ const charts = [
 	createChart(
 		document.querySelector('#chart_t_g'),
 		'Temperatura desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(undefined, undefined),
 		{
 			title: {
 				text: 'Temperatura (Celsius)'
@@ -230,7 +230,7 @@ const charts = [
 	),
 	createChart(document.querySelector('#chart_h'),
 		'Humedad desde estación de tierra',
-		generateTimeXaxis(WINDOW_SIZE, TICKS),
+		generateTimeXaxis(undefined, undefined),
 		{
 			title: {
 				text: 'Humedad'
