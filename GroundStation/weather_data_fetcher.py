@@ -12,7 +12,7 @@ _cache = {
     "data": None,
     "timestamp": 0
 }
-CACHE_TTL = 5
+CACHE_TTL = 30
 
 def init():
     global openmeteo

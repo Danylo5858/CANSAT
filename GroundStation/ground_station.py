@@ -11,8 +11,8 @@ import wireless_communication_gs as wcom_gs
 import Server.main as app
 
 wcom_gs.log = False
-wdf.log = False
-gm.log = False
+wdf.log = True
+gm.log = True
 server_log = True
 
 os.makedirs("BackupData", exist_ok=True)
