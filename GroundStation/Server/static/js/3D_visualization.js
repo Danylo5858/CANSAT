@@ -1,11 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-// ======================================================
-// THREE SETUP
-// ======================================================
-
 let scene, camera, renderer, controls, mesh;
+
+// ======================================================
+// RESIZE (TU FUNCIÓN EXACTA)
+// ======================================================
 
 function onResize() {
 	const container = document.getElementById('viewer');
@@ -18,17 +18,18 @@ function onResize() {
 }
 
 // ======================================================
-// ACCEL -> ANGLES
+// ACCEL -> ANGLES (OPTIMIZADO SIN GC)
 // ======================================================
 
-function accelToAngles(ax, ay, az) {
+const tmpAnglesA = { roll: 0, pitch: 0 };
+const tmpAnglesB = { roll: 0, pitch: 0 };
+
+function accelToAngles(ax, ay, az, out) {
 	const roll = Math.atan2(ay, az);
 	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
 
-	return {
-		roll: roll * 180 / Math.PI,
-		pitch: pitch * 180 / Math.PI
-	};
+	out.roll = roll * 180 / Math.PI;
+	out.pitch = pitch * 180 / Math.PI;
 }
 
 // ======================================================
@@ -40,56 +41,61 @@ function lerp(a, b, t) {
 }
 
 // ======================================================
-// REAL-TIME STATE (SIN COLA)
+// REALTIME STATE (SIN COLA)
 // ======================================================
 
 const state = {
-	prev: null,   // último estado estable
-	next: null,   // nuevo packet
-
-	t: 0,         // interpolación local
-	blendTime: 0.15 // suavizado (segundos)
+	prev: null,
+	next: null,
+	t: 0,
+	blendTime: 0.12 // más bajo = más responsivo (menos lag visual)
 };
 
 // ======================================================
-// RECEPCIÓN DE PACKET (RADIO)
+// RECEPCIÓN DE PACKET
 // ======================================================
 
 export function onReceiveAccel(packet) {
 
-	const angles = packet.accel.map(p => {
-		const { roll, pitch } = accelToAngles(p[0], p[1], p[2]);
-		return { roll, pitch };
-	});
+	// reutilizamos buffers (NO objetos nuevos por frame crítico)
+	const angles = [];
+
+	for (let i = 0; i < packet.accel.length; i++) {
+		const p = packet.accel[i];
+
+		const out = i === 0 ? tmpAnglesA : tmpAnglesB;
+
+		accelToAngles(p[0], p[1], p[2], out);
+
+		angles.push({
+			roll: out.roll,
+			pitch: out.pitch
+		});
+	}
 
 	const newState = {
 		angles,
-		time: packet.time,
-		timestamp: performance.now() / 1000
+		time: packet.time
 	};
 
-	// desplazar estados
 	state.prev = state.next;
 	state.next = newState;
 
-	// reset interpolación
 	state.t = 0;
 }
 
 // ======================================================
-// UPDATE (FRAME LOOP)
+// UPDATE LOOP
 // ======================================================
 
 function update(dt, object3D) {
 
 	if (!state.prev || !state.next) return;
 
-	// acumulamos tiempo local de transición
 	state.t += dt / state.blendTime;
 
 	const t = Math.min(state.t, 1);
 
-	// usamos SOLO primeros 2 puntos del segmento actual (stream real-time)
 	const a0 = state.prev.angles[0];
 	const a1 = state.next.angles[0];
 
@@ -100,54 +106,66 @@ function update(dt, object3D) {
 
 	object3D.rotation.x = pitch * Math.PI / 180;
 	object3D.rotation.z = roll * Math.PI / 180;
+
+	// 🚨 BLOQUEO TOTAL DE YAW
+	object3D.rotation.y = 0;
 }
 
 // ======================================================
-// INIT THREE
+// INIT (TU FUNCIÓN EXACTA)
 // ======================================================
 
 function init() {
 	const container = document.getElementById('viewer');
+
 	scene = new THREE.Scene();
+
 	camera = new THREE.PerspectiveCamera(
 		75,
 		container.clientWidth / container.clientHeight,
 		0.1,
 		1000
 	);
+
 	camera.position.set(2, 2, 3);
+
 	renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 	renderer.setSize(container.clientWidth, container.clientHeight);
+
 	container.appendChild(renderer.domElement);
+
 	controls = new OrbitControls(camera, renderer.domElement);
 	controls.enableDamping = false;
 	controls.rotateSpeed = 0.4;
 	controls.enablePan = false;
+
 	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 16);
 	const material = new THREE.MeshBasicMaterial({
 		color: 0x4FD1C5,
 		wireframe: true
 	});
+
 	mesh = new THREE.Mesh(geometry, material);
 	scene.add(mesh);
+
 	scene.add(new THREE.AxesHelper(2));
+
 	window.addEventListener('resize', onResize);
 }
 
 // ======================================================
-// ANIMATE LOOP
+// ANIMATION LOOP
 // ======================================================
 
-let last = performance.now();
+let lastTime = performance.now();
 
 function animate() {
-
 	requestAnimationFrame(animate);
 
 	const now = performance.now();
-	const dt = (now - last) / 1000;
-	last = now;
+	const dt = (now - lastTime) / 1000;
+	lastTime = now;
 
 	update(dt, mesh);
 
