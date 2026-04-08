@@ -3,6 +3,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let scene, camera, renderer, controls, mesh;
 
+/* =========================
+   UTIL
+========================= */
+
 function onResize() {
 	const container = document.getElementById('viewer');
 
@@ -27,117 +31,72 @@ function lerp(a, b, t) {
 }
 
 /* =========================
-   STREAM STATE
+   STREAM BUFFER
 ========================= */
 
-const queue = [];
-const MAX_QUEUE = 2;
+// buffer continuo de samples (NO packets)
+const samples = [];
 
-let currentPacket = null;
-let nextPacket = null;
+// cursor flotante dentro del stream
+let cursor = 0;
 
-let segmentIndex = 0;
-let t = 0;
+// velocidad del “reproductor” del stream
+const SPEED = 25; // samples por segundo (ajustable)
 
 /* =========================
-   INPUT
+   INPUT (STREAM FLATTEN)
 ========================= */
 
 export function onReceiveAccel(packet) {
-	const angles = packet.accel.map(p => {
+	const converted = packet.accel.map(p => {
 		const { roll, pitch } = accelToAngles(p[0], p[1], p[2]);
 		return { roll, pitch };
 	});
 
-	queue.push({
-		angles,
-		time: packet.time
-	});
+	// 🔥 append directo al stream
+	for (const s of converted) {
+		samples.push(s);
+	}
 
-	// 🔥 evitar delay acumulado
-	if (queue.length > MAX_QUEUE) {
-		queue.splice(0, queue.length - 1);
+	// 🔥 control de memoria + evita delay acumulado
+	const MAX = 200;
+	if (samples.length > MAX) {
+		const remove = samples.length - MAX;
+		samples.splice(0, remove);
+
+		// ajustar cursor para no romper continuidad
+		cursor = Math.max(0, cursor - remove);
 	}
 }
 
 /* =========================
-   PACKET LOADER
-========================= */
-
-function loadNext() {
-	if (!currentPacket && queue.length > 0) {
-		currentPacket = queue.shift();
-	}
-
-	nextPacket = queue.length > 0 ? queue[0] : null;
-
-	t = 0;
-	segmentIndex = 0;
-}
-
-/* =========================
-   INTERPOLATION
-========================= */
-
-function applyInterp(a0, a1, t, object3D) {
-	if (!a0 || !a1) return;
-
-	const roll = lerp(a0.roll, a1.roll, t);
-	const pitch = lerp(a0.pitch, a1.pitch, t);
-
-	object3D.rotation.x = pitch * Math.PI / 180;
-	object3D.rotation.z = roll * Math.PI / 180;
-}
-
-/* =========================
-   UPDATE LOOP
+   UPDATE (CONTINUOUS INTERPOLATION)
 ========================= */
 
 function update(dt, object3D) {
-	if (!currentPacket) {
-		if (queue.length > 0) loadNext();
-		return;
-	}
+	if (samples.length < 2) return;
 
-	const a = currentPacket;
-	const b = nextPacket;
+	// avanzar en el stream continuo
+	cursor += dt * SPEED;
 
-	const segDuration = a.time / 3; // 4 puntos = 3 segmentos
-	t += dt;
+	const i = Math.floor(cursor);
+	const t = cursor - i;
 
-	const u = Math.min(t / segDuration, 1);
+	const a = samples[i];
+	const b = samples[i + 1];
 
-	// ----------------------
-	// 1. dentro del packet
-	// ----------------------
-	if (segmentIndex < 3) {
-		const a0 = a.angles[segmentIndex];
-		const a1 = a.angles[segmentIndex + 1];
+	if (!a || !b) return;
 
-		applyInterp(a0, a1, u, object3D);
-	}
+	const roll = lerp(a.roll, b.roll, t);
+	const pitch = lerp(a.pitch, b.pitch, t);
 
-	// ----------------------
-	// 2. transición entre packets
-	// ----------------------
-	else if (b) {
-		const a3 = a.angles[3];
-		const b0 = b.angles[0];
+	object3D.rotation.x = pitch * Math.PI / 180;
+	object3D.rotation.z = roll * Math.PI / 180;
 
-		applyInterp(a3, b0, u, object3D);
-	}
-
-	// avanzar tiempo
-	if (t >= segDuration) {
-		t = 0;
-		segmentIndex++;
-
-		// fin del packet
-		if (segmentIndex >= 3) {
-			currentPacket = nextPacket;
-			queue.shift(); // consumimos siguiente
-			loadNext();
-		}
+	// 🔥 limpieza progresiva sin saltos
+	if (i > 50) {
+		samples.splice(0, i);
+		cursor -= i;
 	}
 }
 
@@ -183,7 +142,7 @@ function init() {
 }
 
 /* =========================
-   ANIMATION LOOP
+   LOOP
 ========================= */
 
 let lastTime = performance.now();
