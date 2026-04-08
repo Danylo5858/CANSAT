@@ -97,38 +97,32 @@ function update(dt, object3D) {
 // ======================================================
 
 function init() {
-
+	const container = document.getElementById('viewer');
 	scene = new THREE.Scene();
-
 	camera = new THREE.PerspectiveCamera(
 		75,
-		window.innerWidth / window.innerHeight,
+		container.clientWidth / container.clientHeight,
 		0.1,
 		1000
 	);
-
 	camera.position.set(2, 2, 3);
-
 	renderer = new THREE.WebGLRenderer({ antialias: true });
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	document.body.appendChild(renderer.domElement);
-
+	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+	renderer.setSize(container.clientWidth, container.clientHeight);
+	container.appendChild(renderer.domElement);
 	controls = new OrbitControls(camera, renderer.domElement);
-	controls.enableDamping = true;
-
+	controls.enableDamping = false;
+	controls.rotateSpeed = 0.4;
+	controls.enablePan = false;
 	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 16);
-	const material = new THREE.MeshNormalMaterial({ wireframe: true });
-
+	const material = new THREE.MeshBasicMaterial({
+		color: 0x4FD1C5,
+		wireframe: true
+	});
 	mesh = new THREE.Mesh(geometry, material);
-
 	scene.add(mesh);
 	scene.add(new THREE.AxesHelper(2));
-
-	window.addEventListener('resize', () => {
-		camera.aspect = window.innerWidth / window.innerHeight;
-		camera.updateProjectionMatrix();
-		renderer.setSize(window.innerWidth, window.innerHeight);
-	});
+	window.addEventListener('resize', onResize);
 }
 
 // ======================================================
