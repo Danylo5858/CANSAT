@@ -18,7 +18,7 @@ function onResize() {
 }
 
 // ======================================================
-// ACCEL -> ANGLES (SIN OBJETOS NUEVOS)
+// ACCEL -> ANGLES
 // ======================================================
 
 function accelToAngles(ax, ay, az) {
@@ -32,17 +32,10 @@ function accelToAngles(ax, ay, az) {
 }
 
 // ======================================================
-// STATE (PIPELINE ESTABLE)
+// BUFFER TEMPORAL
 // ======================================================
 
-const queue = [];
-
-const state = {
-	current: null,
-	next: null,
-	t: 0,
-	segmentDuration: 0.12 // estabilidad (clave)
-};
+const buffer = [];
 
 // ======================================================
 // INPUT
@@ -50,73 +43,62 @@ const state = {
 
 export function onReceiveAccel(packet) {
 
-	const angles = packet.accel.map(p => {
-		return accelToAngles(p[0], p[1], p[2]);
-	});
+	const angles = packet.accel.map(p => accelToAngles(p[0], p[1], p[2]));
 
-	queue.push({
+	buffer.push({
+		time: packet.time, // IMPORTANTE: timestamp del sensor
 		angles
 	});
+
+	// evitar crecimiento infinito
+	if (buffer.length > 200) buffer.shift();
 }
 
 // ======================================================
-// CONSUMO DE COLA (ESTABILIZA TIMING)
+// BUSCAR INTERPOLACIÓN POR TIEMPO
 // ======================================================
 
-function consumeQueue() {
+function sampleAtTime(t) {
 
-	if (!state.current && queue.length > 0) {
-		state.current = queue.shift();
+	if (buffer.length < 2) return null;
+
+	for (let i = 0; i < buffer.length - 1; i++) {
+
+		const a = buffer[i];
+		const b = buffer[i + 1];
+
+		if (t >= a.time && t <= b.time) {
+
+			const alpha = (t - a.time) / (b.time - a.time);
+
+			return { a, b, alpha };
+		}
 	}
 
-	if (!state.next && queue.length > 0) {
-		state.next = queue.shift();
-		state.t = 0;
-	}
-}
-
-// ======================================================
-// LERP
-// ======================================================
-
-function lerp(a, b, t) {
-	return a + (b - a) * t;
+	return null;
 }
 
 // ======================================================
 // UPDATE (FLUIDO REAL)
 // ======================================================
 
-function update(dt, object3D) {
+function update(_, object3D) {
 
-	consumeQueue();
+	const t = performance.now() / 1000;
 
-	if (!state.current || !state.next) return;
+	const s = sampleAtTime(t);
+	if (!s) return;
 
-	state.t += dt / state.segmentDuration;
+	const a0 = s.a.angles[0];
+	const a1 = s.b.angles[0];
 
-	const t = Math.min(state.t, 1);
-
-	const a0 = state.current.angles[0];
-	const a1 = state.next.angles[0];
-
-	if (!a0 || !a1) return;
-
-	const roll = lerp(a0.roll, a1.roll, t);
-	const pitch = lerp(a0.pitch, a1.pitch, t);
+	const roll = a0.roll + (a1.roll - a0.roll) * s.alpha;
+	const pitch = a0.pitch + (a1.pitch - a0.pitch) * s.alpha;
 
 	object3D.rotation.x = pitch * Math.PI / 180;
 	object3D.rotation.z = roll * Math.PI / 180;
 
-	// 🚨 YAW BLOQUEADO
-	object3D.rotation.y = 0;
-
-	// avanzar segmento
-	if (state.t >= 1) {
-		state.current = state.next;
-		state.next = null;
-		state.t = 0;
-	}
+	// yaw libre (NO bloqueado)
 }
 
 // ======================================================
@@ -166,16 +148,10 @@ function init() {
 // LOOP
 // ======================================================
 
-let lastTime = performance.now();
-
 function animate() {
 	requestAnimationFrame(animate);
 
-	const now = performance.now();
-	const dt = (now - lastTime) / 1000;
-	lastTime = now;
-
-	update(dt, mesh);
+	update(null, mesh);
 
 	controls.update();
 	renderer.render(scene, camera);
