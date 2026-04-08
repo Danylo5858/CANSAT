@@ -27,12 +27,12 @@ def init(i2c, address, lock):
 
 def GetData():
     time.sleep(buffering_time)
-    accel = process_buffer_data()
+    buffer_data = process_buffer_data()
     if send_data:
-        buffer["MPU6050"] = accel
+        buffer["MPU6050"] = buffer_data
     data = {
         "time": datetime.now(),
-        "accel": accel
+        "accel": buffer_data["accel"]
     }
     data_queue.put(data)
 
@@ -49,10 +49,13 @@ def SaveData():
 
 def update_motion_state():
     global accel_buffer
+    global buffer_start
+    accel_buffer = []
     FS = 60
     DT = buffering_time/FS
-    accel_buffer = []
     while True:
+        if accel_buffer == []:
+            buffer_start = time.time()
         with i2c_lock:
             ax, ay, az = mpu.acceleration
         # CÁLCULO DE ACCEL BIAS
@@ -63,6 +66,10 @@ def process_buffer_data():
     points = utils.extract_representative_points(accel_buffer)
     points_rounded = utils.round_points(points)
     accel_buffer.clear()
+    data = {
+        "time": time.time() - buffer_start,
+        "accel": points_rounded
+    }
     if log:
-        log_queue.put(f"MPU6050: {points_rounded}")
-    return points_rounded
+        log_queue.put(f"MPU6050: {data}")
+    return data
