@@ -18,7 +18,7 @@ def pack_all(data):
     accel_points = data["MPU6050"]["accel"]
     duration = data["MPU6050"]["time"]
     packet = struct.pack(
-        '<iiB i i i h' + '12h' + 'I',
+        '<iiB i i i h q' + '16h',
         int(gps["latitude"] * 1e7),
         int(gps["longitude"] * 1e7),
         int(gps["satellites"]),
