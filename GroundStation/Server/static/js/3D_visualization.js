@@ -7,54 +7,71 @@ let scene, camera, renderer, controls, mesh;
    UTILS
 ========================= */
 
-function accelToAngles(ax, ay, az) {
-	const roll = Math.atan2(ay, az);
-	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
-	return {
-		roll: roll * 180 / Math.PI,
-		pitch: pitch * 180 / Math.PI
-	};
+function onResize() {
+	const container = document.getElementById('viewer');
+
+	camera.aspect = container.clientWidth / container.clientHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize(container.clientWidth, container.clientHeight);
+	controls.update();
 }
 
-function lerp(a, b, t) {
-	return a + (b - a) * t;
+/**
+ * Accel → quaternion estable
+ * Asume que accel representa gravedad aproximada
+ */
+function accelToQuat(ax, ay, az) {
+	const len = Math.hypot(ax, ay, az);
+	if (len === 0) return new THREE.Quaternion();
+
+	const x = ax / len;
+	const y = ay / len;
+	const z = az / len;
+
+	const up = new THREE.Vector3(x, y, z);
+	const target = new THREE.Vector3(0, 1, 0);
+
+	return new THREE.Quaternion().setFromUnitVectors(up, target);
 }
 
 /* =========================
    STREAM BUFFER
 ========================= */
 
-const samples = [];
+const samples = []; // quaternions
 
 let index = 0;
 let t = 0;
 
-const INTERP_SPEED = 12; // cuánto tarda en cruzar entre samples
+const SPEED = 10; // velocidad de interpolación
+
+const tmpQuat = new THREE.Quaternion();
 
 /* =========================
-   INPUT
+   INPUT STREAM
 ========================= */
 
 export function onReceiveAccel(packet) {
-	const converted = packet.accel.map(p => {
-		const { roll, pitch } = accelToAngles(p[0], p[1], p[2]);
-		return { roll, pitch };
+	const quats = packet.accel.map(p => {
+		return accelToQuat(p[0], p[1], p[2]);
 	});
 
-	for (const s of converted) {
-		samples.push(s);
+	for (const q of quats) {
+		samples.push(q);
 	}
 
-	// limit buffer
-	if (samples.length > 200) {
-		const remove = samples.length - 200;
+	// 🔥 evitar delay acumulado
+	const MAX = 200;
+	if (samples.length > MAX) {
+		const remove = samples.length - MAX;
 		samples.splice(0, remove);
 		index = Math.max(0, index - remove);
 	}
 }
 
 /* =========================
-   UPDATE (ROBUST STREAM)
+   UPDATE LOOP
 ========================= */
 
 function update(dt, object3D) {
@@ -65,23 +82,22 @@ function update(dt, object3D) {
 
 	if (!a || !b) return;
 
-	t += dt * INTERP_SPEED;
+	t += dt * SPEED;
 
 	if (t > 1) {
 		t = 0;
 		index++;
 
-		// si no hay más data, quedarnos quietos en último estado
-		if (index >= samples.length - 1) {
+		// clamp seguro
+		if (index >= samples.length - 2) {
 			index = samples.length - 2;
 		}
 	}
 
-	const roll = lerp(a.roll, b.roll, t);
-	const pitch = lerp(a.pitch, b.pitch, t);
+	// 🔥 interpolación esférica (SIN saltos)
+	tmpQuat.copy(a).slerp(b, t);
 
-	object3D.rotation.x = pitch * Math.PI / 180;
-	object3D.rotation.z = roll * Math.PI / 180;
+	object3D.quaternion.copy(tmpQuat);
 }
 
 /* =========================
@@ -123,16 +139,6 @@ function init() {
 	scene.add(new THREE.AxesHelper(2));
 
 	window.addEventListener('resize', onResize);
-}
-
-function onResize() {
-	const container = document.getElementById('viewer');
-
-	camera.aspect = container.clientWidth / container.clientHeight;
-	camera.updateProjectionMatrix();
-
-	renderer.setSize(container.clientWidth, container.clientHeight);
-	controls.update();
 }
 
 /* =========================
