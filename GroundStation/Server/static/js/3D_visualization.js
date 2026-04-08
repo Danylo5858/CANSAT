@@ -1,7 +1,26 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+/* =========================
+   THREE GLOBALS
+========================= */
+
 let scene, camera, renderer, controls, mesh;
+
+/* =========================
+   BUFFER SYSTEM
+========================= */
+
+const buffer = [];
+const MIN_BUFFER = 2; // siempre 1 packet de delay
+
+let currentIndex = 0;
+let segmentIndex = 0;
+let t = 0;
+
+/* =========================
+   RESIZE
+========================= */
 
 function onResize() {
 	const container = document.getElementById('viewer');
@@ -10,37 +29,32 @@ function onResize() {
 	camera.updateProjectionMatrix();
 
 	renderer.setSize(container.clientWidth, container.clientHeight);
-	controls.update();
 }
+
+/* =========================
+   ACCEL -> ANGLES
+========================= */
 
 function accelToAngles(ax, ay, az) {
 	const roll = Math.atan2(ay, az);
 	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
+
 	return {
 		roll: roll * 180 / Math.PI,
 		pitch: pitch * 180 / Math.PI
 	};
 }
 
+/* =========================
+   LERP
+========================= */
+
 function lerp(a, b, t) {
 	return a + (b - a) * t;
 }
 
 /* =========================
-   STREAM STATE
-========================= */
-
-const queue = [];
-const MAX_QUEUE = 2;
-
-let currentPacket = null;
-let nextPacket = null;
-
-let segmentIndex = 0;
-let t = 0;
-
-/* =========================
-   INPUT
+   INPUT STREAM
 ========================= */
 
 export function onReceiveAccel(packet) {
@@ -49,30 +63,32 @@ export function onReceiveAccel(packet) {
 		return { roll, pitch };
 	});
 
-	queue.push({
+	buffer.push({
 		angles,
 		time: packet.time
 	});
 
-	// 🔥 evitar delay acumulado
-	if (queue.length > MAX_QUEUE) {
-		queue.splice(0, queue.length - 1);
+	// limitar crecimiento
+	if (buffer.length > 10) {
+		buffer.shift();
+	}
+
+	// reset safe si se desincroniza todo
+	if (currentIndex > buffer.length - 3) {
+		currentIndex = Math.max(0, buffer.length - 3);
 	}
 }
 
 /* =========================
-   PACKET LOADER
+   BUFFER CHECK
 ========================= */
 
-function loadNext() {
-	if (!currentPacket && queue.length > 0) {
-		currentPacket = queue.shift();
-	}
+function canPlay() {
+	return buffer.length >= MIN_BUFFER;
+}
 
-	nextPacket = queue.length > 0 ? queue[0] : null;
-
-	t = 0;
-	segmentIndex = 0;
+function getPacket(i) {
+	return buffer[i] || null;
 }
 
 /* =========================
@@ -94,55 +110,56 @@ function applyInterp(a0, a1, t, object3D) {
 ========================= */
 
 function update(dt, object3D) {
-	if (!currentPacket) {
-		if (queue.length > 0) loadNext();
-		return;
-	}
+	if (!canPlay()) return;
 
-	const a = currentPacket;
-	const b = nextPacket;
+	const a = getPacket(currentIndex);
+	const b = getPacket(currentIndex + 1);
 
-	const segDuration = a.time / 3; // 4 puntos = 3 segmentos
+	if (!a || !b) return;
+
+	const segDuration = a.time / 3;
 	t += dt;
 
 	const u = Math.min(t / segDuration, 1);
 
 	// ----------------------
-	// 1. dentro del packet
+	// dentro del packet
 	// ----------------------
 	if (segmentIndex < 3) {
-		const a0 = a.angles[segmentIndex];
-		const a1 = a.angles[segmentIndex + 1];
-
-		applyInterp(a0, a1, u, object3D);
+		applyInterp(
+			a.angles[segmentIndex],
+			a.angles[segmentIndex + 1],
+			u,
+			object3D
+		);
 	}
 
 	// ----------------------
-	// 2. transición entre packets
+	// transición entre packets
 	// ----------------------
-	else if (b) {
-		const a3 = a.angles[3];
-		const b0 = b.angles[0];
-
-		applyInterp(a3, b0, u, object3D);
+	else {
+		applyInterp(
+			a.angles[3],
+			b.angles[0],
+			u,
+			object3D
+		);
 	}
 
-	// avanzar tiempo
+	// avance controlado
 	if (t >= segDuration) {
 		t = 0;
 		segmentIndex++;
 
-		// fin del packet
 		if (segmentIndex >= 3) {
-			currentPacket = nextPacket;
-			queue.shift(); // consumimos siguiente
-			loadNext();
+			segmentIndex = 0;
+			currentIndex++;
 		}
 	}
 }
 
 /* =========================
-   THREE SETUP
+   THREE INIT
 ========================= */
 
 function init() {
@@ -200,6 +217,10 @@ function animate() {
 	controls.update();
 	renderer.render(scene, camera);
 }
+
+/* =========================
+   START
+========================= */
 
 init();
 animate();
