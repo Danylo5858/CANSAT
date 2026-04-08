@@ -1,51 +1,30 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-/* =========================
-   THREE
-========================= */
-
 let scene, camera, renderer, controls, mesh;
 
 /* =========================
-   STREAM
+   STREAM (with timestamps)
 ========================= */
 
 const stream = [];
-const MIN_BUFFER = 5;
+const MAX_BUFFER = 300;
 
-let index = 0;
-let t = 0;
-
-const SPEED = 1;
+let startTime = null;
 
 /* =========================
-   QUATERNIONS (reutilizables)
+   QUATERNIONS
 ========================= */
 
 const qA = new THREE.Quaternion();
 const qB = new THREE.Quaternion();
 const qOut = new THREE.Quaternion();
 
-/* Euler helper (yaw locked) */
-const eulerA = new THREE.Euler();
-const eulerB = new THREE.Euler();
+const eA = new THREE.Euler();
+const eB = new THREE.Euler();
 
 /* =========================
-   RESIZE
-========================= */
-
-function onResize() {
-	const container = document.getElementById('viewer');
-
-	camera.aspect = container.clientWidth / container.clientHeight;
-	camera.updateProjectionMatrix();
-
-	renderer.setSize(container.clientWidth, container.clientHeight);
-}
-
-/* =========================
-   ACCEL -> ANGLES
+   ACCEL
 ========================= */
 
 function accelToAngles(ax, ay, az) {
@@ -53,76 +32,83 @@ function accelToAngles(ax, ay, az) {
 	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
 
 	return {
-		roll: roll,
-		pitch: pitch
+		roll,
+		pitch
 	};
 }
 
 /* =========================
-   INPUT (FLAT STREAM)
+   INPUT
 ========================= */
 
 export function onReceiveAccel(packet) {
+	const now = performance.now();
+
 	const angles = packet.accel.map(p => {
 		const { roll, pitch } = accelToAngles(p[0], p[1], p[2]);
 		return { roll, pitch };
 	});
 
 	for (const a of angles) {
-		stream.push(a);
+		stream.push({
+			...a,
+			t: now
+		});
 	}
 
-	if (stream.length > 200) {
-		stream.splice(0, 100);
+	if (stream.length > MAX_BUFFER) {
+		stream.splice(0, stream.length - 200);
 	}
 
-	if (index > stream.length - 2) {
-		index = Math.max(0, stream.length - 2);
-	}
+	if (!startTime) startTime = now;
 }
 
 /* =========================
-   HELPERS
+   FIND NEIGHBORS BY TIME
 ========================= */
 
-function canPlay() {
-	return stream.length >= MIN_BUFFER;
+function getSurroundingPoints(t) {
+	for (let i = 0; i < stream.length - 1; i++) {
+		const a = stream[i];
+		const b = stream[i + 1];
+
+		if (a.t <= t && b.t >= t) {
+			const u = (t - a.t) / (b.t - a.t);
+			return { a, b, u };
+		}
+	}
+
+	return null;
 }
 
 /* =========================
-   UPDATE (QUATERNION STABLE)
+   UPDATE (NO DRIFT)
 ========================= */
 
-function update(dt, object3D) {
-	if (!canPlay()) return;
+function update(object3D) {
+	if (stream.length < 2) return;
 
-	t += dt * SPEED;
+	const now = performance.now();
 
-	while (t >= 1) {
-		t -= 1;
-		index++;
-	}
+	const sample = getSurroundingPoints(now);
+	if (!sample) return;
 
-	const a = stream[index];
-	const b = stream[index + 1];
+	const { a, b, u } = sample;
 
-	if (!a || !b) return;
+	eA.set(a.pitch, 0, a.roll, 'XYZ');
+	eB.set(b.pitch, 0, b.roll, 'XYZ');
 
-	// 🔥 Euler -> Quaternion (yaw locked = 0)
-	eulerA.set(a.pitch, 0, a.roll, 'XYZ');
-	eulerB.set(b.pitch, 0, b.roll, 'XYZ');
+	qA.setFromEuler(eA);
+	qB.setFromEuler(eB);
 
-	qA.setFromEuler(eulerA);
-	qB.setFromEuler(eulerB);
-
-	// 🔥 smooth SLERP
-	qOut.copy(qA).slerp(qB, t);
+	qOut.copy(qA).slerp(qB, u);
 
 	object3D.quaternion.copy(qOut);
+	object3D.rotation.y = 0; // lock yaw
 }
 
 /* =========================
-   THREE INIT
+   THREE SETUP
 ========================= */
 
 function init() {
@@ -140,50 +126,43 @@ function init() {
 	camera.position.set(2, 2, 3);
 
 	renderer = new THREE.WebGLRenderer({ antialias: true });
-	renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 	renderer.setSize(container.clientWidth, container.clientHeight);
 	container.appendChild(renderer.domElement);
 
 	controls = new OrbitControls(camera, renderer.domElement);
-	controls.enableDamping = false;
-	controls.rotateSpeed = 0.4;
-	controls.enablePan = false;
 
 	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 16);
-	const material = new THREE.MeshBasicMaterial({
-		color: 0x4FD1C5,
-		wireframe: true
-	});
+	const material = new THREE.MeshBasicMaterial({ wireframe: true });
 
 	mesh = new THREE.Mesh(geometry, material);
 	scene.add(mesh);
+
 	scene.add(new THREE.AxesHelper(2));
 
 	window.addEventListener('resize', onResize);
+}
+
+function onResize() {
+	const container = document.getElementById('viewer');
+
+	camera.aspect = container.clientWidth / container.clientHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
 /* =========================
    LOOP
 ========================= */
 
-let lastTime = performance.now();
-
 function animate() {
 	requestAnimationFrame(animate);
 
-	const now = performance.now();
-	const dt = (now - lastTime) / 1000;
-	lastTime = now;
-
-	update(dt, mesh);
+	update(mesh);
 
 	controls.update();
 	renderer.render(scene, camera);
 }
-
-/* =========================
-   START
-========================= */
 
 init();
 animate();
