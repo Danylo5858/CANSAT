@@ -12,7 +12,7 @@ let scene, camera, renderer, controls, mesh;
 ========================= */
 
 const buffer = [];
-const MIN_BUFFER = 2; // siempre 1 packet de delay
+const MIN_BUFFER = 2;
 
 let currentIndex = 0;
 let segmentIndex = 0;
@@ -32,7 +32,7 @@ function onResize() {
 }
 
 /* =========================
-   ACCEL -> ANGLES
+   ACCEL -> ROLL / PITCH ONLY
 ========================= */
 
 function accelToAngles(ax, ay, az) {
@@ -68,19 +68,17 @@ export function onReceiveAccel(packet) {
 		time: packet.time
 	});
 
-	// limitar crecimiento
 	if (buffer.length > 10) {
 		buffer.shift();
 	}
 
-	// reset safe si se desincroniza todo
 	if (currentIndex > buffer.length - 3) {
 		currentIndex = Math.max(0, buffer.length - 3);
 	}
 }
 
 /* =========================
-   BUFFER CHECK
+   BUFFER HELPERS
 ========================= */
 
 function canPlay() {
@@ -92,7 +90,7 @@ function getPacket(i) {
 }
 
 /* =========================
-   INTERPOLATION
+   INTERPOLATION (NO YAW)
 ========================= */
 
 function applyInterp(a0, a1, t, object3D) {
@@ -103,6 +101,9 @@ function applyInterp(a0, a1, t, object3D) {
 
 	object3D.rotation.x = pitch * Math.PI / 180;
 	object3D.rotation.z = roll * Math.PI / 180;
+
+	// 🔒 YAW BLOQUEADO SIEMPRE
+	object3D.rotation.y = 0;
 }
 
 /* =========================
@@ -122,9 +123,6 @@ function update(dt, object3D) {
 
 	const u = Math.min(t / segDuration, 1);
 
-	// ----------------------
-	// dentro del packet
-	// ----------------------
 	if (segmentIndex < 3) {
 		applyInterp(
 			a.angles[segmentIndex],
@@ -132,12 +130,7 @@ function update(dt, object3D) {
 			u,
 			object3D
 		);
-	}
-
-	// ----------------------
-	// transición entre packets
-	// ----------------------
-	else {
+	} else {
 		applyInterp(
 			a.angles[3],
 			b.angles[0],
@@ -146,7 +139,6 @@ function update(dt, object3D) {
 		);
 	}
 
-	// avance controlado
 	if (t >= segDuration) {
 		t = 0;
 		segmentIndex++;
