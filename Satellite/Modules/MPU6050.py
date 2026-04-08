@@ -26,6 +26,7 @@ def init(i2c, address, lock):
     threading.Thread(target=update_motion_state, daemon=True).start()
 
 def GetData():
+    time.sleep(buffering_time)
     accel = process_buffer_data()
     if send_data:
         buffer["MPU6050"] = accel
