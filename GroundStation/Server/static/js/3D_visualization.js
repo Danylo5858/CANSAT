@@ -18,18 +18,61 @@ function onResize() {
 }
 
 // ======================================================
-// ACCEL -> ANGLES (OPTIMIZADO SIN GC)
+// ACCEL -> ANGLES (SIN OBJETOS NUEVOS)
 // ======================================================
 
-const tmpAnglesA = { roll: 0, pitch: 0 };
-const tmpAnglesB = { roll: 0, pitch: 0 };
-
-function accelToAngles(ax, ay, az, out) {
+function accelToAngles(ax, ay, az) {
 	const roll = Math.atan2(ay, az);
 	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
 
-	out.roll = roll * 180 / Math.PI;
-	out.pitch = pitch * 180 / Math.PI;
+	return {
+		roll: roll * 180 / Math.PI,
+		pitch: pitch * 180 / Math.PI
+	};
+}
+
+// ======================================================
+// STATE (PIPELINE ESTABLE)
+// ======================================================
+
+const queue = [];
+
+const state = {
+	current: null,
+	next: null,
+	t: 0,
+	segmentDuration: 0.12 // estabilidad (clave)
+};
+
+// ======================================================
+// INPUT
+// ======================================================
+
+export function onReceiveAccel(packet) {
+
+	const angles = packet.accel.map(p => {
+		return accelToAngles(p[0], p[1], p[2]);
+	});
+
+	queue.push({
+		angles
+	});
+}
+
+// ======================================================
+// CONSUMO DE COLA (ESTABILIZA TIMING)
+// ======================================================
+
+function consumeQueue() {
+
+	if (!state.current && queue.length > 0) {
+		state.current = queue.shift();
+	}
+
+	if (!state.next && queue.length > 0) {
+		state.next = queue.shift();
+		state.t = 0;
+	}
 }
 
 // ======================================================
@@ -41,62 +84,20 @@ function lerp(a, b, t) {
 }
 
 // ======================================================
-// REALTIME STATE (SIN COLA)
-// ======================================================
-
-const state = {
-	prev: null,
-	next: null,
-	t: 0,
-	blendTime: 0.12 // más bajo = más responsivo (menos lag visual)
-};
-
-// ======================================================
-// RECEPCIÓN DE PACKET
-// ======================================================
-
-export function onReceiveAccel(packet) {
-
-	// reutilizamos buffers (NO objetos nuevos por frame crítico)
-	const angles = [];
-
-	for (let i = 0; i < packet.accel.length; i++) {
-		const p = packet.accel[i];
-
-		const out = i === 0 ? tmpAnglesA : tmpAnglesB;
-
-		accelToAngles(p[0], p[1], p[2], out);
-
-		angles.push({
-			roll: out.roll,
-			pitch: out.pitch
-		});
-	}
-
-	const newState = {
-		angles,
-		time: packet.time
-	};
-
-	state.prev = state.next;
-	state.next = newState;
-
-	state.t = 0;
-}
-
-// ======================================================
-// UPDATE LOOP
+// UPDATE (FLUIDO REAL)
 // ======================================================
 
 function update(dt, object3D) {
 
-	if (!state.prev || !state.next) return;
+	consumeQueue();
 
-	state.t += dt / state.blendTime;
+	if (!state.current || !state.next) return;
+
+	state.t += dt / state.segmentDuration;
 
 	const t = Math.min(state.t, 1);
 
-	const a0 = state.prev.angles[0];
+	const a0 = state.current.angles[0];
 	const a1 = state.next.angles[0];
 
 	if (!a0 || !a1) return;
@@ -107,8 +108,15 @@ function update(dt, object3D) {
 	object3D.rotation.x = pitch * Math.PI / 180;
 	object3D.rotation.z = roll * Math.PI / 180;
 
-	// 🚨 BLOQUEO TOTAL DE YAW
+	// 🚨 YAW BLOQUEADO
 	object3D.rotation.y = 0;
+
+	// avanzar segmento
+	if (state.t >= 1) {
+		state.current = state.next;
+		state.next = null;
+		state.t = 0;
+	}
 }
 
 // ======================================================
@@ -155,7 +163,7 @@ function init() {
 }
 
 // ======================================================
-// ANIMATION LOOP
+// LOOP
 // ======================================================
 
 let lastTime = performance.now();
