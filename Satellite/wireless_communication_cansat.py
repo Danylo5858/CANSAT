@@ -15,9 +15,9 @@ def init(self_address, destination_address, frequency):
 def pack_all(data):
     gps = data["GPS"]
     bmp = data["BMP390"]
-    quats = data["MPU6050"]
+    points = data["MPU6050"]
     packet = struct.pack(
-        '<iiB i i i h' + '16h',
+        '<iiB i i i h' + '12h',
         int(gps["latitude"] * 1e7),
         int(gps["longitude"] * 1e7),
         int(gps["satellites"]),
@@ -25,7 +25,11 @@ def pack_all(data):
         int(bmp["pressure"] * 100),
         int(bmp["altitude"] * 100),
         0,
-        *[int(x * 32767) for q in quats for x in q]
+        *[
+            int(x * 32767)
+            for p in points
+            for x in p
+        ]
     )
     return packet
 

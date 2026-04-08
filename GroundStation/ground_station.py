@@ -10,10 +10,10 @@ from log_manager import log_queue
 import wireless_communication_gs as wcom_gs
 import Server.main as app
 
-wcom_gs.log = False
-wdf.log = True
-gm.log = True
-server_log = True
+wcom_gs.log = True
+wdf.log = False
+gm.log = False
+server_log = False
 
 os.makedirs("BackupData", exist_ok=True)
 

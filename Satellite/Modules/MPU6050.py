@@ -22,14 +22,15 @@ def init(i2c, address, lock):
     mpu = adafruit_mpu6050.MPU6050(i2c, address=address)
     if save_data:
         threading.Thread(target=SaveData, daemon=True).start()
+    threading.Thread(target=update_motion_state, daemon=True).start()
 
 def GetData():
-    quats = update_motion_state()
+    accel = process_buffer_data()
     if send_data:
-        buffer["MPU6050"] = quats
+        buffer["MPU6050"] = accel
     data = {
         "time": datetime.now(),
-        "quats": quats
+        "accel": accel
     }
     data_queue.put(data)
 
@@ -41,77 +42,25 @@ def SaveData():
             data_writer.writerow([
                 data["time"].strftime("%Y-%m-%d"),
                 data["time"].strftime("%H:%M:%S"),
-                data["quats"]
+                data["accel"]
             ])
 
 def update_motion_state():
+    global buffer
     FS = 60
     DT = 1/FS
-    WINDOW = 60
-    GYRO_THRESHOLD = 0.02
     buffer = []
-    last = time.time()
-    madgwick = utils.Madgwick()
-    q_ref = None
-
     while True:
-        now = time.time()
-        if now - last < DT:
-            continue
-        last = now
-
         with i2c_lock:
             ax, ay, az = mpu.acceleration
-            gx, gy, gz = mpu.gyro
+        # CÁLCULO DE ACCEL BIAS
+        buffer.append([ax, ay, az])
+        time.sleep(DT)
 
-        gx -= utils.BIAS_GX
-        gy -= utils.BIAS_GY
-        gz -= utils.BIAS_GZ
-
-        # ax -= utils.BIAS_AX
-        # ay -= utils.BIAS_AY
-        # az -= utils.BIAS_AZ
-
-        # if abs(gx)<GYRO_THRESHOLD and abs(gy)<GYRO_THRESHOLD and abs(gz)<GYRO_THRESHOLD:
-        #     gx *= 0.1
-        #     gy *= 0.1
-        #     gz *= 0.1
-
-        if abs(gx) < GYRO_THRESHOLD:
-            gx *= 0.3
-        if abs(gy) < GYRO_THRESHOLD:
-            gy *= 0.3
-        if abs(gz) < GYRO_THRESHOLD:
-            gz *= 0.3
-
-        q = madgwick.updateIMU(gx, gy, gz, ax, ay, az, DT)
-        if q_ref is None:
-            q_ref = q.copy()
-        buffer.append(q)
-
-        if len(buffer) >= WINDOW:
-
-            N = len(buffer)
-
-            s1 = utils.q_mean(buffer[0:N//4])
-            s2 = utils.q_mean(buffer[N//4:N//2])
-            s3 = utils.q_mean(buffer[N//2:3*N//4])
-            s4 = utils.q_mean(buffer[3*N//4:N])
-
-            q_start = s1
-            q_end = s4
-
-            q1 = utils.slerp(q_start, q_end, 0.0)
-            q2 = utils.slerp(q_start, q_end, 0.33)
-            q3 = utils.slerp(q_start, q_end, 0.66)
-            q4 = utils.slerp(q_start, q_end, 1.0)
-
-            r1 = utils.to_xyzw_rounded(q1)
-            r2 = utils.to_xyzw_rounded(q2)
-            r3 = utils.to_xyzw_rounded(q3)
-            r4 = utils.to_xyzw_rounded(q4)
-
-            if log:
-                log_queue.put(f"MPU6050:\nQ1: {r1}\nQ2: {r2}\nQ3: {r3}\nQ4: {r4}")
-            buffer = []
-            return [r1, r2, r3, r4]
+def process_buffer_data():
+    points = utils.extract_representative_points(buffer)
+    points_rounded = utils.round_points(points)
+    buffer.clear()
+    if log:
+        log_queue.put(f"MPU6050: {points_rounded}")
+    return points_rounded
