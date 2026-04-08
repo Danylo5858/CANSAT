@@ -1,4 +1,4 @@
-import { onReceiveQuats } from './3D_visualization.js';
+import { onReceiveAccel } from './3D_visualization.js';
 import { backupRequest } from './backup.js';
 import { updateMap } from './map.js';
 
@@ -347,7 +347,7 @@ socket.on('ground_data', (data) => {
 
 socket.on('MPU6050_data', (data) => {
 	//console.log('Datos recibidos (MPU6050_data)');
-	onReceiveQuats(data);
+	onReceiveAccel(data);
 });
 
 function showBackupLoader() {
