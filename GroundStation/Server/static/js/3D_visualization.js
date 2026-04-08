@@ -8,18 +8,28 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 let scene, camera, renderer, controls, mesh;
 
 /* =========================
-   FLAT BUFFER (CLAVE)
+   STREAM
 ========================= */
 
 const stream = [];
 const MIN_BUFFER = 5;
 
-/* cursor continuo */
 let index = 0;
 let t = 0;
 
-/* velocidad constante (ajustable) */
-const SPEED = 1; // puntos por segundo
+const SPEED = 1;
+
+/* =========================
+   QUATERNIONS (reutilizables)
+========================= */
+
+const qA = new THREE.Quaternion();
+const qB = new THREE.Quaternion();
+const qOut = new THREE.Quaternion();
+
+/* Euler helper (yaw locked) */
+const eulerA = new THREE.Euler();
+const eulerB = new THREE.Euler();
 
 /* =========================
    RESIZE
@@ -35,7 +45,7 @@ function onResize() {
 }
 
 /* =========================
-   ACCEL
+   ACCEL -> ANGLES
 ========================= */
 
 function accelToAngles(ax, ay, az) {
@@ -43,21 +53,13 @@ function accelToAngles(ax, ay, az) {
 	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
 
 	return {
-		roll: roll * 180 / Math.PI,
-		pitch: pitch * 180 / Math.PI
+		roll: roll,
+		pitch: pitch
 	};
 }
 
 /* =========================
-   LERP
-========================= */
-
-function lerp(a, b, t) {
-	return a + (b - a) * t;
-}
-
-/* =========================
-   INPUT → FLATTEN STREAM
+   INPUT (FLAT STREAM)
 ========================= */
 
 export function onReceiveAccel(packet) {
@@ -66,13 +68,12 @@ export function onReceiveAccel(packet) {
 		return { roll, pitch };
 	});
 
-	// 🔥 flatten inmediato
 	for (const a of angles) {
 		stream.push(a);
 	}
 
 	if (stream.length > 200) {
-		stream.splice(0, stream.length - 100);
+		stream.splice(0, 100);
 	}
 
 	if (index > stream.length - 2) {
@@ -89,24 +90,7 @@ function canPlay() {
 }
 
 /* =========================
-   APPLY ROTATION
-========================= */
-
-function apply(a, b, u, object3D) {
-	if (!a || !b) return;
-
-	const roll = lerp(a.roll, b.roll, u);
-	const pitch = lerp(a.pitch, b.pitch, u);
-
-	object3D.rotation.x = pitch * Math.PI / 180;
-	object3D.rotation.z = roll * Math.PI / 180;
-
-	// 🔒 yaw lock
-	object3D.rotation.y = 0;
-}
-
-/* =========================
-   UPDATE (SMOOTH CONTINUOUS TIME)
+   UPDATE (QUATERNION STABLE)
 ========================= */
 
 function update(dt, object3D) {
@@ -122,7 +106,19 @@ function update(dt, object3D) {
 	const a = stream[index];
 	const b = stream[index + 1];
 
-	apply(a, b, t, object3D);
+	if (!a || !b) return;
+
+	// 🔥 Euler -> Quaternion (yaw locked = 0)
+	eulerA.set(a.pitch, 0, a.roll, 'XYZ');
+	eulerB.set(b.pitch, 0, b.roll, 'XYZ');
+
+	qA.setFromEuler(eulerA);
+	qB.setFromEuler(eulerB);
+
+	// 🔥 smooth SLERP
+	qOut.copy(qA).slerp(qB, t);
+
+	object3D.quaternion.copy(qOut);
 }
 
 /* =========================
