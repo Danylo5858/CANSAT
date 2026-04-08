@@ -67,7 +67,7 @@ def process_buffer_data():
     points_rounded = utils.round_points(points)
     accel_buffer.clear()
     data = {
-        "time": time.time(),
+        "time": time.time() * 10000,
         "accel": points_rounded
     }
     if log:
