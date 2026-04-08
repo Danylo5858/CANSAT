@@ -8,27 +8,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 let scene, camera, renderer, controls, mesh;
 
 /* =========================
-   STREAM
+   STREAM TARGET
 ========================= */
 
-const stream = [];
-const MIN_BUFFER = 2;
+const targetQuat = new THREE.Quaternion();
+const currentQuat = new THREE.Quaternion();
 
-let index = 0;
-let t = 0;
+const euler = new THREE.Euler();
 
-const SPEED = 1;
-
-/* =========================
-   QUATERNIONS
-========================= */
-
-const qA = new THREE.Quaternion();
-const qB = new THREE.Quaternion();
-const qOut = new THREE.Quaternion();
-
-const eulerA = new THREE.Euler();
-const eulerB = new THREE.Euler();
+/* smoothing factor (clave del sistema) */
+const SMOOTHING = 0.12;
 
 /* =========================
    RESIZE
@@ -50,78 +39,36 @@ function onResize() {
 function accelToAngles(ax, ay, az) {
 	const roll = Math.atan2(ay, az);
 	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
-
 	return { roll, pitch };
 }
 
 /* =========================
-   INPUT STREAM
+   INPUT (TARGET ONLY)
 ========================= */
 
 export function onReceiveAccel(packet) {
-	const angles = packet.accel.map(p => {
-		const { roll, pitch } = accelToAngles(p[0], p[1], p[2]);
-		return { roll, pitch };
-	});
+	// solo nos quedamos con el ÚLTIMO estado
+	const last = packet.accel[packet.accel.length - 1];
 
-	for (const a of angles) {
-		stream.push(a);
-	}
+	const { roll, pitch } = accelToAngles(last[0], last[1], last[2]);
 
-	// 🔥 recorte ligero (sin saltos grandes)
-	if (stream.length > 80) {
-		stream.shift();
-	}
-
-	// 🔥 mantener índice siempre válido
-	if (index > stream.length - 2) {
-		index = Math.max(0, stream.length - 2);
-		t = 1;
-	}
+	euler.set(pitch, 0, roll, 'XYZ');
+	targetQuat.setFromEuler(euler);
 }
 
 /* =========================
-   UPDATE
+   UPDATE (FULL SMOOTH)
 ========================= */
 
-function update(dt, object3D) {
-	if (stream.length < MIN_BUFFER) return;
+function update(object3D) {
+	// 🔥 suavizado continuo SIEMPRE
+	currentQuat.slerp(targetQuat, SMOOTHING);
 
-	t += dt * SPEED;
-
-	const maxIndex = stream.length - 2;
-
-	// 🔥 CLAVE: siempre seguir el "presente"
-	if (index < maxIndex - 1) {
-		index = maxIndex - 1;
-		t = 1;
-	}
-
-	if (t >= 1) {
-		t = 0;
-		index = Math.max(0, stream.length - 2);
-	}
-
-	const a = stream[index];
-	const b = stream[index + 1];
-
-	if (!a || !b) return;
-
-	// Euler -> Quaternion
-	eulerA.set(a.pitch, 0, a.roll, 'XYZ');
-	eulerB.set(b.pitch, 0, b.roll, 'XYZ');
-
-	qA.setFromEuler(eulerA);
-	qB.setFromEuler(eulerB);
-
-	// Smooth interpolation
-	qOut.copy(qA).slerp(qB, t);
-
-	object3D.quaternion.copy(qOut);
+	object3D.quaternion.copy(currentQuat);
 }
 
 /* =========================
-   THREE INIT
+   INIT
 ========================= */
 
 function init() {
@@ -145,8 +92,6 @@ function init() {
 
 	controls = new OrbitControls(camera, renderer.domElement);
 	controls.enableDamping = false;
-	controls.rotateSpeed = 0.4;
-	controls.enablePan = false;
 
 	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 16);
 	const material = new THREE.MeshBasicMaterial({
@@ -165,16 +110,10 @@ function init() {
    LOOP
 ========================= */
 
-let lastTime = performance.now();
-
 function animate() {
 	requestAnimationFrame(animate);
 
-	const now = performance.now();
-	const dt = (now - lastTime) / 1000;
-	lastTime = now;
-
-	update(dt, mesh);
+	update(mesh);
 
 	controls.update();
 	renderer.render(scene, camera);
