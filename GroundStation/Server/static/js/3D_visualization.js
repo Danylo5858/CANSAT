@@ -3,10 +3,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let scene, camera, renderer, controls, mesh;
 
-/* =========================
-   UTILS
-========================= */
-
 function onResize() {
 	const container = document.getElementById('viewer');
 
@@ -17,57 +13,80 @@ function onResize() {
 	controls.update();
 }
 
-/**
- * Accel → quaternion estable
- * Asume que accel representa gravedad aproximada
- */
-function accelToQuat(ax, ay, az) {
-	const len = Math.hypot(ax, ay, az);
-	if (len === 0) return new THREE.Quaternion();
+function accelToAngles(ax, ay, az) {
+	const roll = Math.atan2(ay, az);
+	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
+	return {
+		roll: roll * 180 / Math.PI,
+		pitch: pitch * 180 / Math.PI
+	};
+}
 
-	const x = ax / len;
-	const y = ay / len;
-	const z = az / len;
-
-	const up = new THREE.Vector3(x, y, z);
-	const target = new THREE.Vector3(0, 1, 0);
-
-	return new THREE.Quaternion().setFromUnitVectors(up, target);
+function lerp(a, b, t) {
+	return a + (b - a) * t;
 }
 
 /* =========================
-   STREAM BUFFER
+   STREAM STATE
 ========================= */
 
-const samples = []; // quaternions
+const queue = [];
+const MAX_QUEUE = 2;
 
-let index = 0;
+let currentPacket = null;
+let nextPacket = null;
+
+let segmentIndex = 0;
 let t = 0;
 
-const SPEED = 10; // velocidad de interpolación
-
-const tmpQuat = new THREE.Quaternion();
-
 /* =========================
-   INPUT STREAM
+   INPUT
 ========================= */
 
 export function onReceiveAccel(packet) {
-	const quats = packet.accel.map(p => {
-		return accelToQuat(p[0], p[1], p[2]);
+	const angles = packet.accel.map(p => {
+		const { roll, pitch } = accelToAngles(p[0], p[1], p[2]);
+		return { roll, pitch };
 	});
 
-	for (const q of quats) {
-		samples.push(q);
-	}
+	queue.push({
+		angles,
+		time: packet.time
+	});
 
 	// 🔥 evitar delay acumulado
-	const MAX = 200;
-	if (samples.length > MAX) {
-		const remove = samples.length - MAX;
-		samples.splice(0, remove);
-		index = Math.max(0, index - remove);
+	if (queue.length > MAX_QUEUE) {
+		queue.splice(0, queue.length - 1);
 	}
+}
+
+/* =========================
+   PACKET LOADER
+========================= */
+
+function loadNext() {
+	if (!currentPacket && queue.length > 0) {
+		currentPacket = queue.shift();
+	}
+
+	nextPacket = queue.length > 0 ? queue[0] : null;
+
+	t = 0;
+	segmentIndex = 0;
+}
+
+/* =========================
+   INTERPOLATION
+========================= */
+
+function applyInterp(a0, a1, t, object3D) {
+	if (!a0 || !a1) return;
+
+	const roll = lerp(a0.roll, a1.roll, t);
+	const pitch = lerp(a0.pitch, a1.pitch, t);
+
+	object3D.rotation.x = pitch * Math.PI / 180;
+	object3D.rotation.z = roll * Math.PI / 180;
 }
 
 /* =========================
@@ -75,29 +94,51 @@ export function onReceiveAccel(packet) {
 ========================= */
 
 function update(dt, object3D) {
-	if (samples.length < 2) return;
-
-	const a = samples[index];
-	const b = samples[index + 1];
-
-	if (!a || !b) return;
-
-	t += dt * SPEED;
-
-	if (t > 1) {
-		t = 0;
-		index++;
-
-		// clamp seguro
-		if (index >= samples.length - 2) {
-			index = samples.length - 2;
-		}
+	if (!currentPacket) {
+		if (queue.length > 0) loadNext();
+		return;
 	}
 
-	// 🔥 interpolación esférica (SIN saltos)
-	tmpQuat.copy(a).slerp(b, t);
+	const a = currentPacket;
+	const b = nextPacket;
 
-	object3D.quaternion.copy(tmpQuat);
+	const segDuration = a.time / 3; // 4 puntos = 3 segmentos
+	t += dt;
+
+	const u = Math.min(t / segDuration, 1);
+
+	// ----------------------
+	// 1. dentro del packet
+	// ----------------------
+	if (segmentIndex < 3) {
+		const a0 = a.angles[segmentIndex];
+		const a1 = a.angles[segmentIndex + 1];
+
+		applyInterp(a0, a1, u, object3D);
+	}
+
+	// ----------------------
+	// 2. transición entre packets
+	// ----------------------
+	else if (b) {
+		const a3 = a.angles[3];
+		const b0 = b.angles[0];
+
+		applyInterp(a3, b0, u, object3D);
+	}
+
+	// avanzar tiempo
+	if (t >= segDuration) {
+		t = 0;
+		segmentIndex++;
+
+		// fin del packet
+		if (segmentIndex >= 3) {
+			currentPacket = nextPacket;
+			queue.shift(); // consumimos siguiente
+			loadNext();
+		}
+	}
 }
 
 /* =========================
@@ -142,7 +183,7 @@ function init() {
 }
 
 /* =========================
-   LOOP
+   ANIMATION LOOP
 ========================= */
 
 let lastTime = performance.now();
