@@ -7,6 +7,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 let scene, camera, renderer, controls, mesh;
 
+function onResize() {
+	const container = document.getElementById('viewer');
+
+	camera.aspect = container.clientWidth / container.clientHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize(container.clientWidth, container.clientHeight);
+	controls.update();
+}
+
 // ======================================================
 // ACCEL -> ANGLES
 // ======================================================
