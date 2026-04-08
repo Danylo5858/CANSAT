@@ -13,6 +13,7 @@ from wireless_communication_cansat import buffer
 log = False
 send_data = False
 save_data = False
+buffering_time = 1
 
 data_queue = Queue()
 
@@ -48,7 +49,7 @@ def SaveData():
 def update_motion_state():
     global buffer
     FS = 60
-    DT = 1/FS
+    DT = buffering_time/FS
     buffer = []
     while True:
         with i2c_lock:
