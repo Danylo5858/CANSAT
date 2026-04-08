@@ -4,18 +4,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 let scene, camera, renderer, controls, mesh;
 
 /* =========================
-   UTIL
+   UTILS
 ========================= */
-
-function onResize() {
-	const container = document.getElementById('viewer');
-
-	camera.aspect = container.clientWidth / container.clientHeight;
-	camera.updateProjectionMatrix();
-
-	renderer.setSize(container.clientWidth, container.clientHeight);
-	controls.update();
-}
 
 function accelToAngles(ax, ay, az) {
 	const roll = Math.atan2(ay, az);
@@ -34,17 +24,15 @@ function lerp(a, b, t) {
    STREAM BUFFER
 ========================= */
 
-// buffer continuo de samples (NO packets)
 const samples = [];
 
-// cursor flotante dentro del stream
-let cursor = 0;
+let index = 0;
+let t = 0;
 
-// velocidad del “reproductor” del stream
-const SPEED = 25; // samples por segundo (ajustable)
+const INTERP_SPEED = 12; // cuánto tarda en cruzar entre samples
 
 /* =========================
-   INPUT (STREAM FLATTEN)
+   INPUT
 ========================= */
 
 export function onReceiveAccel(packet) {
@@ -53,51 +41,47 @@ export function onReceiveAccel(packet) {
 		return { roll, pitch };
 	});
 
-	// 🔥 append directo al stream
 	for (const s of converted) {
 		samples.push(s);
 	}
 
-	// 🔥 control de memoria + evita delay acumulado
-	const MAX = 200;
-	if (samples.length > MAX) {
-		const remove = samples.length - MAX;
+	// limit buffer
+	if (samples.length > 200) {
+		const remove = samples.length - 200;
 		samples.splice(0, remove);
-
-		// ajustar cursor para no romper continuidad
-		cursor = Math.max(0, cursor - remove);
+		index = Math.max(0, index - remove);
 	}
 }
 
 /* =========================
-   UPDATE (CONTINUOUS INTERPOLATION)
+   UPDATE (ROBUST STREAM)
 ========================= */
 
 function update(dt, object3D) {
 	if (samples.length < 2) return;
 
-	// avanzar en el stream continuo
-	cursor += dt * SPEED;
-
-	const i = Math.floor(cursor);
-	const t = cursor - i;
-
-	const a = samples[i];
-	const b = samples[i + 1];
+	const a = samples[index];
+	const b = samples[index + 1];
 
 	if (!a || !b) return;
+
+	t += dt * INTERP_SPEED;
+
+	if (t > 1) {
+		t = 0;
+		index++;
+
+		// si no hay más data, quedarnos quietos en último estado
+		if (index >= samples.length - 1) {
+			index = samples.length - 2;
+		}
+	}
 
 	const roll = lerp(a.roll, b.roll, t);
 	const pitch = lerp(a.pitch, b.pitch, t);
 
 	object3D.rotation.x = pitch * Math.PI / 180;
 	object3D.rotation.z = roll * Math.PI / 180;
-
-	// 🔥 limpieza progresiva sin saltos
-	if (i > 50) {
-		samples.splice(0, i);
-		cursor -= i;
-	}
 }
 
 /* =========================
@@ -139,6 +123,16 @@ function init() {
 	scene.add(new THREE.AxesHelper(2));
 
 	window.addEventListener('resize', onResize);
+}
+
+function onResize() {
+	const container = document.getElementById('viewer');
+
+	camera.aspect = container.clientWidth / container.clientHeight;
+	camera.updateProjectionMatrix();
+
+	renderer.setSize(container.clientWidth, container.clientHeight);
+	controls.update();
 }
 
 /* =========================
