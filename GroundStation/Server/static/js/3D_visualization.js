@@ -2,20 +2,24 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 /* =========================
-   THREE GLOBALS
+   THREE
 ========================= */
 
 let scene, camera, renderer, controls, mesh;
 
 /* =========================
-   BUFFER SYSTEM
+   BUFFER
 ========================= */
 
 const buffer = [];
 const MIN_BUFFER = 2;
 
-let currentIndex = 0;
-let segmentIndex = 0;
+/* =========================
+   GLOBAL STATE (FLAT STREAM)
+========================= */
+
+let packetIndex = 0;   // qué packet
+let pointIndex = 0;    // qué punto dentro del packet (0..3)
 let t = 0;
 
 /* =========================
@@ -32,7 +36,7 @@ function onResize() {
 }
 
 /* =========================
-   ACCEL -> ROLL / PITCH ONLY
+   ACCEL -> ANGLES
 ========================= */
 
 function accelToAngles(ax, ay, az) {
@@ -54,7 +58,7 @@ function lerp(a, b, t) {
 }
 
 /* =========================
-   INPUT STREAM
+   INPUT
 ========================= */
 
 export function onReceiveAccel(packet) {
@@ -68,29 +72,29 @@ export function onReceiveAccel(packet) {
 		time: packet.time
 	});
 
-	if (buffer.length > 10) {
-		buffer.shift();
-	}
+	if (buffer.length > 10) buffer.shift();
 
-	if (currentIndex > buffer.length - 3) {
-		currentIndex = Math.max(0, buffer.length - 3);
+	if (packetIndex > buffer.length - 2) {
+		packetIndex = Math.max(0, buffer.length - 2);
 	}
 }
 
 /* =========================
-   BUFFER HELPERS
+   HELPERS
 ========================= */
 
 function canPlay() {
 	return buffer.length >= MIN_BUFFER;
 }
 
-function getPacket(i) {
-	return buffer[i] || null;
+function getPoint(pIdx, iIdx) {
+	const p = buffer[pIdx];
+	if (!p) return null;
+	return p.angles[iIdx];
 }
 
 /* =========================
-   INTERPOLATION (NO YAW)
+   APPLY
 ========================= */
 
 function applyInterp(a0, a1, t, object3D) {
@@ -102,50 +106,47 @@ function applyInterp(a0, a1, t, object3D) {
 	object3D.rotation.x = pitch * Math.PI / 180;
 	object3D.rotation.z = roll * Math.PI / 180;
 
-	// 🔒 YAW BLOQUEADO SIEMPRE
+	// yaw locked
 	object3D.rotation.y = 0;
 }
 
 /* =========================
-   UPDATE LOOP
+   UPDATE (CONTINUOUS STREAM)
 ========================= */
 
 function update(dt, object3D) {
 	if (!canPlay()) return;
 
-	const a = getPacket(currentIndex);
-	const b = getPacket(currentIndex + 1);
+	const currentPacket = buffer[packetIndex];
+	const nextPacket = buffer[packetIndex + 1];
 
-	if (!a || !b) return;
+	if (!currentPacket || !nextPacket) return;
 
-	const segDuration = a.time / 3;
+	const a0 = currentPacket.angles[pointIndex];
+	let a1;
+
+	// 👉 clave: continuidad entre packets
+	if (pointIndex < 3) {
+		a1 = currentPacket.angles[pointIndex + 1];
+	} else {
+		// 🔥 transición REAL entre packets
+		a1 = nextPacket.angles[0];
+	}
+
+	const segDuration = currentPacket.time / 3;
 	t += dt;
 
 	const u = Math.min(t / segDuration, 1);
 
-	if (segmentIndex < 3) {
-		applyInterp(
-			a.angles[segmentIndex],
-			a.angles[segmentIndex + 1],
-			u,
-			object3D
-		);
-	} else {
-		applyInterp(
-			a.angles[3],
-			b.angles[0],
-			u,
-			object3D
-		);
-	}
+	applyInterp(a0, a1, u, object3D);
 
 	if (t >= segDuration) {
 		t = 0;
-		segmentIndex++;
+		pointIndex++;
 
-		if (segmentIndex >= 3) {
-			segmentIndex = 0;
-			currentIndex++;
+		if (pointIndex >= 4) {
+			pointIndex = 0;
+			packetIndex++;
 		}
 	}
 }
@@ -192,7 +193,7 @@ function init() {
 }
 
 /* =========================
-   ANIMATION LOOP
+   LOOP
 ========================= */
 
 let lastTime = performance.now();
