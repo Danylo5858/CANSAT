@@ -13,7 +13,7 @@ def init(self_address, frequency):
 	radio = sx126x("/dev/serial0", frequency, self_address, 22, False)
 
 def unpack_all(packet):
-    unpacked = struct.unpack('<iiB i i i h q 16h', packet)
+    unpacked = struct.unpack('<iiB i i i h q 12h', packet)
     lat = unpacked[0] / 1e7
     lon = unpacked[1] / 1e7
     sats = unpacked[2]
