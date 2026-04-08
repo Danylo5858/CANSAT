@@ -12,7 +12,7 @@ let scene, camera, renderer, controls, mesh;
 ========================= */
 
 const stream = [];
-const MIN_BUFFER = 5;
+const MIN_BUFFER = 2;
 
 let index = 0;
 let t = 0;
@@ -20,14 +20,13 @@ let t = 0;
 const SPEED = 1;
 
 /* =========================
-   QUATERNIONS (reutilizables)
+   QUATERNIONS
 ========================= */
 
 const qA = new THREE.Quaternion();
 const qB = new THREE.Quaternion();
 const qOut = new THREE.Quaternion();
 
-/* Euler helper (yaw locked) */
 const eulerA = new THREE.Euler();
 const eulerB = new THREE.Euler();
 
@@ -52,14 +51,11 @@ function accelToAngles(ax, ay, az) {
 	const roll = Math.atan2(ay, az);
 	const pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
 
-	return {
-		roll: roll,
-		pitch: pitch
-	};
+	return { roll, pitch };
 }
 
 /* =========================
-   INPUT (FLAT STREAM)
+   INPUT STREAM
 ========================= */
 
 export function onReceiveAccel(packet) {
@@ -72,35 +68,38 @@ export function onReceiveAccel(packet) {
 		stream.push(a);
 	}
 
-	if (stream.length > 200) {
-		stream.splice(0, 100);
+	// 🔥 recorte ligero (sin saltos grandes)
+	if (stream.length > 80) {
+		stream.shift();
 	}
 
+	// 🔥 mantener índice siempre válido
 	if (index > stream.length - 2) {
 		index = Math.max(0, stream.length - 2);
+		t = 1;
 	}
 }
 
 /* =========================
-   HELPERS
-========================= */
-
-function canPlay() {
-	return stream.length >= MIN_BUFFER;
-}
-
-/* =========================
-   UPDATE (QUATERNION STABLE)
+   UPDATE
 ========================= */
 
 function update(dt, object3D) {
-	if (!canPlay()) return;
+	if (stream.length < MIN_BUFFER) return;
 
 	t += dt * SPEED;
 
-	while (t >= 1) {
-		t -= 1;
-		index++;
+	const maxIndex = stream.length - 2;
+
+	// 🔥 CLAVE: siempre seguir el "presente"
+	if (index < maxIndex - 1) {
+		index = maxIndex - 1;
+		t = 1;
+	}
+
+	if (t >= 1) {
+		t = 0;
+		index = Math.max(0, stream.length - 2);
 	}
 
 	const a = stream[index];
@@ -108,14 +107,14 @@ function update(dt, object3D) {
 
 	if (!a || !b) return;
 
-	// 🔥 Euler -> Quaternion (yaw locked = 0)
+	// Euler -> Quaternion
 	eulerA.set(a.pitch, 0, a.roll, 'XYZ');
 	eulerB.set(b.pitch, 0, b.roll, 'XYZ');
 
 	qA.setFromEuler(eulerA);
 	qB.setFromEuler(eulerB);
 
-	// 🔥 smooth SLERP
+	// Smooth interpolation
 	qOut.copy(qA).slerp(qB, t);
 
 	object3D.quaternion.copy(qOut);
