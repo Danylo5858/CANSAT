@@ -48,7 +48,7 @@ def run(queue, on_request, log):
 		saved_files = []
 		for file in files:
 			filename = file.filename
-			file.save(f"uploads/{filename}")
+			file.save(f"Server/uploads/{filename}")
 			saved_files.append(filename)
 		return { "status": "ok", "received": saved_files }
 
