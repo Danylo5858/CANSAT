@@ -4,12 +4,16 @@ def run(queue, on_request, log):
 
 	import os
 	import sys
+	import shutil
 	from queue import Empty
 	from dotenv import load_dotenv
 	from flask import Flask, jsonify, render_template, request
 	from flask_socketio import SocketIO
 
-	os.makedirs("uploads", exist_ok=True)
+	folder = "Server/uploads"
+	if os.path.exists(folder):
+		shutil.rmtree(folder)
+	os.makedirs(folder)
 
 	load_dotenv()
 	GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
