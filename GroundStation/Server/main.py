@@ -6,7 +6,7 @@ def run(queue, on_request, log):
 	import sys
 	from queue import Empty
 	from dotenv import load_dotenv
-	from flask import Flask, jsonify, render_template
+	from flask import Flask, jsonify, render_template, request
 	from flask_socketio import SocketIO
 
 	load_dotenv()
@@ -35,6 +35,16 @@ def run(queue, on_request, log):
 	@app.route("/")
 	def index():
 		return render_template("index.html", google_maps_api_key=GOOGLE_MAPS_API_KEY)
+
+	@app.route('/upload', mehtods=['POST'])
+	def upload():
+		files = request.files.getlist("images")
+    	saved_files = []
+	    for file in files:
+	        filename = file.filename
+	        file.save(f"uploads/{filename}")
+	        saved_files.append(filename)
+    	return { "status": "ok", "received": saved_files }
 
 	@socketio.on("connect")
 	def handle_connect():

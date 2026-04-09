@@ -3,7 +3,6 @@ from datetime import datetime
 from csv import writer
 import threading
 from queue import Queue
-import struct
 import adafruit_mpu6050
 import MPU6050_utils as utils
 from log_manager import log_queue

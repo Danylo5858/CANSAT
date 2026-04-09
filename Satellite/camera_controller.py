@@ -1,10 +1,12 @@
 import time
 from datetime import datetime
+import requests
 from picamera2 import Picamera2
 from log_manager import log_queue
 
 log = False
 SleepTime = 5
+url = "http://localhost:5000/upload"
 
 def init(size):
     global picam2
@@ -19,6 +21,12 @@ def capture():
             picam2.capture_file(filename)
             if log:
                 log_queue.put(f"Imagen guardada: {filename}")
+            file = {
+                "images": open(filename, "rb")
+            }
+            result = requests.post(url, files=files)
+            if log:
+                log_queue.put(f"Imagen enviada por HTTP: {result.text}")
         except Exception as e:
             if log:
                 log_queue.put(f"Excepción en captura de imagen: {str(e)}")
