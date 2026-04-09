@@ -25,6 +25,8 @@ logger_thread = threading.Thread(target=lm.logger, daemon=True)
 logger_thread.start()
 
 cam.log = True
+cam.SleepTime = 5
+cam.init((512, 512))
 image_capture = threading.Thread(target=cam.capture, daemon=True)
 image_capture.start()
 
