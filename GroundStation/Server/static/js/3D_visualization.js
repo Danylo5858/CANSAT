@@ -92,6 +92,8 @@ function init() {
 
 	controls = new OrbitControls(camera, renderer.domElement);
 	controls.enableDamping = false;
+	controls.rotateSpeed = 0.4;
+	controls.enablePan = false;
 
 	const geometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 16);
 	const material = new THREE.MeshBasicMaterial({
