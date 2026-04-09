@@ -15,7 +15,7 @@ def init(size):
 def capture():
     while True:
         try:
-            filename = f"Pictures/{datetime.now().strftime('%Y-%m-%d_%H:%M:%S')}.jpg"
+            filename = f"Pictures/{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.jpg"
             picam2.capture_file(filename)
             if log:
                 log_queue.put(f"Imagen guardada: {filename}")
