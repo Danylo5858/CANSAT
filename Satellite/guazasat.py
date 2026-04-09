@@ -9,10 +9,12 @@ from Modules import MPU6050 as mpu
 from Modules import GPS as gps
 import log_manager as lm
 import wireless_communication_cansat as wcom_c
+import camera_controller as cam
 
 GlobalSleepTime = 1
 
 os.makedirs("Data", exist_ok=True)
+os.makedirs("Pictures", exist_ok=True)
 
 i2c_lock = threading.Lock()
 i2c = busio.I2C(board.SCL, board.SDA)
@@ -22,6 +24,10 @@ with i2c_lock:
 logger_thread = threading.Thread(target=lm.logger, daemon=True)
 logger_thread.start()
 
+cam.log = True
+image_capture = threading.Thread(target=cam.capture, daemon=True)
+image_capture.start()
+
 wcom_c.log = True
 wcom_c.init(1, 2, 868)
 
@@ -30,7 +36,7 @@ bmp.send_data = True
 bmp.save_data = True
 bmp.init(i2c, 0x76, i2c_lock)
 
-mpu.log = True
+mpu.log = False
 mpu.send_data = True
 mpu.save_data = True
 mpu.init(i2c, 0x68, i2c_lock)

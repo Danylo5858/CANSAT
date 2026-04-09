@@ -1,23 +1,22 @@
-import os
 import time
 import subprocess
 from datetime import datetime
+from log_manager import log_queue
 
-os.makedirs("Pictures", exist_ok=True)
+log = False
 
-try:
+def capture():
     while True:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"Pictures/{timestamp}.jpg"
         cmd = [
             "libcamera-still",
             "-o", filename,
-            "--width", "640",
-            "--height", "480",
+            "--width", "512",
+            "--height", "512",
             "--nopreview"
         ]
         subprocess.run(cmd)
-        print(f"Foto guardada: {filename}")
+        if log:
+            log_queue.put(f"Foto guardada: {filename}")
         time.sleep(5)
-except KeyboardInterrupt:
-    print("\nDetenido")
