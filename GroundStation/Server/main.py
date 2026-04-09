@@ -36,7 +36,7 @@ def run(queue, on_request, log):
 	def index():
 		return render_template("index.html", google_maps_api_key=GOOGLE_MAPS_API_KEY)
 
-	@app.route('/upload', mehtods=['POST'])
+	@app.route('/upload', methods=['POST'])
 	def upload():
 		files = request.files.getlist("images")
 		saved_files = []
