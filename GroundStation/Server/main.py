@@ -39,12 +39,12 @@ def run(queue, on_request, log):
 	@app.route('/upload', mehtods=['POST'])
 	def upload():
 		files = request.files.getlist("images")
-    	saved_files = []
-	    for file in files:
-	        filename = file.filename
-	        file.save(f"uploads/{filename}")
-	        saved_files.append(filename)
-    	return { "status": "ok", "received": saved_files }
+		saved_files = []
+		for file in files:
+			filename = file.filename
+			file.save(f"uploads/{filename}")
+			saved_files.append(filename)
+		return { "status": "ok", "received": saved_files }
 
 	@socketio.on("connect")
 	def handle_connect():
