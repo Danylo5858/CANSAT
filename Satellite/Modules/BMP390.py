@@ -28,7 +28,7 @@ def GetData():
         p = round(bmp.pressure, 2)
         a = round(bmp.altitude, 2)
     if log:
-        log_queue.put(f"Temperature: {t}\nPressure: {p}\nAltitude: {a}")
+        log_queue.put(f"Temperatura: {t}\nPresion: {p}\nAltitud: {a}")
     if send_data:
         buffer["BMP390"] = {
             "temperature": t,
