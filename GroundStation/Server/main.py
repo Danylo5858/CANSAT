@@ -9,6 +9,8 @@ def run(queue, on_request, log):
 	from flask import Flask, jsonify, render_template, request
 	from flask_socketio import SocketIO
 
+	os.makedirs("uploads", exist_ok=True)
+
 	load_dotenv()
 	GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
 
