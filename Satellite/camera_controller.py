@@ -21,7 +21,7 @@ def capture():
             picam2.capture_file(filename)
             if log:
                 log_queue.put(f"Imagen guardada: {filename}")
-            file = {
+            files = {
                 "images": open(filename, "rb")
             }
             result = requests.post(url, files=files)
