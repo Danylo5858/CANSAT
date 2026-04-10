@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 import requests
 from picamera2 import Picamera2
-from picamera2 import controls
+from libcamera import controls
 from log_manager import log_queue
 
 log = False
