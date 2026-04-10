@@ -45,7 +45,11 @@ def predict(image_path):
 
     outputs = session.run([output_name], {input_name: image})
 
-    probs = outputs[0][0]
+    logits = outputs[0][0]
+
+    # softmax manual
+    exp_vals = np.exp(logits - np.max(logits))
+    probs = exp_vals / np.sum(exp_vals)
 
     pred = np.argmax(probs)
     confidence = np.max(probs)
