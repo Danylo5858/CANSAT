@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 import requests
 from picamera2 import Picamera2
+from picamera2 import controls
 from log_manager import log_queue
 
 log = False
@@ -13,6 +14,7 @@ def init(size):
     picam2 = Picamera2()
     picam2.configure(picam2.create_still_configuration(main={ "size": size }))
     picam2.start()
+    picam2.set_controls({"AfMode": controls.AfModeEnum.Continuous})
 
 def capture():
     while True:
