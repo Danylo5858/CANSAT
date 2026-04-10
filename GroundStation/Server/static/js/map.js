@@ -36,7 +36,7 @@ function getRandomNearBase() {
 	return { lat, lng };
 }
 
-setInterval(() => {
-	const { lat, lng } = getRandomNearBase();
-	updateMap(lat, lng);
-}, 1000);
+// setInterval(() => {
+// 	const { lat, lng } = getRandomNearBase();
+// 	updateMap(lat, lng);
+// }, 1000);
