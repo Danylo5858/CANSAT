@@ -248,8 +248,7 @@ canvas {
 }
 
 .action-btn-ai {
-    width: 100%;
-    padding: 12px;
+    width: 80%;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
     font-weight: 600;
@@ -260,7 +259,7 @@ canvas {
     cursor: pointer;
     transition: 0.2s;
     position: relative;
-    bottom: 0;
+    bottom: 5%;
 }
 
 .action-btn-ai.primary:hover {
