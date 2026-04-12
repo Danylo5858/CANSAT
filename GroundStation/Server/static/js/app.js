@@ -245,7 +245,7 @@ for (const chart of charts) {
 }
 
 
-export const socket = io('http://10.156.112.51:5000', {
+export const socket = io('http://10.93.88.51:5000', {
 	reconnection: true,
 	reconnectionAttempts: Infinity,
 	reconnectionDelay: 1000,

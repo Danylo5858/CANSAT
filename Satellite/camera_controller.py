@@ -6,7 +6,7 @@ from log_manager import log_queue
 
 log = False
 SleepTime = 5
-url = "http://10.156.112.51:5000/upload"
+url = "http://10.93.88.51:5000/upload"
 
 def init(size):
     global picam2
