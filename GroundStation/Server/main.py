@@ -50,6 +50,7 @@ def run(queue, on_request, log):
 			filename = file.filename
 			file.save(f"Server/uploads/{filename}")
 			saved_files.append(filename)
+			socketio.emit("img_upload", filename)
 		return { "status": "ok", "received": saved_files }
 
 	@socketio.on("connect")

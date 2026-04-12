@@ -479,6 +479,14 @@ socket.on('GPS_data', (data) => {
 	}
 });
 
+const uploaded_img = [];
+
+socket.on('img_upload', (filename) => {
+	uploaded_img.push(filename);
+	const el_img = document.getElementById('ai-img');
+	el_img.src = `../uploads/${filename}`;
+});
+
 
 function handleSidebarAction(button) {
 	document.querySelectorAll('.sidebar-btn').forEach(btn => {
