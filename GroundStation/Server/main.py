@@ -10,7 +10,7 @@ def run(queue, on_request, log):
 	from flask import Flask, jsonify, render_template, request
 	from flask_socketio import SocketIO
 
-	folder = "Server/uploads"
+	folder = "Server/static/uploads"
 	if os.path.exists(folder):
 		shutil.rmtree(folder)
 	os.makedirs(folder)
