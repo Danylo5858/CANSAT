@@ -5,7 +5,8 @@ __pycache__/
 
 Satellite/Data/*.csv
 GroundStation/BackupData/*.csv
-venv/
+GroundStation/AI/*.csv
 AI_training/
+venv/
 
 .env

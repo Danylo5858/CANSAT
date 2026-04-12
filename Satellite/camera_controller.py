@@ -13,10 +13,6 @@ def init(size):
     picam2 = Picamera2()
     picam2.configure(picam2.create_still_configuration(main={ "size": size }))
     picam2.start()
-    picam2.set_controls({
-        "AfMode": 0,          # manual
-        "LensPosition": 0.0   # prueba valores
-    })
 
 def capture():
     while True:
