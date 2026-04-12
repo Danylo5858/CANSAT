@@ -484,7 +484,7 @@ const uploaded_img = [];
 socket.on('img_upload', (filename) => {
 	uploaded_img.push(filename);
 	const el_img = document.getElementById('ai-img');
-	el_img.src = `../uploads/${filename}`;
+	el_img.src = `../static/uploads/${filename}`;
 });
 
 

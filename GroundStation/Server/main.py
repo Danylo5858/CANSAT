@@ -48,7 +48,7 @@ def run(queue, on_request, log):
 		saved_files = []
 		for file in files:
 			filename = file.filename
-			file.save(f"Server/uploads/{filename}")
+			file.save(f"Server/static/uploads/{filename}")
 			saved_files.append(filename)
 			socketio.emit("img_upload", filename)
 		return { "status": "ok", "received": saved_files }

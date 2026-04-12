@@ -13,7 +13,7 @@ MODEL_PATH = "haze_model.onnx"
 
 class_names = ["calima", "no_calima"]
 
-folder_path = "../Server/uploads"
+folder_path = "../Server/static/uploads"
 valid_ext = [".jpg", ".jpeg", ".png", ".bmp"]
 
 output_file = "results.csv"
