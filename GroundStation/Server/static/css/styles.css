@@ -232,9 +232,11 @@ canvas {
     height: 512px;
     border: 4px solid rgba(79, 209, 197, 0.45);
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 .ai-img-container img {
+    position: relative;
     width: 100%;
     height: 100%;
     object-fit: contain;
@@ -242,6 +244,27 @@ canvas {
 
 .ai-img-container:hover {
     border: 4px solid rgba(79, 209, 197, 0.9);
+}
+
+.action-btn-ai {
+    width: 100%;
+    padding: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    border: 2px solid rgba(79, 209, 197, 0.45);
+    background: transparent;
+    color: #4fd1c5;
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+    bottom: 0;
+}
+
+.action-btn-ai.primary:hover {
+    background: rgba(79, 209, 197, 0.08);
+    border-color: #4fd1c5;
 }
 
 .backup-wrapper {

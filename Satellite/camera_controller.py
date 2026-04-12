@@ -27,7 +27,7 @@ def capture():
             files = {
                 "images": open(filename, "rb")
             }
-            result = requests.post(url, files=files, timeout=2.5)
+            result = requests.post(url, files=files, timeout=1)
             if log:
                 log_queue.put(f"Imagen enviada por HTTP: {result.text}")
         except Exception as e:
