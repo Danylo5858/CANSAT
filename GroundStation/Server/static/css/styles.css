@@ -233,6 +233,12 @@ canvas {
     transition: all 0.2s ease;
 }
 
+.ai-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .ai-img-container:hover {
     border: 4px solid rgba(79, 209, 197, 0.9);
 }
