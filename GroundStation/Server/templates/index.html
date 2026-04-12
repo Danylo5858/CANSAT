@@ -22,6 +22,11 @@
     </script>
 </head>
 <body>
+    <div id="ai" class="main-content hide">
+        <div class="ai-wrapper">
+            <div class="ai-img-container"></div>
+        </div>
+    </div>
 	<div id="cansat-charts" class="main-content charts-grid">
         <div id="chart_a"></div>
         <div id="chart_t"></div>
@@ -97,6 +102,9 @@
         <div id="map-canvas"></div>
     </div>
     <div class="sidebar">
+        <button id="ai-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
+            Analizar imágenes con IA
+        </button>
         <button id="cansat-charts-btn" class="sidebar-btn active" onclick="handleSidebarAction(this)">
             Mostrar gráficos del CanSat
         </button>

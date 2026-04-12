@@ -500,6 +500,9 @@ function handleSidebarAction(button) {
 	else if (button.getAttribute('id') === 'map-btn') {
 		document.querySelector('#map-view').classList.remove('hide');
 	}
+	else if (button.getAttribute('id') === 'ai-btn') {
+		document.querySelector('#ai').classList.remove('hide');
+	}
 }
 window.handleSidebarAction = handleSidebarAction;
 
