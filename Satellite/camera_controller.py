@@ -13,11 +13,14 @@ def init(size):
     picam2 = Picamera2()
     picam2.configure(picam2.create_still_configuration(main={ "size": size }))
     picam2.start()
+    picam2.set_controls({ "AfMode": 1 })
 
 def capture():
     while True:
         try:
             filename = f"Pictures/{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.jpg"
+            picam2.set_controls({ "AfTrigger": 0 })
+            time.sleep(0.5)
             picam2.capture_file(filename)
             if log:
                 log_queue.put(f"Imagen guardada: {filename}")
