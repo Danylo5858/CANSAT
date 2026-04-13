@@ -137,7 +137,6 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 	      		style: {
 			        fontSize: remToPx(1.1) + 'px'
 			    },
-			    margin: 4,
 	        	datetimeUTC: false,
 	        	formatter: function (value, timestamp) {
 	          		const format = getDynamicTimeFormat(currentMin, currentMax);
@@ -162,7 +161,6 @@ function generateTimeXaxis(range, ticks) {
 			style: {
 		        fontSize: remToPx(1.1) + 'px'
 			},
-			margin: 4,
 			datetimeUTC: false,
 			formatter: function (value, timestamp) {
 				const d = new Date(timestamp);
