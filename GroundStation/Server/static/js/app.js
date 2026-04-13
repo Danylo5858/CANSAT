@@ -186,6 +186,11 @@ const charts = [
         			fontSize: remToPx(1.2) + 'px',
         			fontWeight: 500
       			}
+			},
+			labels: {
+				style: {
+			        fontSize: remToPx(1) + 'px'
+				}
 			}
 		},
 		'#7c4dff'
@@ -201,6 +206,11 @@ const charts = [
         			fontSize: remToPx(1.2) + 'px',
         			fontWeight: 500
       			}
+			},
+			labels: {
+				style: {
+			        fontSize: remToPx(1) + 'px'
+				}
 			}
 		},
 		'#00e5ff'
@@ -215,6 +225,11 @@ const charts = [
         			fontSize: remToPx(1.2) + 'px',
         			fontWeight: 500
       			}
+			},
+			labels: {
+				style: {
+			        fontSize: remToPx(1) + 'px'
+				}
 			}
 		},
 		'#00ff88'
@@ -267,6 +282,11 @@ const charts = [
         			fontSize: remToPx(1.2) + 'px',
         			fontWeight: 500
       			}
+			},
+			labels: {
+				style: {
+			        fontSize: remToPx(1) + 'px'
+				}
 			}
 		},
 		'#7c4dff'
@@ -282,6 +302,11 @@ const charts = [
         			fontSize: remToPx(1.2) + 'px',
         			fontWeight: 500
       			}
+			},
+			labels: {
+				style: {
+			        fontSize: remToPx(1) + 'px'
+				}
 			}
 		},
 		'#00e5ff'
@@ -296,6 +321,11 @@ const charts = [
         			fontSize: remToPx(1.2) + 'px',
         			fontWeight: 500
       			}
+			},
+			labels: {
+				style: {
+			        fontSize: remToPx(1) + 'px'
+				}
 			}
 		},
 		'#00ff88'
@@ -431,7 +461,16 @@ socket.on('backup_response', (res) => {
 				'Altitud del CanSat (Copia de seguridad)',
 				{
 					title: {
-						text: 'Altitud (m)'
+						text: 'Altitud (m)',
+						style: {
+		        			fontSize: remToPx(1.2) + 'px',
+		        			fontWeight: 500
+		      			}
+					},
+					labels: {
+						style: {
+					        fontSize: remToPx(1) + 'px'
+						}
 					}
 				},
 				'#7c4dff',
@@ -442,7 +481,16 @@ socket.on('backup_response', (res) => {
 				'Temperatura del CanSat (Copia de seguridad)',
 				{
 					title: {
-						text: 'Temperatura (Celsius)'
+						text: 'Temperatura (Celsius)',
+						style: {
+		        			fontSize: remToPx(1.2) + 'px',
+		        			fontWeight: 500
+		      			}
+					},
+					labels: {
+						style: {
+					        fontSize: remToPx(1) + 'px'
+						}
 					}
 				},
 				'#00e5ff',
@@ -452,7 +500,16 @@ socket.on('backup_response', (res) => {
 				'Presión del CanSat (Copia de seguridad)',
 				{
 					title: {
-						text: 'Presión (hPa)'
+						text: 'Presión (hPa)',
+						style: {
+		        			fontSize: remToPx(1.2) + 'px',
+		        			fontWeight: 500
+		      			}
+					},
+					labels: {
+						style: {
+					        fontSize: remToPx(1) + 'px'
+						}
 					}
 				},
 				'#00ff88',
@@ -462,19 +519,33 @@ socket.on('backup_response', (res) => {
 				'Altitud - Presión (Copia de seguridad)',
 				{
 					title: {
-						text: 'Presión (hPa)'
+						text: 'Presión (hPa)',
+						style: {
+		        			fontSize: remToPx(1.2) + 'px',
+		        			fontWeight: 500
+		      			}
 					},
 					labels: {
-						formatter: (val) => `${Math.round(val)} hPa`
+						formatter: (val) => `${Math.round(val)} hPa`,
+						style: {
+					        fontSize: remToPx(1) + 'px'
+						}
 					}
 				},
 				{
 					type: 'numeric',
 					title: {
-						text: 'Altitud (m)'
+						text: 'Altitud (m)',
+						style: {
+		        			fontSize: remToPx(1.2) + 'px',
+		        			fontWeight: 500
+		      			}
 					},
 					labels: {
-						formatter: (val) => `${Math.round(val)} m`
+						formatter: (val) => `${Math.round(val)} m`,
+						style: {
+					        fontSize: remToPx(1) + 'px'
+						}
 					}
 				},
 				'#ff3b3b',
