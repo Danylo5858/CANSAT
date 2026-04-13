@@ -149,7 +149,7 @@ canvas {
   	display: flex;
   	align-items: center;
   	justify-content: center;
-  	padding: 14px 16px;
+  	padding: 14px 2rem;
   	border-radius: 0px;
   	background: rgba(79, 209, 197, 0.03);
   	border: 2px solid rgba(79, 209, 197, 0.45);
