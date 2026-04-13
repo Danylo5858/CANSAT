@@ -135,7 +135,7 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 	      	max: currentMax,
 	      	labels: {
 	      		style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 			    },
 	        	datetimeUTC: false,
 	        	formatter: function (value, timestamp) {
@@ -159,7 +159,7 @@ function generateTimeXaxis(range, ticks) {
 		tickAmount: ticks,
 		labels: {
 			style: {
-		        fontSize: remToPx(1) + 'px'
+		        fontSize: remToPx(1.1) + 'px'
 			},
 			datetimeUTC: false,
 			formatter: function (value, timestamp) {
@@ -183,13 +183,13 @@ const charts = [
 			title: {
 				text: 'Altitud (m)',
 				style: {
-        			fontSize: remToPx(1.2) + 'px',
+        			fontSize: remToPx(1.3) + 'px',
         			fontWeight: 500
       			}
 			},
 			labels: {
 				style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 				}
 			}
 		},
@@ -203,13 +203,13 @@ const charts = [
 			title: {
 				text: 'Temperatura (Celsius)',
 				style: {
-        			fontSize: remToPx(1.2) + 'px',
+        			fontSize: remToPx(1.3) + 'px',
         			fontWeight: 500
       			}
 			},
 			labels: {
 				style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 				}
 			}
 		},
@@ -222,13 +222,13 @@ const charts = [
 			title: {
 				text: 'Presión (hPa)',
 				style: {
-        			fontSize: remToPx(1.2) + 'px',
+        			fontSize: remToPx(1.3) + 'px',
         			fontWeight: 500
       			}
 			},
 			labels: {
 				style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 				}
 			}
 		},
@@ -240,14 +240,14 @@ const charts = [
 			title: {
 				text: 'Presión (hPa)',
 				style: {
-        			fontSize: remToPx(1.2) + 'px',
+        			fontSize: remToPx(1.3) + 'px',
         			fontWeight: 500
       			}
 			},
 			labels: {
 				formatter: (val) => `${Math.round(val)} hPa`,
 				style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 			    }
 			}
 		},
@@ -256,14 +256,14 @@ const charts = [
 			title: {
 				text: 'Altitud (m)',
 				style: {
-        			fontSize: remToPx(1.2) + 'px',
+        			fontSize: remToPx(1.3) + 'px',
         			fontWeight: 500
       			}
 			},
 			labels: {
 				formatter: (val) => `${Math.round(val)} m`,
 				style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 			    }
 			}
 		},
@@ -279,13 +279,13 @@ const charts = [
 			title: {
 				text: 'Calidad del aire',
 				style: {
-        			fontSize: remToPx(1.2) + 'px',
+        			fontSize: remToPx(1.3) + 'px',
         			fontWeight: 500
       			}
 			},
 			labels: {
 				style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 				}
 			}
 		},
@@ -299,13 +299,13 @@ const charts = [
 			title: {
 				text: 'Temperatura (Celsius)',
 				style: {
-        			fontSize: remToPx(1.2) + 'px',
+        			fontSize: remToPx(1.3) + 'px',
         			fontWeight: 500
       			}
 			},
 			labels: {
 				style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 				}
 			}
 		},
@@ -318,13 +318,13 @@ const charts = [
 			title: {
 				text: 'Humedad',
 				style: {
-        			fontSize: remToPx(1.2) + 'px',
+        			fontSize: remToPx(1.3) + 'px',
         			fontWeight: 500
       			}
 			},
 			labels: {
 				style: {
-			        fontSize: remToPx(1) + 'px'
+			        fontSize: remToPx(1.1) + 'px'
 				}
 			}
 		},
@@ -463,13 +463,13 @@ socket.on('backup_response', (res) => {
 					title: {
 						text: 'Altitud (m)',
 						style: {
-		        			fontSize: remToPx(1.2) + 'px',
+		        			fontSize: remToPx(1.3) + 'px',
 		        			fontWeight: 500
 		      			}
 					},
 					labels: {
 						style: {
-					        fontSize: remToPx(1) + 'px'
+					        fontSize: remToPx(1.1) + 'px'
 						}
 					}
 				},
@@ -483,13 +483,13 @@ socket.on('backup_response', (res) => {
 					title: {
 						text: 'Temperatura (Celsius)',
 						style: {
-		        			fontSize: remToPx(1.2) + 'px',
+		        			fontSize: remToPx(1.3) + 'px',
 		        			fontWeight: 500
 		      			}
 					},
 					labels: {
 						style: {
-					        fontSize: remToPx(1) + 'px'
+					        fontSize: remToPx(1.1) + 'px'
 						}
 					}
 				},
@@ -502,13 +502,13 @@ socket.on('backup_response', (res) => {
 					title: {
 						text: 'Presión (hPa)',
 						style: {
-		        			fontSize: remToPx(1.2) + 'px',
+		        			fontSize: remToPx(1.3) + 'px',
 		        			fontWeight: 500
 		      			}
 					},
 					labels: {
 						style: {
-					        fontSize: remToPx(1) + 'px'
+					        fontSize: remToPx(1.1) + 'px'
 						}
 					}
 				},
@@ -521,14 +521,14 @@ socket.on('backup_response', (res) => {
 					title: {
 						text: 'Presión (hPa)',
 						style: {
-		        			fontSize: remToPx(1.2) + 'px',
+		        			fontSize: remToPx(1.3) + 'px',
 		        			fontWeight: 500
 		      			}
 					},
 					labels: {
 						formatter: (val) => `${Math.round(val)} hPa`,
 						style: {
-					        fontSize: remToPx(1) + 'px'
+					        fontSize: remToPx(1.1) + 'px'
 						}
 					}
 				},
@@ -537,14 +537,14 @@ socket.on('backup_response', (res) => {
 					title: {
 						text: 'Altitud (m)',
 						style: {
-		        			fontSize: remToPx(1.2) + 'px',
+		        			fontSize: remToPx(1.3) + 'px',
 		        			fontWeight: 500
 		      			}
 					},
 					labels: {
 						formatter: (val) => `${Math.round(val)} m`,
 						style: {
-					        fontSize: remToPx(1) + 'px'
+					        fontSize: remToPx(1.1) + 'px'
 						}
 					}
 				},
