@@ -337,7 +337,7 @@ for (const chart of charts) {
 }
 
 
-export const socket = io('http://10.93.88.51:5000', {
+export const socket = io(window.APP_CONFIG.local_url, {
 	reconnection: true,
 	reconnectionAttempts: Infinity,
 	reconnectionDelay: 1000,

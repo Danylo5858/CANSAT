@@ -142,6 +142,11 @@
             </div>
         </div>
     </div>
+    <script>
+        window.APP_CONFIG = {
+            local_url: {{ local_url | tojson  }}
+        };
+    </script>
     <script type="module" src="{{ url_for('static', filename='js/map.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/3D_visualization.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/backup.js') }}"></script>

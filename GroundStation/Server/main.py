@@ -17,6 +17,7 @@ def run(queue, on_request, log):
 
 	load_dotenv()
 	GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
+	LOCAL_URL = os.environ.get("LOCAL_URL")
 
 	app = Flask(__name__)
 	socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
@@ -40,7 +41,7 @@ def run(queue, on_request, log):
 
 	@app.route("/")
 	def index():
-		return render_template("index.html", google_maps_api_key=GOOGLE_MAPS_API_KEY)
+		return render_template("index.html", google_maps_api_key=GOOGLE_MAPS_API_KEY, local_url=LOCAL_URL)
 
 	@app.route('/upload', methods=['POST'])
 	def upload():

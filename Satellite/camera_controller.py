@@ -1,15 +1,17 @@
 import time
 from datetime import datetime
 import requests
+from dotenv import load_dotenv
 from picamera2 import Picamera2
 from log_manager import log_queue
 
 log = False
 SleepTime = 5
-url = "http://10.93.88.51:5000/upload"
 
 def init(size):
-    global picam2
+    global picam2, url
+    load_dotenv()
+    url = os.environ.get("LOCAL_URL") + "/upload"
     picam2 = Picamera2()
     picam2.configure(picam2.create_still_configuration(main={ "size": size }))
     picam2.start()
