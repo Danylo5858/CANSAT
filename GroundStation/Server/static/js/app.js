@@ -5,6 +5,10 @@ import { updateMap } from './map.js';
 const WINDOW_SIZE = 60 * 1000;
 const TICKS = 6;
 
+const remToPx = (rem) => {
+  	return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+};
+
 function getDynamicTimeFormat(min, max) {
   	const diff = max - min;
 
@@ -50,11 +54,18 @@ function createChart(element, title, xaxis, yaxis, color, type='line', curve='sm
 		},
 		title: {
 			text: title,
-			align: 'center'
+			align: 'center',
+			style: {
+      			fontSize: remToPx(1.6) + 'px',
+      			fontWeight: 600
+    		}
 		},
 		tooltip: {
 			enabled: tooltip,
 			theme: 'dark',
+			style: {
+      			fontSize: remToPx(0.9) + 'px'
+    		}
 			//intersect: false,
 			//shared: true
 		},
@@ -96,11 +107,18 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 		},
 		title: {
 			text: title,
-			align: 'center'
+			align: 'center',
+			style: {
+      			fontSize: remToPx(1.6) + 'px',
+      			fontWeight: 600
+    		}
 		},
 		tooltip: {
 			enabled: true,
 			theme: 'dark',
+			style: {
+      			fontSize: remToPx(0.9) + 'px'
+    		}
 			//intersect: false,
 			//shared: true
 		},
@@ -116,6 +134,9 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 	      	min: currentMin,
 	      	max: currentMax,
 	      	labels: {
+	      		style: {
+			        fontSize: remToPx(1) + 'px'
+			    },
 	        	datetimeUTC: false,
 	        	formatter: function (value, timestamp) {
 	          		const format = getDynamicTimeFormat(currentMin, currentMax);
@@ -137,6 +158,9 @@ function generateTimeXaxis(range, ticks) {
 		range: range,
 		tickAmount: ticks,
 		labels: {
+			style: {
+		        fontSize: remToPx(1) + 'px'
+			},
 			datetimeUTC: false,
 			formatter: function (value, timestamp) {
 				const d = new Date(timestamp);
@@ -157,7 +181,11 @@ const charts = [
 		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
-				text: 'Altitud (m)'
+				text: 'Altitud (m)',
+				style: {
+        			fontSize: remToPx(1.2) + 'px',
+        			fontWeight: 500
+      			}
 			}
 		},
 		'#7c4dff'
@@ -168,7 +196,11 @@ const charts = [
 		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
-				text: 'Temperatura (Celsius)'
+				text: 'Temperatura (Celsius)',
+				style: {
+        			fontSize: remToPx(1.2) + 'px',
+        			fontWeight: 500
+      			}
 			}
 		},
 		'#00e5ff'
@@ -178,7 +210,11 @@ const charts = [
 		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
-				text: 'Presión (hPa)'
+				text: 'Presión (hPa)',
+				style: {
+        			fontSize: remToPx(1.2) + 'px',
+        			fontWeight: 500
+      			}
 			}
 		},
 		'#00ff88'
@@ -187,19 +223,33 @@ const charts = [
 		'Altitud - Presión',
 		{
 			title: {
-				text: 'Presión (hPa)'
+				text: 'Presión (hPa)',
+				style: {
+        			fontSize: remToPx(1.2) + 'px',
+        			fontWeight: 500
+      			}
 			},
 			labels: {
-				formatter: (val) => `${Math.round(val)} hPa`
+				formatter: (val) => `${Math.round(val)} hPa`,
+				style: {
+			        fontSize: remToPx(1) + 'px'
+			    }
 			}
 		},
 		{
 			type: 'numeric',
 			title: {
-				text: 'Altitud (m)'
+				text: 'Altitud (m)',
+				style: {
+        			fontSize: remToPx(1.2) + 'px',
+        			fontWeight: 500
+      			}
 			},
 			labels: {
-				formatter: (val) => `${Math.round(val)} m`
+				formatter: (val) => `${Math.round(val)} m`,
+				style: {
+			        fontSize: remToPx(1) + 'px'
+			    }
 			}
 		},
 		'#ff3b3b',
@@ -212,7 +262,11 @@ const charts = [
 		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
-				text: 'Calidad del aire'
+				text: 'Calidad del aire',
+				style: {
+        			fontSize: remToPx(1.2) + 'px',
+        			fontWeight: 500
+      			}
 			}
 		},
 		'#7c4dff'
@@ -223,7 +277,11 @@ const charts = [
 		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
-				text: 'Temperatura (Celsius)'
+				text: 'Temperatura (Celsius)',
+				style: {
+        			fontSize: remToPx(1.2) + 'px',
+        			fontWeight: 500
+      			}
 			}
 		},
 		'#00e5ff'
@@ -233,7 +291,11 @@ const charts = [
 		generateTimeXaxis(WINDOW_SIZE, TICKS),
 		{
 			title: {
-				text: 'Humedad'
+				text: 'Humedad',
+				style: {
+        			fontSize: remToPx(1.2) + 'px',
+        			fontWeight: 500
+      			}
 			}
 		},
 		'#00ff88'
