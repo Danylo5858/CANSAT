@@ -64,7 +64,7 @@ function createChart(element, title, xaxis, yaxis, color, type='line', curve='sm
 			enabled: tooltip,
 			theme: 'dark',
 			style: {
-      			fontSize: remToPx(0.9) + 'px'
+      			fontSize: remToPx(1) + 'px'
     		}
 			//intersect: false,
 			//shared: true
@@ -117,7 +117,7 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 			enabled: true,
 			theme: 'dark',
 			style: {
-      			fontSize: remToPx(0.9) + 'px'
+      			fontSize: remToPx(1) + 'px'
     		}
 			//intersect: false,
 			//shared: true
@@ -137,6 +137,7 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 	      		style: {
 			        fontSize: remToPx(1.1) + 'px'
 			    },
+			    margin: 4,
 	        	datetimeUTC: false,
 	        	formatter: function (value, timestamp) {
 	          		const format = getDynamicTimeFormat(currentMin, currentMax);
@@ -161,6 +162,7 @@ function generateTimeXaxis(range, ticks) {
 			style: {
 		        fontSize: remToPx(1.1) + 'px'
 			},
+			margin: 4,
 			datetimeUTC: false,
 			formatter: function (value, timestamp) {
 				const d = new Date(timestamp);
