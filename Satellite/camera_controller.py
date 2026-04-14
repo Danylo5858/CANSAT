@@ -12,7 +12,7 @@ SleepTime = 5
 def init(size):
     global picam2, url
     load_dotenv()
-    url = os.environ.get("LOCAL_URL") + "/upload"
+    url = str(os.environ.get("LOCAL_URL")) + "/upload"
     picam2 = Picamera2()
     picam2.configure(picam2.create_still_configuration(main={ "size": size }))
     picam2.start()
