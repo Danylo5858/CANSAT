@@ -80,4 +80,5 @@ try:
         #time.sleep(GlobalSleepTime)
         lm.log_queue.put(time.time() - start)
 except KeyboardInterrupt:
+    GPIO.output(23, GPIO.LOW)
     print("\nCerrando todos los procesos...")

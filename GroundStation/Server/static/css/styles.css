@@ -10,6 +10,10 @@ html {
     zoom: 1.7;
 }
 
+.backup-loader {
+    zoom: 1.7;
+}
+
 @media (max-width: 1400px) {
     html {
         font-size: 11px;
@@ -20,6 +24,10 @@ html {
     }
 
     .backup-card {
+        zoom: 1;
+    }
+
+    .backup-loader {
         zoom: 1;
     }
 }
@@ -185,7 +193,7 @@ canvas {
   	border: 2px solid rgba(79, 209, 197, 0.45);
   	color: #4fd1c5;
   	font-family: 'Inter', sans-serif;
-  	font-size: 1.6em;
+  	font-size: 1.7em;
   	font-weight: 600;
   	letter-spacing: 0.4px;
   	cursor: pointer;
@@ -312,7 +320,7 @@ canvas {
 }
 
 .backup-wrapper {
-    width: 70vw;
+    width: 69vw;
     height: 100vh;
     display: flex;
     justify-content: center;
