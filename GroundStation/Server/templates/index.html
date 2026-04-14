@@ -32,14 +32,13 @@
         <button id="ground-charts-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
             Mostrar gráficos de la estación de tierra
         </button>
-        <button id="backup-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
-            Generar gráficos a partir de una copia de seguridad
+        <button class="sidebar-btn" onclick="analyseAll()">
+            Analizar todas las imagenes recopiladas
         </button>
-        <button id="map-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
-            Seguir al CanSat en tiempo real
+        <button class="sidebar-btn" onclick="analyseCurrentImage()">
+            Analizar imagen actual
         </button>
         <div id="ai-img" class="ai-img-container">
-            <!-- <img id="ai-img" src=""> -->
             <!-- <div class="btn-background">
                 <button onclick="" class="action-btn-ai primary">
                         Analizar imagen

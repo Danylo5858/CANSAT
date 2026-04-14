@@ -302,32 +302,13 @@ canvas {
 
 .ai-img-container {
     flex: 1;
-    /*position: absolute;*/
-    /*bottom: 20px;*/
-    /*left: 20px;*/
-    /*width: 512px;*/
-    /*height: 512px;*/
     border: 2px solid rgba(79, 209, 197, 0.45);
     transition: all 0.2s ease;
-    /*box-sizing: border-box;*/
-    /*display: flex;*/
-    /*justify-content: center;*/
-    /*transform: scale(0.5);*/
-    /*transform-origin: left bottom;*/
     background-image: url("");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
 }
-
-/*.ai-img-container img {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}*/
 
 .ai-img-container:hover {
     border-color: rgba(79, 209, 197, 0.9);

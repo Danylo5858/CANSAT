@@ -656,6 +656,16 @@ function handleSidebarAction(button) {
 }
 window.handleSidebarAction = handleSidebarAction;
 
+function analyseCurrentImage() {
+
+}
+window.analyseCurrentImage = analyseCurrentImage;
+
+function analyseAll() {
+	
+}
+window.analyseAll = analyseAll;
+
 function generateInterval() {
     const startDate = document.getElementById('start-date').value;
     const startTime = document.getElementById('start-time').value;
