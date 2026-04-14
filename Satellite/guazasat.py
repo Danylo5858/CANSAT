@@ -67,9 +67,9 @@ except KeyboardInterrupt:
     print("\nCerrando todos los procesos...")
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(11, GPIO.OUT)    # LED
+GPIO.setup(12, GPIO.OUT)    # LED
 GPIO.setup(23, GPIO.OUT)    # BUZZER
-GPIO.output(11, GPIO.HIGH)
+GPIO.output(12, GPIO.HIGH)
 
 while True:
    GPIO.output(23, GPIO.HIGH)
