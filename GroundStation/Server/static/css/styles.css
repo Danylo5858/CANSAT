@@ -7,7 +7,8 @@ html {
 }
 
 .backup-card {
-    transform: scale(2);
+    max-width: 1240px;
+    gap: 110px;
 }
 
 @media (max-width: 1400px) {
@@ -20,7 +21,8 @@ html {
     }
 
     .backup-card {
-        transform: scale(1);
+        max-width: 620px;
+        gap: 55px;
     }
 }
 
@@ -325,11 +327,8 @@ canvas {
 
 .backup-card {
     width: 100%;
-    max-width: 620px;
-    /*padding: 40px;*/
     display: flex;
     flex-direction: column;
-    gap: 55px;
 }
 
 .backup-header {
