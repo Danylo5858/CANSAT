@@ -133,7 +133,7 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 	      	type: 'datetime',
 	      	min: currentMin,
 	      	max: currentMax,
-	      	// tickAmount: ,
+	      	tickAmount: 8,
 	      	labels: {
 	      		style: {
 			        fontSize: remToPx(1.1) + 'px'
