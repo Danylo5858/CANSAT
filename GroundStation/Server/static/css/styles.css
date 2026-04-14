@@ -2,8 +2,16 @@ html {
     font-size: 16px;
 }
 
+.sidebar {
+    font-size: 16px;
+}
+
 @media (max-width: 1400px) {
     html {
+        font-size: 13px;
+    }
+
+    .sidebar {
         font-size: 8px;
     }
 }
@@ -162,13 +170,13 @@ canvas {
   	display: flex;
   	align-items: center;
   	justify-content: center;
-  	padding: 1.5rem 16px;
+  	padding: 1.5em 16px;
   	border-radius: 0px;
   	background: rgba(79, 209, 197, 0.03);
   	border: 2px solid rgba(79, 209, 197, 0.45);
   	color: #4fd1c5;
   	font-family: 'Inter', sans-serif;
-  	font-size: 1.5rem;
+  	font-size: 1.5em;
   	font-weight: 600;
   	letter-spacing: 0.4px;
   	cursor: pointer;
