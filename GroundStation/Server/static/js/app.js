@@ -669,6 +669,6 @@ window.generateInterval = generateInterval
 
 function generateFull() {
     showBackupLoader();
-	backupRequest(true, false, false);
+	backupRequest(true, false, false, '2026-01-01 00:00:00', '2050-01-01 00:00:00');
 }
 window.generateFull = generateFull

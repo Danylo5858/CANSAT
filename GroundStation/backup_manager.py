@@ -61,15 +61,10 @@ def get_backup_data(req_data):
 	return final_data
 
 def ValidateTime(req_data, data):
-	print(req_data["start"])
-	print(req_data["end"])
-	print(type(req_data["start"]))
-	print(type(req_data["end"]))
 	if req_data["start"] != 0 or req_data["end"] != 0:
 		if req_data["start"] <= (data["date"] + " " + data["time"]) <= req_data["end"]:
 			return True
 		else:
 			return False
 	else:
-		print("TRUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 		return True
