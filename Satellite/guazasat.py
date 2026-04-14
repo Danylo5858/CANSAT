@@ -72,6 +72,7 @@ GPIO.setup(23, GPIO.OUT)    # BUZZER
 GPIO.output(12, GPIO.HIGH)
 
 while True:
-   GPIO.output(23, GPIO.HIGH)
-   time.sleep(GlobalSleepTime)
-   GPIO.output(23, GPIO.LOW)
+    print("...")
+    GPIO.output(23, GPIO.HIGH)
+    time.sleep(GlobalSleepTime)
+    GPIO.output(23, GPIO.LOW)
