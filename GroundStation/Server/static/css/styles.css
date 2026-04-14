@@ -316,7 +316,7 @@ canvas {
 .backup-card {
     width: 100%;
     max-width: 620px;
-    padding: 40px;
+    /*padding: 40px;*/
     display: flex;
     flex-direction: column;
     gap: 55px;
