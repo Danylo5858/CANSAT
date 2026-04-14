@@ -452,6 +452,10 @@ function hideBackupLoader() {
 }
 
 socket.on('backup_response', (res) => {
+	if (window.waitingForBackupDataChart === false) {
+		return;
+	}
+	window.waitingForBackupDataChart = false;
 	if (res['success'] === true) {
 		console.log('Copia de seguridad del CanSat recibida correctamente');
 		console.log(res['data'])

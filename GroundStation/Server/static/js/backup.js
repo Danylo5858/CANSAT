@@ -11,5 +11,6 @@ export function backupRequest(bmp, mpu, gps, start=0, end=0) {
 		end: end
 	};
 	socket.emit('backup_request', request_data);
+	window.waitingForBackupDataChart = true;
 	console.log('Enviando peticion de copia de seguridad del CanSat');
 }
