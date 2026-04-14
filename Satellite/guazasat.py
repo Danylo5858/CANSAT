@@ -25,6 +25,15 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(12, GPIO.OUT)    # LED
 GPIO.setup(23, GPIO.OUT)    # BUZZER
 GPIO.output(12, GPIO.HIGH)
+
+def buzzer():
+    sound_duration = 0.2
+    while True:
+        GPIO.output(23, GPIO.HIGH)
+        time.sleep(sound_duration)
+        GPIO.output(23, GPIO.LOW)
+        time.sleep(GlobalSleepTime - sound_duration)
+
 buzzer_thread = threading.Thread(target=buzzer, daemon=True)
 buzzer_thread.start()
 
@@ -72,11 +81,3 @@ try:
         lm.log_queue.put(time.time() - start)
 except KeyboardInterrupt:
     print("\nCerrando todos los procesos...")
-
-def buzzer():
-    sound_duration = 0.2
-    while True:
-        GPIO.output(23, GPIO.HIGH)
-        time.sleep(sound_duration)
-        GPIO.output(23, GPIO.LOW)
-        time.sleep(GlobalSleepTime - sound_duration)
