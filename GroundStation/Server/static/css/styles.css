@@ -14,6 +14,10 @@ html {
     .sidebar {
         font-size: 8px;
     }
+
+    .backup-card {
+        transform: scale(2);
+    }
 }
 
 body {

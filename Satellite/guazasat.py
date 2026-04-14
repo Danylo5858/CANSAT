@@ -35,7 +35,7 @@ def buzzer():
         time.sleep(GlobalSleepTime - sound_duration)
 
 buzzer_thread = threading.Thread(target=buzzer, daemon=True)
-buzzer_thread.start()
+# buzzer_thread.start()
 
 logger_thread = threading.Thread(target=lm.logger, daemon=True)
 logger_thread.start()
