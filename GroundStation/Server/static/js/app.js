@@ -616,7 +616,8 @@ socket.on('analysis_response', (res) => {
 		return;
 	}
 	window.waitingForAIData = false;
-
+	console.log('Analisis de imagenes recibido correctamente');
+	
 });
 
 socket.on('GPS_data', (data) => {

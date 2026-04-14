@@ -12,7 +12,7 @@ MODEL_PATH = os.path.join(BASE_DIR, "haze_model.onnx")
 
 class_names = ["calima", "no_calima"]
 
-folder_path = os.path.join(BASE_DIR, "../Server/static/uploads")
+folder_path = os.path.join(BASE_DIR, "../Server/static/test")
 valid_ext = [".jpg", ".jpeg", ".png", ".bmp"]
 
 output_file = os.path.join(BASE_DIR, "results.csv")
