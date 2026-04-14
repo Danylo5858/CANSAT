@@ -311,6 +311,7 @@ canvas {
     position: absolute;
     left: 0;
     top: 0;
+    overflow: hidden;
 }
 
 .backup-card {
@@ -331,7 +332,7 @@ canvas {
     color: #4fd1c5;
     font-size: 20px;
     letter-spacing: 0.6px;
-    margin-top: 0;
+    margin-top: 15px;
 }
 
 .backup-header p {
