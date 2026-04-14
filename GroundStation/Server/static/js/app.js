@@ -56,7 +56,7 @@ function createChart(element, title, xaxis, yaxis, color, type='line', curve='sm
 			text: title,
 			align: 'center',
 			style: {
-      			fontSize: remToPx(1.4) + 'px',
+      			fontSize: remToPx(1.45) + 'px',
       			fontWeight: 600
     		}
 		},
@@ -109,7 +109,7 @@ function createBackupChart(element, title, yaxis, color, dataset, type='line', c
 			text: title,
 			align: 'center',
 			style: {
-      			fontSize: remToPx(1.4) + 'px',
+      			fontSize: remToPx(1.45) + 'px',
       			fontWeight: 600
     		}
 		},
