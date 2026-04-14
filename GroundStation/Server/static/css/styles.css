@@ -295,10 +295,15 @@ canvas {
     border: 4px solid rgba(79, 209, 197, 0.9);
 }
 
+.ai-img-container:hover .action-btn-ai.primary {
+    background: rgba(79, 209, 197, 0.08);
+    border-color: #4fd1c5;
+}
+
 .btn-background {
     width: 90%;
     position: absolute;
-    bottom: 5%;
+    bottom: 4.5%;
     background: #0a0f14;
 }
 
@@ -315,11 +320,6 @@ canvas {
     color: #4fd1c5;
     cursor: pointer;
     transition: 0.2s;
-}
-
-.action-btn-ai.primary:hover {
-    background: rgba(79, 209, 197, 0.08);
-    border-color: #4fd1c5;
 }
 
 .backup-wrapper {
