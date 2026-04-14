@@ -21,6 +21,13 @@ i2c = busio.I2C(board.SCL, board.SDA)
 with i2c_lock:
     print("Devices: ", [hex(device_address) for device_address in i2c.scan()])
 
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(12, GPIO.OUT)    # LED
+GPIO.setup(23, GPIO.OUT)    # BUZZER
+GPIO.output(12, GPIO.HIGH)
+buzzer_thread = threading.Thread(target=buzzer, daemon=True)
+buzzer_thread.start()
+
 logger_thread = threading.Thread(target=lm.logger, daemon=True)
 logger_thread.start()
 
@@ -66,13 +73,10 @@ try:
 except KeyboardInterrupt:
     print("\nCerrando todos los procesos...")
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(12, GPIO.OUT)    # LED
-GPIO.setup(23, GPIO.OUT)    # BUZZER
-GPIO.output(12, GPIO.HIGH)
-
-while True:
-    print("...")
-    GPIO.output(23, GPIO.HIGH)
-    time.sleep(GlobalSleepTime)
-    GPIO.output(23, GPIO.LOW)
+def buzzer():
+    sound_duration = 0.2
+    while True:
+        GPIO.output(23, GPIO.HIGH)
+        time.sleep(sound_duration)
+        GPIO.output(23, GPIO.LOW)
+        time.sleep(GlobalSleepTime - sound_duration)
