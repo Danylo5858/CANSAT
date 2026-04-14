@@ -66,12 +66,12 @@ try:
 except KeyboardInterrupt:
     print("\nCerrando todos los procesos...")
 
-#GPIO.setmode(GPIO.BCM)
-#GPIO.setup(17, GPIO.OUT)    # LED
-#GPIO.setup(15, GPIO.OUT)    # BUZZER
-#GPIO.output(17, GPIO.HIGH)
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(11, GPIO.OUT)    # LED
+GPIO.setup(23, GPIO.OUT)    # BUZZER
+GPIO.output(11, GPIO.HIGH)
 
-#while True:
-#    GPIO.output(15, GPIO.HIGH)
-#    time.sleep(GlobalSleepTime)
-#    GPIO.output(15, GPIO.LOW)
+while True:
+   GPIO.output(23, GPIO.HIGH)
+   time.sleep(GlobalSleepTime)
+   GPIO.output(23, GPIO.LOW)
