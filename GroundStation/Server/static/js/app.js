@@ -629,7 +629,7 @@ socket.on('GPS_data', (data) => {
 	}
 });
 
-const last_uploaded_img;
+let last_uploaded_img;
 
 socket.on('img_upload', (filename) => {
 	last_uploaded_img = filename;
