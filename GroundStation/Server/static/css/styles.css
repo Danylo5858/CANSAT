@@ -297,17 +297,17 @@ canvas {
 
 .btn-background {
     width: 90%;
-    height: 8%;
     position: absolute;
-    bottom: 6.5%;
+    bottom: 5%;
     background: #0a0f14;
 }
 
 .action-btn-ai {
     width: 100%;
-    height: 100%;
+    padding: 12px;
     font-family: 'Inter', sans-serif;
-    font-size: 1.6em;
+    /*font-size: 1.6em;*/
+    font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.4px;
     border: 2px solid rgba(79, 209, 197, 0.45);
