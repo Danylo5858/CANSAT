@@ -317,10 +317,9 @@ canvas {
 }
 
 .ai-img-container img {
-    position: absolute;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 .ai-img-container:hover {
