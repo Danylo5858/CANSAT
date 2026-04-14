@@ -265,16 +265,15 @@ canvas {
 .ai-wrapper {
     width: 70vw;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: absolute;
     left: 0;
     top: 0;
 }
 
 .ai-img-container {
-    position: relative;
+    position: absolute;
+    top: 20px;
+    left: 20px;
     width: 512px;
     height: 512px;
     border: 4px solid rgba(79, 209, 197, 0.45);
@@ -282,6 +281,7 @@ canvas {
     box-sizing: border-box;
     display: flex;
     justify-content: center;
+    transform: scale(0.25);
 }
 
 .ai-img-container img {
