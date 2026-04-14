@@ -57,31 +57,39 @@ def predict(image_path):
     return class_names[pred], float(confidence)
 
 # ======================
-# ANÁLISIS DE CARPETA
+# ANÁLISIS DE CARPETA / IMAGEN
 # ======================
-def analyse():
+def analyse(req_img=""):
     results = []
 
-    for file in os.listdir(folder_path):
-        if any(file.lower().endswith(ext) for ext in valid_ext):
+    if req_img == "":
+        files_to_analyse = [
+            file for file in os.listdir(folder_path)
+            if any(file.lower().endswith(ext) for ext in valid_ext)
+        ]
+    else:
+        if not any(req_img.lower().endswith(ext) for ext in valid_ext):
+            print(f"Formato no valido: {req_img}")
+            return
+        path = os.path.join(folder_path, req_img)
+        if not os.path.exists(path):
+            print(f"No existe la imagen: {req_img}")
+            return
+        files_to_analyse = [req_img]
 
-            path = os.path.join(folder_path, file)
+    for file in files_to_analyse:
+        path = os.path.join(folder_path, file)
 
-            pred, conf = predict(path)
+        pred, conf = predict(path)
+        results.append([file, pred, conf])
 
-            results.append([file, pred, conf])
+        print(f"{file} → {pred} ({conf:.2f})")
 
-            print(f"{file} → {pred} ({conf:.2f})")
-
-    # ======================
-    # GUARDAR CSV
-    # ======================
     with open(output_file, mode="w", newline="") as f:
         writer = csv.writer(f)
-
         writer.writerow(["image", "prediction", "confidence"])
         writer.writerows(results)
-
     print(f"\nResultados guardados en {output_file}")
 
-analyse()
+if __name__ == "__main__":
+    analyse()

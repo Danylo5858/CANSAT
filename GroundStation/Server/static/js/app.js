@@ -1,11 +1,13 @@
 import { onReceiveAccel } from './3D_visualization.js';
 import { backupRequest } from './backup.js';
+import { analysisRequest } from './AI.js';
 import { updateMap } from './map.js';
 
 const WINDOW_SIZE = 60 * 1000;
 const TICKS = 6;
 
 window.waitingForBackupDataChart = false;
+window.waitingForAIData = false;
 
 const remToPx = (rem) => {
   	return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
@@ -609,6 +611,14 @@ socket.on('backup_response', (res) => {
 	}
 });
 
+socket.on('analysis_response', (res) => {
+	if (window.waitingForAIData === false) {
+		return;
+	}
+	window.waitingForAIData = false;
+
+});
+
 socket.on('GPS_data', (data) => {
 	if (data['latitude'] === 0 && data['longitude'] === 0) {
 		return;
@@ -619,10 +629,10 @@ socket.on('GPS_data', (data) => {
 	}
 });
 
-const uploaded_img = [];
+const last_uploaded_img;
 
 socket.on('img_upload', (filename) => {
-	uploaded_img.push(filename);
+	last_uploaded_img = filename;
 	const el_img = document.getElementById('ai-img');
 	el_img.style.backgroundImage = `url("../static/uploads/${filename}")`;
 });
@@ -657,12 +667,14 @@ function handleSidebarAction(button) {
 window.handleSidebarAction = handleSidebarAction;
 
 function analyseCurrentImage() {
-	// analysisRequest
+	analysisRequest(last_uploaded_img);
+	window.waitingForAIData = true;
 }
 window.analyseCurrentImage = analyseCurrentImage;
 
 function analyseAll() {
-	
+	analysisRequest();
+	window.waitingForAIData = true;
 }
 window.analyseAll = analyseAll;
 

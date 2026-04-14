@@ -34,6 +34,11 @@ def run(queue, on_request, log):
 					pass
 				socketio.sleep(0.05)
 
+	def process_analysis(data):
+		socketio.emit("analysis_response", on_request("analysis_request", data))
+		if log:
+			print("IMAGENES ANALIZADAS")
+
 	def process_backup(data):
 		socketio.emit("backup_response", on_request("backup_request", data))
 		if log:
@@ -58,6 +63,12 @@ def run(queue, on_request, log):
 	def handle_connect():
 		if log:
 			print("CLIENTE CONECTADO")
+
+	@socketio.on("analysis_request")
+	def handle_analysis_request(data):
+		if log:
+			print(f"PETICION DE ANALISIS DE IMAGENES: {data}")
+		socketio.start_background_task(process_analysis, data)
 
 	@socketio.on("backup_request")
 	def handle_backup_request(data):

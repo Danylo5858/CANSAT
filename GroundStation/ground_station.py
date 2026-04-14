@@ -2,6 +2,7 @@ import os
 import time
 import threading
 from multiprocessing import Process, Queue
+import AI.image_analysis as ai
 import backup_manager as bm
 import graph_manager as gm
 import weather_data_fetcher as wdf
@@ -20,6 +21,8 @@ os.makedirs("BackupData", exist_ok=True)
 def on_request(request, req_data):
 	if request == "backup_request":
 		return bm.get_backup_data(req_data)
+	elif request == "analysis_request":
+		return ai.analyse(req_data)
 
 server_queue = Queue()
 server = Process(target=app.run, args=(server_queue, on_request, server_log))
