@@ -281,7 +281,7 @@ canvas {
     box-sizing: border-box;
     display: flex;
     justify-content: center;
-    transform: scale(0.25);
+    transform: scale(0.7);
 }
 
 .ai-img-container img {
