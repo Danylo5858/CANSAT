@@ -5,6 +5,8 @@ import { updateMap } from './map.js';
 const WINDOW_SIZE = 60 * 1000;
 const TICKS = 6;
 
+window.waitingForBackupDataChart = false;
+
 const remToPx = (rem) => {
   	return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 };
