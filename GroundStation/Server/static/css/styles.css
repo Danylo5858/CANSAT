@@ -8,7 +8,7 @@ html {
 
 @media (max-width: 1400px) {
     html {
-        font-size: 13px;
+        font-size: 11px;
     }
 
     .sidebar {
@@ -176,7 +176,7 @@ canvas {
   	border: 2px solid rgba(79, 209, 197, 0.45);
   	color: #4fd1c5;
   	font-family: 'Inter', sans-serif;
-  	font-size: 1.5em;
+  	font-size: 1.7em;
   	font-weight: 600;
   	letter-spacing: 0.4px;
   	cursor: pointer;
