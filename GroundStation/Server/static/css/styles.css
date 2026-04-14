@@ -6,6 +6,10 @@ html {
     font-size: 16px;
 }
 
+.backup-card {
+    transform: scale(2);
+}
+
 @media (max-width: 1400px) {
     html {
         font-size: 11px;
@@ -16,7 +20,7 @@ html {
     }
 
     .backup-card {
-        transform: scale(2);
+        transform: scale(1);
     }
 }
 
