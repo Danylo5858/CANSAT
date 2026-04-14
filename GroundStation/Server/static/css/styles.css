@@ -309,6 +309,7 @@ canvas {
     /*height: 512px;*/
     border: 2px solid rgba(79, 209, 197, 0.45);
     transition: all 0.2s ease;
+    position: relative;
     /*box-sizing: border-box;*/
     /*display: flex;*/
     /*justify-content: center;*/
@@ -317,7 +318,7 @@ canvas {
 }
 
 .ai-img-container img {
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
