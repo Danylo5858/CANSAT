@@ -28,7 +28,7 @@ server.start()
 logger_thread = threading.Thread(target=lm.logger, daemon=True)
 logger_thread.start()
 
-wcom_gs.init(2, 868)
+wcom_gs.init(2, 869)
 receiver_thread = threading.Thread(target=wcom_gs.receiver, daemon=True)
 receiver_thread.start()
 

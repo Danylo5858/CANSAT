@@ -45,13 +45,10 @@ def GetData():
     data_queue.put(data)
 
 def SaveData():
-    log_queue.put("SAVE_DATA")
     with open('./Data/BMP390_data.csv', 'a', buffering=1, newline='') as f:
-        print("WITH_OPEN")
         data_writer = writer(f)
         while True:
             data = data_queue.get()
-            log_queue.put("WRITING ROW...")
             data_writer.writerow([
                 data["time"].strftime("%Y-%m-%d"),
                 data["time"].strftime("%H:%M:%S"),

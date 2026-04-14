@@ -31,7 +31,7 @@ image_capture = threading.Thread(target=cam.capture, daemon=True)
 image_capture.start()
 
 wcom_c.log = True
-wcom_c.init(1, 2, 868)
+wcom_c.init(1, 2, 869)
 
 bmp.log = False
 bmp.send_data = True
