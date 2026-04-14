@@ -5,49 +5,36 @@ import numpy as np
 from PIL import Image
 from torchvision import transforms
 
-# ======================
-# CONFIG
-# ======================
 IMG_SIZE = 256
-MODEL_PATH = "haze_model.onnx"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "haze_model.onnx")
 
 class_names = ["calima", "no_calima"]
 
-folder_path = "../Server/static/uploads"
+folder_path = os.path.join(BASE_DIR, "../Server/static/uploads")
 valid_ext = [".jpg", ".jpeg", ".png", ".bmp"]
 
-output_file = "results.csv"
+output_file = os.path.join(BASE_DIR, "results.csv")
 
-# ======================
-# TRANSFORM
-# ======================
 transform = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.ToTensor(),
 ])
 
-# ======================
-# ONNX MODEL
-# ======================
 session = ort.InferenceSession(MODEL_PATH)
 
 input_name = session.get_inputs()[0].name
 output_name = session.get_outputs()[0].name
 
-# ======================
-# PREDICCIÓN
-# ======================
 def predict(image_path):
     image = Image.open(image_path).convert("RGB")
     image = transform(image)
-
     image = image.unsqueeze(0).numpy().astype(np.float32)
 
     outputs = session.run([output_name], {input_name: image})
-
     logits = outputs[0][0]
 
-    # softmax manual
     exp_vals = np.exp(logits - np.max(logits))
     probs = exp_vals / np.sum(exp_vals)
 
@@ -56,9 +43,6 @@ def predict(image_path):
 
     return class_names[pred], float(confidence)
 
-# ======================
-# ANÁLISIS DE CARPETA / IMAGEN
-# ======================
 def analyse(req_img=""):
     results = []
 
@@ -79,10 +63,8 @@ def analyse(req_img=""):
 
     for file in files_to_analyse:
         path = os.path.join(folder_path, file)
-
         pred, conf = predict(path)
         results.append([file, pred, conf])
-
         print(f"{file} → {pred} ({conf:.2f})")
 
     with open(output_file, mode="w", newline="") as f:
