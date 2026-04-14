@@ -70,8 +70,6 @@ def ValidateTime(req_data, data):
 			print("TRUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 			return True
 		else:
-			print("FALSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
 			return False
 	else:
-		print("FALSEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE222222222222")
 		return True
