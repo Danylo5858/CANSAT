@@ -658,8 +658,8 @@ function generateInterval() {
     }
     else {
     	showBackupLoader();
-    	const formattedStartTime = startTime.replace(':', '-') + '-00';
-    	const formattedEndTime = endTime.replace(':', '-') + '-00';
+    	const formattedStartTime = startTime + ':00';
+    	const formattedEndTime = endTime + ':00';
     	const start = `${startDate} ${formattedStartTime}`;
     	const end = `${endDate} ${formattedEndTime}`;
 		backupRequest(true, false, false, start, end);

@@ -19,12 +19,9 @@ def get_backup_data(req_data):
 	gps_data = []
 	final_data = { "success": True, "data": {} }
 	if req_data["bmp"]:
-		print("1")
 		with open('./BackupData/BMP390_data.csv', 'r', newline='') as f:
-			print("2")
 			data_reader = reader(f)
 			for row in data_reader:
-				print("3")
 				data = {
 		            "date": row[0],
 		            "time": row[1],
@@ -64,7 +61,6 @@ def get_backup_data(req_data):
 	return final_data
 
 def ValidateTime(req_data, data):
-	print("4")
 	if req_data["start"] != 0 or req_data["end"] != 0:
 		if req_data["start"] <= (data["date"] + " " + data["time"]) <= req_data["end"]:
 			print("TRUEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
