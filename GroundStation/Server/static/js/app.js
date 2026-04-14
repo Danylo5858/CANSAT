@@ -657,7 +657,7 @@ function handleSidebarAction(button) {
 window.handleSidebarAction = handleSidebarAction;
 
 function analyseCurrentImage() {
-
+	// analysisRequest
 }
 window.analyseCurrentImage = analyseCurrentImage;
 
