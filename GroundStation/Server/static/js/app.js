@@ -636,6 +636,7 @@ function handleSidebarAction(button) {
 	document.querySelectorAll('.main-content').forEach(el => {
 		el.classList.add('hide');
 	});
+	document.querySelector('.ai-sidebar').classList.add('hide');
 	if (button.getAttribute('id') === 'ground-charts-btn') {
 		document.querySelector('#ground-charts').classList.remove('hide');
 	}
@@ -650,6 +651,7 @@ function handleSidebarAction(button) {
 	}
 	else if (button.getAttribute('id') === 'ai-btn') {
 		document.querySelector('#ai').classList.remove('hide');
+		document.querySelector('.ai-sidebar').classList.remove('hide');
 	}
 }
 window.handleSidebarAction = handleSidebarAction;
