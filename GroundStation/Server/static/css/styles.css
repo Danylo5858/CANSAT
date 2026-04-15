@@ -300,6 +300,25 @@ canvas {
     height: 100%;
 }
 
+.ai-gallery {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    padding: 20px;
+    box-sizing: border-box;
+    display: grid;
+    gap: 4px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-auto-rows: 1fr;
+}
+
+.ai-gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 .ai-img-container {
     flex: 1;
     border: 2px solid rgba(79, 209, 197, 0.45);

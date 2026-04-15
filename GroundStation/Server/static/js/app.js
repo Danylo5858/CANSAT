@@ -617,8 +617,11 @@ socket.on('analysis_response', (res) => {
 	}
 	window.waitingForAIData = false;
 	console.log('Analisis de imagenes recibido correctamente');
+	console.log(res);
 	for (let i = 0; i < res.length; i++) {
-		console.log(res[i]);
+		const img = document.createElement('img');
+		img.src = res[i][0];
+		document.querySelector('.ai-gallery').appendChild(img);
 	}
 });
 
@@ -671,6 +674,7 @@ window.handleSidebarAction = handleSidebarAction;
 
 function clearUploads() {
 	socket.emit('clear_uploads_request');
+	console.log('Peticion de limpieza de uploads enviada');
 }
 window.clearUploads = clearUploads;
 
