@@ -1,6 +1,5 @@
 import struct
 from sx126x import sx126x
-from battery_controller import read_percent
 from log_manager import log_queue
 
 log = False
@@ -14,7 +13,6 @@ def init(self_address, destination_address, frequency):
     radio = sx126x("/dev/serial0", freq, self_address, 22, False)
 
 def pack_all(data):
-    print(int(read_percent()))
     gps = data["GPS"]
     bmp = data["BMP390"]
     accel_points = data["MPU6050"]["accel"]
@@ -24,7 +22,6 @@ def pack_all(data):
         int(gps["latitude"] * 1e7),
         int(gps["longitude"] * 1e7),
         int(gps["satellites"]),
-        # int(read_percent()),
         int(bmp["temperature"] * 100),
         int(bmp["pressure"] * 100),
         int(bmp["altitude"] * 100),

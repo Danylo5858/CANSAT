@@ -18,8 +18,8 @@ def init(size):
     picam2.start()
     time.sleep(2)
     picam2.set_controls({
-        "ExposureTime": 800,
-        "AnalogueGain": 3.0,
+        "ExposureTime": 1500,
+        "AnalogueGain": 2.0,
         "AfMode": 2
     })
 
