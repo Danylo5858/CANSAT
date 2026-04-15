@@ -192,7 +192,7 @@ canvas {
 .battery-indicator {
     position: absolute;
     font-family: 'Inter', sans-serif;
-    font-weight: 400;
+    font-weight: 600;
     padding: 8px;
     font-size: 1.35rem;
 }
