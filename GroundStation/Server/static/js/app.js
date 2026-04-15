@@ -669,6 +669,11 @@ function handleSidebarAction(button) {
 }
 window.handleSidebarAction = handleSidebarAction;
 
+function clearUploads() {
+	socket.emit('clear_uploads_request');
+}
+window.clearUploads = clearUploads;
+
 function analyseCurrentImage() {
 	analysisRequest(last_uploaded_img);
 	window.waitingForAIData = true;

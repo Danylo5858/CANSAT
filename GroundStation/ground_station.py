@@ -14,6 +14,7 @@ import Server.main as app
 wcom_gs.log = True
 wdf.log = False
 gm.log = False
+ai.log = False
 server_log = False
 
 os.makedirs("BackupData", exist_ok=True)

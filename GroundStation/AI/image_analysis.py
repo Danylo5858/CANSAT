@@ -5,6 +5,8 @@ import numpy as np
 from PIL import Image
 from torchvision import transforms
 
+log = False
+
 IMG_SIZE = 256
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -53,11 +55,13 @@ def analyse(req_img=""):
         ]
     else:
         if not any(req_img.lower().endswith(ext) for ext in valid_ext):
-            print(f"Formato no valido: {req_img}")
+            if log:
+                print(f"Formato no valido: {req_img}")
             return
         path = os.path.join(folder_path, req_img)
         if not os.path.exists(path):
-            print(f"No existe la imagen: {req_img}")
+            if log:
+                print(f"No existe la imagen: {req_img}")
             return
         files_to_analyse = [req_img]
 
@@ -65,13 +69,15 @@ def analyse(req_img=""):
         path = os.path.join(folder_path, file)
         pred, conf = predict(path)
         results.append([file, pred, conf])
-        print(f"{file} → {pred} ({conf:.2f})")
+        if log:
+            print(f"{file} → {pred} ({conf:.2f})")
 
     with open(output_file, mode="w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["image", "prediction", "confidence"])
         writer.writerows(results)
-    print(f"\nResultados guardados en {output_file}")
+    if log:
+        print(f"\nResultados guardados en {output_file}")
 
     return results
 

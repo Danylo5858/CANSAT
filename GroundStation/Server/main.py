@@ -11,9 +11,11 @@ def run(queue, on_request, log):
 	from flask_socketio import SocketIO
 
 	folder = "Server/static/uploads"
-	if os.path.exists(folder):
-		shutil.rmtree(folder)
-	os.makedirs(folder)
+	def clear_uploads():
+		if os.path.exists(folder):
+			shutil.rmtree(folder)
+		os.makedirs(folder)
+	clear_uploads()
 
 	load_dotenv()
 	GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
@@ -38,6 +40,11 @@ def run(queue, on_request, log):
 		socketio.emit("analysis_response", on_request("analysis_request", data))
 		if log:
 			print("IMAGENES ANALIZADAS")
+
+	def process_clear_uploads():
+		clear_uploads()
+		if log:
+			print("UPLOADS VACIADO")
 
 	def process_backup(data):
 		socketio.emit("backup_response", on_request("backup_request", data))
@@ -69,6 +76,12 @@ def run(queue, on_request, log):
 		if log:
 			print(f"PETICION DE ANALISIS DE IMAGENES: {data}")
 		socketio.start_background_task(process_analysis, data)
+
+	@socketio.on("clear_uploads_request")
+	def handle_clear_uploads_request():
+		if log:
+			print(f"LIMPIANDO UPLOADS")
+		socketio.start_background_task(process_clear_uploads)
 
 	@socketio.on("backup_request")
 	def handle_backup_request(data):
