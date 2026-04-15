@@ -306,15 +306,13 @@ canvas {
     height: 50%;
     padding: 20px;
     box-sizing: border-box;
-    display: grid;
-    gap: 4px;
-    grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
-    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-.gallery-item{
-    width: 100%;
-    height: auto;
+.gallery-item {
+    flex: 1 1 30px;
     aspect-ratio: 1 / 1;
     background-size: cover;
     background-position: center;
