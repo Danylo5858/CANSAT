@@ -645,8 +645,8 @@ async function renderGallery(res, gallery, delay = 80) {
   	}
   	await sleep(3000);
   	if (calima + no_calima > 1) {
-	  	document.getElementById('ai-result').textContent = `
-	  		Número de imágenes CON calima detectada: ${calima}\n
+	  	document.getElementById('ai-result').innerHTML = `
+	  		Número de imágenes CON calima detectada: ${calima}<br>
 	  		Número de imágenes SIN calima detectada: ${no_calima}
 	  	`;
 	}
@@ -655,10 +655,10 @@ async function renderGallery(res, gallery, delay = 80) {
 		if (calima === 1) {
 			r = 'SÍ';
 		}
-		document.getElementById('ai-result').textContent = `
-			Imagen: ${filename}\n
-	  		Calima detectada: ${r}\n
-	  		Probabilidad de acierto: ${confidence*100} %
+		document.getElementById('ai-result').innerHTML = `
+			Imagen: ${filename}<br>
+	  		Calima detectada: ${r}<br>
+	  		Probabilidad de acierto: ${parseInt(confidence)*100} %
 	  	`;
 	}
   	hideAnalysisLoader();
