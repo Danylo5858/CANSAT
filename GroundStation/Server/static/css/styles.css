@@ -314,12 +314,15 @@ canvas {
     overflow-y: auto;
 }
 
-.ai-gallery img {
-    /*width: 100%;*/
-    /*height: 100%;*/
+.gallery-item {
     aspect-ratio: 1 / 1;
+    overflow: hidden;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    display: block;
 }
 
 .ai-img-container {
