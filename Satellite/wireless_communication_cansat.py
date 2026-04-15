@@ -1,5 +1,6 @@
 import struct
 from sx126x import sx126x
+from battery_controller import read_percent
 from log_manager import log_queue
 
 log = False

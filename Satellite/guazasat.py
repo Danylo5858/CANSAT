@@ -7,6 +7,7 @@ import RPi.GPIO as GPIO
 from Modules import BMP390 as bmp
 from Modules import MPU6050 as mpu
 from Modules import GPS as gps
+import battery_controller as battery
 import log_manager as lm
 import wireless_communication_cansat as wcom_c
 import camera_controller as cam
@@ -79,6 +80,7 @@ try:
         wcom_c.send_data() # send => 0.3 sec
         #time.sleep(GlobalSleepTime)
         lm.log_queue.put(time.time() - start)
+        lm.log_queue.put(battery.read_percent())
 except KeyboardInterrupt:
     GPIO.output(23, GPIO.LOW)
     print("\nCerrando todos los procesos...")
