@@ -12,7 +12,7 @@ MODEL_PATH = os.path.join(BASE_DIR, "haze_model.onnx")
 
 class_names = ["calima", "no_calima"]
 
-folder_path = os.path.join(BASE_DIR, "../Server/static/test")
+folder_path = os.path.join(BASE_DIR, "../Server/static/uploads")
 valid_ext = [".jpg", ".jpeg", ".png", ".bmp"]
 
 output_file = os.path.join(BASE_DIR, "results.csv")
@@ -72,6 +72,8 @@ def analyse(req_img=""):
         writer.writerow(["image", "prediction", "confidence"])
         writer.writerows(results)
     print(f"\nResultados guardados en {output_file}")
+
+    return results
 
 if __name__ == "__main__":
     analyse()
