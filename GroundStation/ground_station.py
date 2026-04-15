@@ -44,7 +44,7 @@ try:
 		server_queue.put(("MPU6050_data", cansat_data["MPU6050"]))
 		server_queue.put(("BMP390_data", cansat_data["BMP390"]))
 		server_queue.put(("GPS_data", cansat_data["GPS"]))
-		server_queue.put(("battery", cansat_data["battery"]))
+		# server_queue.put(("battery", cansat_data["battery"]))
 		if cansat_data["GPS"]["latitude"] != 0 or cansat_data["GPS"]["longitude"] != 0:
 			wdf.lat = cansat_data["GPS"]["latitude"]
 			wdf.lon = cansat_data["GPS"]["longitude"]
