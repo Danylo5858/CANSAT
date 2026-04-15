@@ -366,6 +366,28 @@ canvas {
     width: 100%;
 }
 
+.ai-text-container {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ai-text-container h2 {
+    font-family: 'Inter', sans-serif;
+    color: #4fd1c5;
+    font-size: 20px;
+    letter-spacing: 0.6px;
+    /*margin-top: 15px;*/
+}
+
+.ai-text-container p {
+    font-family: 'Inter', sans-serif;
+    color: rgba(79, 209, 197, 0.7);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
 .ai-loader {
     position: absolute;
     inset: 0;
@@ -374,7 +396,7 @@ canvas {
     align-items: center;
     /*background: rgba(10, 15, 20, 0.35);*/
     /*backdrop-filter: blur(6px);*/
-    z-index: 50;
+    /*z-index: 50;*/
     /*opacity: 0;*/
     /*pointer-events: none;*/
     transition: 0.25s;

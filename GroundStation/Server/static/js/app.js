@@ -615,15 +615,25 @@ socket.on('backup_response', (res) => {
 
 function showAnalysisLoader() {
     document.getElementById('ai-loader').classList.remove('hide');
+    document.querySelector('.ai-text-container').classList.add('hide');
 }
 
 function hideAnalysisLoader() {
     document.getElementById('ai-loader').classList.add('hide');
+    document.querySelector('.ai-text-container').classList.remove('hide');
 }
 
 async function renderGallery(res, gallery, delay = 80) {
   	const fragment = document.createDocumentFragment();
+  	let calima = 0;
+  	let no_calima = 0;
   	for (let i = 0; i < res.length; i++) {
+  		if (res[i][1] === 'calima') {
+  			calima++;
+  		}
+  		else {
+  			no_calima++;
+  		}
 	    const item = document.createElement('div');
 	    item.className = 'gallery-item';
 	    item.style.backgroundImage = `url('../static/uploads/${res[i][0]}')`;
@@ -631,6 +641,8 @@ async function renderGallery(res, gallery, delay = 80) {
     	gallery.appendChild(item);
     	await sleep(delay);
   	}
+  	await sleep(3000);
+  	document.getElementById('#ai-result').textContent = `Número de imágenes CON calima detectada: ${calima}\nNúmero de imágenes SIN calima detectada: ${no_calima}`;
   	hideAnalysisLoader();
 }
 
@@ -639,7 +651,6 @@ socket.on('analysis_response', (res) => {
 		return;
 	}
 	window.waitingForAIData = false;
-	showAnalysisLoader();
 	console.log('Analisis de imagenes recibido correctamente');
 	console.log(res);
 	const gallery = document.querySelector('.ai-gallery');
@@ -705,12 +716,14 @@ function clearUploads() {
 window.clearUploads = clearUploads;
 
 function analyseCurrentImage() {
+	showAnalysisLoader();
 	analysisRequest(last_uploaded_img);
 	window.waitingForAIData = true;
 }
 window.analyseCurrentImage = analyseCurrentImage;
 
 function analyseAll() {
+	showAnalysisLoader();
 	analysisRequest();
 	window.waitingForAIData = true;
 }
