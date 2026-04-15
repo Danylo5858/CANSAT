@@ -618,10 +618,12 @@ socket.on('analysis_response', (res) => {
 	window.waitingForAIData = false;
 	console.log('Analisis de imagenes recibido correctamente');
 	console.log(res);
+	const gallery = document.querySelector('.ai-gallery');
 	for (let i = 0; i < res.length; i++) {
+		gallery.replaceChildren();
 		const img = document.createElement('img');
 		img.src = `../static/uploads/${res[i][0]}`;
-		document.querySelector('.ai-gallery').appendChild(img);
+		gallery.appendChild(img);
 	}
 });
 
