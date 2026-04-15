@@ -301,26 +301,15 @@ canvas {
 }
 
 .ai-gallery {
-    position: absolute;
-    width: 100%;
-    height: 50%;
-    padding: 20px;
-    box-sizing: border-box;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 10px;
 }
 
 .gallery-item {
-    --gap: 10px;
-    --cols: 3;
-    width: calc(
-        (100% - (var(--cols) - 1) * var(--gap)) / var(--cols)
-    );
     aspect-ratio: 1 / 1;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    width: 100%;
+    background: #4a90e2;
 }
 
 .ai-img-container {
