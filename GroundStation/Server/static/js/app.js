@@ -695,7 +695,7 @@ socket.on('img_upload', (filename) => {
 });
 
 socket.on('battery', (battery) => {
-	const pBattery = parseInt(battery*100);
+	const pBattery = parseInt(battery);
 	console.log(`Bateria: ${pBattery}%`);
 	const batteryIndicator = document.querySelector('.battery-indicator');
 	batteryIndicator.textContent = `Batería: ${pBattery}%`;
