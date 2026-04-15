@@ -312,7 +312,11 @@ canvas {
 }
 
 .gallery-item {
-    flex: 1 1 30px;
+    --gap: 10px;
+    --cols: 3;
+    width: calc(
+        (100% - (var(--cols) - 1) * var(--gap)) / var(--cols)
+    );
     aspect-ratio: 1 / 1;
     background-size: cover;
     background-position: center;
