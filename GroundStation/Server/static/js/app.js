@@ -613,6 +613,14 @@ socket.on('backup_response', (res) => {
 	}
 });
 
+function showAnalysisLoader() {
+    document.getElementById('ai-loader').classList.remove('hide');
+}
+
+function hideAnalysisLoader() {
+    document.getElementById('ai-loader').classList.add('hide');
+}
+
 async function renderGallery(res, gallery, delay = 80) {
   	const fragment = document.createDocumentFragment();
   	for (let i = 0; i < res.length; i++) {
@@ -623,6 +631,7 @@ async function renderGallery(res, gallery, delay = 80) {
     	gallery.appendChild(item);
     	await sleep(delay);
   	}
+  	hideAnalysisLoader();
 }
 
 socket.on('analysis_response', (res) => {
@@ -630,6 +639,7 @@ socket.on('analysis_response', (res) => {
 		return;
 	}
 	window.waitingForAIData = false;
+	showAnalysisLoader();
 	console.log('Analisis de imagenes recibido correctamente');
 	console.log(res);
 	const gallery = document.querySelector('.ai-gallery');
