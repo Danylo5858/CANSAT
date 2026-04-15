@@ -620,7 +620,7 @@ socket.on('analysis_response', (res) => {
 	console.log(res);
 	for (let i = 0; i < res.length; i++) {
 		const img = document.createElement('img');
-		img.src = res[i][0];
+		img.src = `../static/uploads/${res[i][0]}`;
 		document.querySelector('.ai-gallery').appendChild(img);
 	}
 });
