@@ -1,11 +1,14 @@
-import busio
-import board
-import adafruit_max1704x
+import smbus2
+import time
 
-i2c = busio.I2C(board.SCL, board.SDA)
+bus = smbus2.SMBus(1)
+ADDR = 0x36
 
-max1704x = adafruit_max1704x.MAX17048(i2c)
+def read_percent():
+    data = bus.read_word_data(ADDR, 0x04)
+    value = ((data & 0xFF) << 8) | (data >> 8)
+    return value / 256.0
 
 while True:
-    print(f"{max1704x.cell_percent:.1f}%")
-   
+    print(f"{read_percent():.1f}%")
+    time.sleep(2)
