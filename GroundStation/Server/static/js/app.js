@@ -619,8 +619,8 @@ socket.on('analysis_response', (res) => {
 	console.log('Analisis de imagenes recibido correctamente');
 	console.log(res);
 	const gallery = document.querySelector('.ai-gallery');
+	gallery.replaceChildren();
 	for (let i = 0; i < res.length; i++) {
-		gallery.replaceChildren();
 		const img = document.createElement('img');
 		img.src = `../static/uploads/${res[i][0]}`;
 		gallery.appendChild(img);
