@@ -658,7 +658,7 @@ async function renderGallery(res, gallery, delay = 80) {
 		document.getElementById('ai-result').innerHTML = `
 			Imagen: ${filename}<br>
 	  		Calima detectada: ${r}<br>
-	  		Probabilidad de acierto: ${parseInt(confidence*100)} %
+	  		Probabilidad de acierto: ${parseInt(confidence*100)}%
 	  	`;
 	}
   	hideAnalysisLoader();

@@ -23,12 +23,6 @@
 </head>
 <body>
     <div class="ai-sidebar hide">
-        <button id="ai-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
-            Analizar imágenes con IA
-        </button>
-        <button id="cansat-charts-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
-            Mostrar gráficos del CanSat
-        </button>
         <button class="sidebar-btn" onclick="clearUploads()">
             Eliminar imágenes recopiladas
         </button>
@@ -155,7 +149,9 @@
         <button id="map-btn" class="sidebar-btn" onclick="handleSidebarAction(this)">
             Seguir al CanSat en tiempo real
         </button>
-        <div id="viewer" class="sidebar-gyro-visualization"></div>
+        <div id="viewer" class="sidebar-gyro-visualization">
+            <p class="battery-indicator">Batería: 100%</p>
+        </div>
     </div>
     <div class="loader-container">
         <div class="center">
