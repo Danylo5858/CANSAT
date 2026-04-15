@@ -642,7 +642,10 @@ async function renderGallery(res, gallery, delay = 80) {
     	await sleep(delay);
   	}
   	await sleep(3000);
-  	document.getElementById('ai-result').textContent = `Número de imágenes CON calima detectada: ${calima}\nNúmero de imágenes SIN calima detectada: ${no_calima}`;
+  	document.getElementById('ai-result').textContent = `
+  		Número de imágenes CON calima detectada: ${calima}<\br>
+  		Número de imágenes SIN calima detectada: ${no_calima}
+  	`;
   	hideAnalysisLoader();
 }
 
