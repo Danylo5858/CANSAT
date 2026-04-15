@@ -621,9 +621,7 @@ socket.on('analysis_response', (res) => {
 	const gallery = document.querySelector('.ai-gallery');
 	gallery.replaceChildren();
 	for (let i = 0; i < res.length; i++) {
-		setTimeout(() => {
-			gallery.innerHTML += `<div class="gallery-item" style="background-image: url('../static/uploads/${res[i][0]}');"></div>`;
-		}, 150);
+		gallery.innerHTML += `<div class="gallery-item" style="background-image: url('../static/uploads/${res[i][0]}');"></div>`;
 	}
 });
 

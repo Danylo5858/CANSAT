@@ -310,7 +310,7 @@ canvas {
     gap: 4px;
     grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
     grid-auto-rows: 1fr;
-    /*overflow-y: auto;*/
+    overflow-y: auto;
 }
 
 .gallery-item{
