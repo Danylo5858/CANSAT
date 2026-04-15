@@ -621,11 +621,7 @@ socket.on('analysis_response', (res) => {
 	const gallery = document.querySelector('.ai-gallery');
 	gallery.replaceChildren();
 	for (let i = 0; i < res.length; i++) {
-		gallery.innerHTML += `
-		  	<div class="gallery-item">
-		    	<img src="../static/uploads/${res[i][0]}">
-		  	</div>
-		`;
+		gallery.innerHTML += `<div class="gallery-item" style="background-image: url('../static/uploads/${res[i][0]}');"></div>`;
 	}
 });
 
