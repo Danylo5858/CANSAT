@@ -43,9 +43,9 @@ logger_thread.start()
 
 cam.log = True
 cam.SleepTime = 4
-cam.init((512, 512))
+# cam.init((512, 512))
 image_capture = threading.Thread(target=cam.capture, daemon=True)
-image_capture.start()
+# image_capture.start()
 
 wcom_c.log = True
 wcom_c.init(1, 2, 869)
