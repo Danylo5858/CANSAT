@@ -643,6 +643,10 @@ socket.on('img_upload', (filename) => {
 	el_img.style.backgroundImage = `url("../static/uploads/${filename}")`;
 });
 
+socket.on('battery', (battery) => {
+	console.log(`Bateria: ${battery} %`);
+});
+
 
 function handleSidebarAction(button) {
 	document.querySelectorAll('.sidebar-btn').forEach(btn => {
