@@ -2,7 +2,7 @@ adafruit-blinka
 adafruit-circuitpython-bmp3xx
 adafruit-circuitpython-gps
 adafruit-circuitpython-mpu6050
-adafruit_max1704x
+adafruit-circuitpython-max1704x
 openmeteo-requests
 requests
 RPi.GPIO
