@@ -6,6 +6,8 @@ import { updateMap } from './map.js';
 const WINDOW_SIZE = 60 * 1000;
 const TICKS = 6;
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 window.waitingForBackupDataChart = false;
 window.waitingForAIData = false;
 
@@ -611,6 +613,18 @@ socket.on('backup_response', (res) => {
 	}
 });
 
+async function renderGallery(res, gallery, delay = 80) {
+  	const fragment = document.createDocumentFragment();
+  	for (let i = 0; i < res.length; i++) {
+	    const item = document.createElement('div');
+	    item.className = 'gallery-item';
+	    item.style.backgroundImage = `url('../static/uploads/${res[i][0]}')`;
+    	fragment.appendChild(item);
+    	gallery.appendChild(item);
+    	await sleep(delay);
+  	}
+}
+
 socket.on('analysis_response', (res) => {
 	if (window.waitingForAIData === false) {
 		return;
@@ -620,9 +634,7 @@ socket.on('analysis_response', (res) => {
 	console.log(res);
 	const gallery = document.querySelector('.ai-gallery');
 	gallery.replaceChildren();
-	for (let i = 0; i < res.length; i++) {
-		gallery.innerHTML += `<div class="gallery-item" style="background-image: url('../static/uploads/${res[i][0]}');"></div>`;
-	}
+	renderGallery(res, gallery, 100);
 });
 
 socket.on('GPS_data', (data) => {
