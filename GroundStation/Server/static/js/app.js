@@ -695,7 +695,19 @@ socket.on('img_upload', (filename) => {
 });
 
 socket.on('battery', (battery) => {
-	console.log(`Bateria: ${battery} %`);
+	const pBattery = parseInt(battery*100);
+	console.log(`Bateria: ${pBattery}%`);
+	const batteryIndicator = document.querySelector('.battery-indicator');
+	batteryIndicator.textContent = `Batería: ${pBattery}%`;
+	if (pBattery >= 75) {
+		batteryIndicator.style.color = 'green';
+	}
+	else if (pBattery >= 25) {
+		batteryIndicator.style.color = 'yellow';
+	}
+	else if (pBattery >= 0) {
+		batteryIndicator.style.color = 'red';
+	}
 });
 
 
