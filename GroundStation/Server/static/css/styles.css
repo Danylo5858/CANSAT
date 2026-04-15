@@ -309,17 +309,26 @@ canvas {
     display: grid;
     gap: 4px;
     grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
-    grid-auto-rows: 1fr;
+    grid-auto-rows: 0;
     align-content: start;
     overflow-y: auto;
 }
 
 .gallery-item {
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.gallery-item::before{
+    content: "";
+    display: block;
+    padding-top: 100%;
 }
 
 .gallery-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
