@@ -14,16 +14,17 @@ def init(self_address, destination_address, frequency):
     radio = sx126x("/dev/serial0", freq, self_address, 22, False)
 
 def pack_all(data):
+    print(int(read_percent()))
     gps = data["GPS"]
     bmp = data["BMP390"]
     accel_points = data["MPU6050"]["accel"]
     duration = data["MPU6050"]["time"]
     packet = struct.pack(
-        '<iiBB i i i h' + '12h' + 'I',
+        '<iiB i i i h' + '12h' + 'I',
         int(gps["latitude"] * 1e7),
         int(gps["longitude"] * 1e7),
         int(gps["satellites"]),
-        int(read_percent()),
+        # int(read_percent()),
         int(bmp["temperature"] * 100),
         int(bmp["pressure"] * 100),
         int(bmp["altitude"] * 100),
