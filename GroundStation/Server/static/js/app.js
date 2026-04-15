@@ -625,6 +625,8 @@ function hideAnalysisLoader() {
 
 async function renderGallery(res, gallery, delay = 80) {
   	const fragment = document.createDocumentFragment();
+  	const filename = res[0][0];
+  	const confidence = res[0][2];
   	let calima = 0;
   	let no_calima = 0;
   	for (let i = 0; i < res.length; i++) {
@@ -642,10 +644,23 @@ async function renderGallery(res, gallery, delay = 80) {
     	await sleep(delay);
   	}
   	await sleep(3000);
-  	document.getElementById('ai-result').textContent = `
-  		Número de imágenes CON calima detectada: ${calima}<\br>
-  		Número de imágenes SIN calima detectada: ${no_calima}
-  	`;
+  	if (calima + no_calima > 1) {
+	  	document.getElementById('ai-result').textContent = `
+	  		Número de imágenes CON calima detectada: ${calima}\n
+	  		Número de imágenes SIN calima detectada: ${no_calima}
+	  	`;
+	}
+	else {
+		let r = 'NO';
+		if (calima === 1) {
+			r = 'SÍ';
+		}
+		document.getElementById('ai-result').textContent = `
+			Imagen: ${filename}\n
+	  		Calima detectada: ${r}\n
+	  		Probabilidad de acierto: ${confidence*100} %
+	  	`;
+	}
   	hideAnalysisLoader();
 }
 
