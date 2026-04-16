@@ -15,7 +15,7 @@ def run(queue, on_request, log):
 		if os.path.exists(folder):
 			shutil.rmtree(folder)
 		os.makedirs(folder)
-	clear_uploads()
+	# clear_uploads()
 
 	load_dotenv()
 	GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")
@@ -68,6 +68,8 @@ def run(queue, on_request, log):
 
 	@socketio.on("connect")
 	def handle_connect():
+		filenames = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+		socketio.emit("all_img_filenames", filenames)
 		if log:
 			print("CLIENTE CONECTADO")
 

@@ -687,11 +687,28 @@ socket.on('GPS_data', (data) => {
 });
 
 let last_uploaded_img;
+let img_filenames;
+
+async function autoUpdateImg(freq) {
+	while (true) {
+		for (let i = 0; i < img_filenames.length; i++) {
+			last_uploaded_img = img_filenames[i];
+			const el_img = document.getElementById('ai-img');
+			el_img.style.backgroundImage = `url("../static/uploads/${img_filenames[i]}")`;
+			await sleep(freq);
+		}
+	}
+}
 
 socket.on('img_upload', (filename) => {
 	last_uploaded_img = filename;
 	const el_img = document.getElementById('ai-img');
 	el_img.style.backgroundImage = `url("../static/uploads/${filename}")`;
+});
+
+socket.on('all_img_filenames', (filenames) => {
+	img_filenames = filenames;
+	autoUpdateImg(4);
 });
 
 socket.on('battery', (battery) => {
