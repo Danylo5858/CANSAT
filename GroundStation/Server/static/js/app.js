@@ -653,7 +653,7 @@ function updateCalimaRing(selector, percent, detected = true) {
     el.classList.toggle("clean", !detected);
 
     label.textContent = detected ? "CALIMA" : "LIMPIO";
-    sub.textContent = "confidence IA";
+    sub.textContent = "Probabilidad de acierto";
 
     /* reset fill para animar desde vacío SIEMPRE */
     progress.style.transition = "none";
@@ -712,16 +712,16 @@ async function renderGallery(res, gallery, delay = 80) {
 	    const item = document.createElement('div');
 	    item.className = 'gallery-item';
 	    item.style.backgroundImage = `url('../static/uploads/${res[i][0]}')`;
+	    // item.onclick = () => {
+	    // 	item.classList.add('scan-card');
+	    // };
     	fragment.appendChild(item);
     	gallery.appendChild(item);
     	await sleep(delay);
   	}
   	await sleep(3000);
   	if (calima + no_calima > 1) {
-	  	document.getElementById('ai-result').innerHTML = `
-	  		Número de imágenes CON calima detectada: ${calima}<br>
-	  		Número de imágenes SIN calima detectada: ${no_calima}
-	  	`;
+	  	updateCalimaRing(".calima-ring", 69, true);
 	}
 	else {
 		let r = false;
