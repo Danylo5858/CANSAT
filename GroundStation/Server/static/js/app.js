@@ -613,48 +613,74 @@ socket.on('backup_response', (res) => {
 	}
 });
 
-function animateNumber(el, target, duration = 1200) {
+function animateNumber(el, target, duration = 1100) {
     let start = 0;
-    const stepTime = 16;
-    const totalSteps = duration / stepTime;
-    const increment = target / totalSteps;
+    const startTime = performance.now();
 
-    const timer = setInterval(() => {
-        start += increment;
+    function frame(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
 
-        if (start >= target) {
-            start = target;
-            clearInterval(timer);
-        }
+        const value = Math.round(start + (target - start) * eased);
+        el.textContent = value + "%";
 
-        el.textContent = Math.round(start) + "%";
-    }, stepTime);
+        if (progress < 1) requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
 }
 
 function updateCalimaRing(selector, percent, detected = true) {
     const el = document.querySelector(selector);
-    const progress = el.querySelector('.ring-progress');
-    const value = el.querySelector('.ring-value');
-    const label = el.querySelector('.ring-label');
+    if (!el) return;
+
+    const progress = el.querySelector(".ring-progress");
+    const value = el.querySelector(".ring-value");
+    const label = el.querySelector(".ring-label");
+    const sub = el.querySelector(".ring-sub");
 
     const radius = 88;
     const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (percent / 100) * circumference;
 
-    /* Reiniciar animación entrada */
-    progress.style.animation = "none";
-    progress.offsetHeight;
-    progress.style.animation = "ringEnter 1.4s ease forwards";
+    const safePercent = Math.max(0, Math.min(100, percent));
+    const offset = circumference - (safePercent / 100) * circumference;
 
-    progress.style.strokeDasharray = circumference;
-    progress.style.strokeDashoffset = offset;
+    /* activar desde estado apagado */
+    el.classList.remove("disabled");
+    el.classList.add("active");
 
-    label.textContent = detected ? "CALIMA" : "LIMPIO";
-
-    el.classList.toggle("detected", detected);
+    /* modo detectado / limpio */
     el.classList.toggle("clean", !detected);
 
-    animateNumber(value, percent);
+    label.textContent = detected ? "CALIMA" : "LIMPIO";
+    sub.textContent = "confidence IA";
+
+    /* reset fill para animar desde vacío SIEMPRE */
+    progress.style.transition = "none";
+    progress.style.strokeDasharray = circumference;
+    progress.style.strokeDashoffset = circumference;
+
+    /* forzar repaint */
+    progress.getBoundingClientRect();
+
+    /* animación de llenado */
+    progress.style.transition =
+        "stroke-dashoffset 1.15s cubic-bezier(.22,.8,.2,1), opacity .25s ease";
+    progress.style.strokeDashoffset = offset;
+
+    animateNumber(value, safePercent);
+}
+
+function disableCalimaRing(selector) {
+    const el = document.querySelector(selector);
+    if (!el) return;
+
+    el.classList.remove("active", "clean");
+    el.classList.add("disabled");
+
+    el.querySelector(".ring-label").textContent = "IA OFFLINE";
+    el.querySelector(".ring-value").textContent = "--%";
+    el.querySelector(".ring-sub").textContent = "esperando análisis";
 }
 
 function showAnalysisLoader() {

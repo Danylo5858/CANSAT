@@ -280,8 +280,8 @@ canvas {
 
 .calima-ring {
     position: relative;
-    width: 280px;
-    height: 280px;
+    width: 290px;
+    height: 290px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -297,31 +297,36 @@ canvas {
 .ring-progress,
 .ring-glow {
     fill: none;
-    stroke-width: 14;
+    stroke-width: 12;
 }
 
+/* Base */
 .ring-bg {
-    stroke: rgba(79, 209, 197, 0.12);
+    stroke: rgba(79, 209, 197, 0.08);
 }
 
+/* Glow */
 .ring-glow {
-    stroke: rgba(79, 209, 197, 0.22);
-    filter: blur(8px);
+    stroke: rgba(79, 209, 197, 0.18);
+    filter: blur(10px);
+    opacity: 0;
     transform-origin: center;
-    animation: pulseGlow 2.5s ease-in-out infinite;
 }
 
+/* Fill principal */
 .ring-progress {
     stroke: url(#ringGradient);
-    stroke-linecap: round;
+    stroke-linecap: butt; /* esquinas rectas */
     stroke-dasharray: 553;
     stroke-dashoffset: 553;
-    transition: stroke-dashoffset 1s ease;
-    filter: drop-shadow(0 0 8px rgba(79, 209, 197, 0.35));
     opacity: 0;
-    animation: ringEnter 1.4s ease forwards;
+    filter: drop-shadow(0 0 10px rgba(79, 209, 197, 0.18));
+    transition:
+        stroke-dashoffset 1.15s cubic-bezier(.22,.8,.2,1),
+        opacity .25s ease;
 }
 
+/* Centro */
 .ring-center {
     position: absolute;
     inset: 0;
@@ -331,62 +336,96 @@ canvas {
     align-items: center;
     pointer-events: none;
     text-align: center;
+    gap: 6px;
 }
 
 .ring-label {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
     letter-spacing: 2px;
-    color: rgba(79, 209, 197, 0.75);
-    margin-bottom: 6px;
+    color: rgba(79, 209, 197, 0.35);
+    text-transform: uppercase;
 }
 
 .ring-value {
-    font-family: 'Inter', sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-size: 3rem;
     font-weight: 700;
-    color: #4fd1c5;
     line-height: 1;
+    color: rgba(79, 209, 197, 0.35);
 }
 
 .ring-sub {
-    margin-top: 8px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.75rem;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
     letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(79, 209, 197, 0.22);
+}
+
+/* ===== DESACTIVADO ===== */
+.calima-ring.disabled .ring-progress {
+    opacity: 0;
+    stroke-dashoffset: 553;
+}
+
+.calima-ring.disabled .ring-glow {
+    opacity: 0;
+}
+
+.calima-ring.disabled .ring-label,
+.calima-ring.disabled .ring-value,
+.calima-ring.disabled .ring-sub {
+    color: rgba(79, 209, 197, 0.25);
+}
+
+/* ===== ACTIVO ===== */
+.calima-ring.active .ring-progress {
+    opacity: 1;
+}
+
+.calima-ring.active .ring-glow {
+    animation: pulseGlow 2.4s ease-in-out infinite;
+}
+
+.calima-ring.active .ring-label {
+    color: rgba(79, 209, 197, 0.82);
+}
+
+.calima-ring.active .ring-value {
+    color: #4fd1c5;
+}
+
+.calima-ring.active .ring-sub {
     color: rgba(79, 209, 197, 0.45);
 }
 
-/* Estado limpio */
+/* ===== LIMPIO ===== */
 .calima-ring.clean .ring-progress {
-    stroke: #3b4b52;
+    stroke: #708089;
+    filter: drop-shadow(0 0 8px rgba(140,160,170,0.12));
 }
 
-.calima-ring.clean .ring-label,
-.calima-ring.clean .ring-value {
-    color: #8fa1a8;
+.calima-ring.clean .ring-value,
+.calima-ring.clean .ring-label {
+    color: #9aa8ae;
 }
 
-/* Entrada */
-@keyframes ringEnter {
-    from {
-        stroke-dashoffset: 553;
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.calima-ring.clean .ring-sub {
+    color: rgba(154,168,174,0.55);
 }
 
-/* Glow respirando */
+/* Glow vivo */
 @keyframes pulseGlow {
     0%,100% {
-        opacity: 0.35;
+        opacity: 0.22;
         transform: scale(1);
     }
     50% {
-        opacity: 0.8;
-        transform: scale(1.02);
+        opacity: 0.75;
+        transform: scale(1.018);
     }
 }
 
