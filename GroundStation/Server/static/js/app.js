@@ -683,17 +683,22 @@ function disableCalimaRing(selector) {
     el.querySelector(".ring-sub").textContent = "esperando análisis";
 }
 
+let analysing = false;
+
 function showAnalysisLoader() {
     // document.getElementById('ai-loader').classList.remove('hide');
     // document.querySelector('.ai-text-container').classList.add('hide');
     document.querySelector('.ai-warning').classList.add('hide');
 	document.querySelector('.ai-img-container').classList.add('scan-card');
+	analysing = true;
+
 }
 
 function hideAnalysisLoader() {
     // document.getElementById('ai-loader').classList.add('hide');
     // document.querySelector('.ai-text-container').classList.remove('hide');
 	document.querySelector('.ai-img-container').classList.remove('scan-card');
+	analysing = false;
 }
 
 async function renderGallery(res, gallery, delay = 80) {
@@ -763,9 +768,18 @@ socket.on('GPS_data', (data) => {
 let last_uploaded_img;
 let img_filenames;
 
+async function waitForAnalysis() {
+	while (analysing) {
+		continue;
+	}
+}
+
 async function autoUpdateImg(freq) {
 	while (true) {
 		for (let i = 0; i < img_filenames.length; i++) {
+			if (analysing) {
+				await waitForAnalysis();
+			}
 			last_uploaded_img = img_filenames[i];
 			const el_img = document.getElementById('ai-img');
 			el_img.style.backgroundImage = `url("../static/uploads/${img_filenames[i]}")`;
