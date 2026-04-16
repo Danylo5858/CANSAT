@@ -470,13 +470,13 @@ canvas {
 .ai-bottom-part {
     position: absolute;
     width: 100%;
-    bottom: 17%;
+    bottom: 7%;
     display: flex;
     justify-content: center;
 }
 
 /* líneas fijas CRT */
-.scan-card::before {
+.ai-img-container::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -498,7 +498,6 @@ canvas {
     inset: 0;
     pointer-events: none;
     z-index: 3;
-    opacity: 0;
 
     background: linear-gradient(
         to bottom,
@@ -513,10 +512,6 @@ canvas {
 
     transform: translateY(-100%);
     animation: scanMove 2.5s linear infinite;
-}
-
-.scan-card.scanning::after {
-    opacity: 1;
 }
 
 @keyframes scanMove {

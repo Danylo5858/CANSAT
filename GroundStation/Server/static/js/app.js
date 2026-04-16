@@ -693,7 +693,7 @@ function showAnalysisLoader() {
 function hideAnalysisLoader() {
     // document.getElementById('ai-loader').classList.add('hide');
     // document.querySelector('.ai-text-container').classList.remove('hide');
-	document.querySelector('.scan-card').classList.remove('scanning');
+	document.querySelector('.ai-img-container').classList.remove('scan-card');
 }
 
 async function renderGallery(res, gallery, delay = 80) {
