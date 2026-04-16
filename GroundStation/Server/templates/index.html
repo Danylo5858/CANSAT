@@ -43,11 +43,13 @@
     <div id="ai" class="main-content hide">
         <div class="ai-wrapper">
             <div class="ai-card">
-                <div class="ai-warning">
-                    <p>Ninguna imagen se está analizando<br> ahora mismo</p>
+                <div class="ai-top-part">
+                    <div class="ai-warning">
+                        <p>Ninguna imagen se está analizando<br> ahora mismo</p>
+                    </div>
+                    <div class="target-img"></div>
                 </div>
-                <div class="single-img-analysis-container">
-                    <div class="ai-single-img"></div>
+                <div class="ai-bottom-part">
                     <div class="calima-ring disabled">
                         <svg viewBox="0 0 220 220" class="ring-svg">
                             <defs>
@@ -56,12 +58,10 @@
                                     <stop offset="100%" stop-color="#6ff7ee"/>
                                 </linearGradient>
                             </defs>
-
                             <circle class="ring-glow" cx="110" cy="110" r="88"></circle>
                             <circle class="ring-bg" cx="110" cy="110" r="88"></circle>
                             <circle class="ring-progress" cx="110" cy="110" r="88"></circle>
                         </svg>
-
                         <div class="ring-center">
                             <span class="ring-label">IA OFFLINE</span>
                             <span class="ring-value">--%</span>

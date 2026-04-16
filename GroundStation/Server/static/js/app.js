@@ -726,7 +726,8 @@ async function renderGallery(res, gallery, delay = 80) {
 		if (calima === 1) {
 			r = true;
 		}
-		document.querySelector('.single-img-analysis-container').classList.remove('hide');
+		document.querySelector('.target-img').style.backgroundImage = `url('../static/uploads/${filename}')`;
+		document.querySelector('.target-img').classList.remove('hide');
 		updateCalimaRing(".calima-ring", parseInt(confidence*100), r);
 		// document.getElementById('ai-result').innerHTML = `
 		// 	Imagen: ${filename}<br>
