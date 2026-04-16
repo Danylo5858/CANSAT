@@ -768,17 +768,11 @@ socket.on('GPS_data', (data) => {
 let last_uploaded_img;
 let img_filenames;
 
-async function waitForAnalysis() {
-	while (analysing) {
-		continue;
-	}
-}
-
 async function autoUpdateImg(freq) {
 	while (true) {
 		for (let i = 0; i < img_filenames.length; i++) {
-			if (analysing) {
-				await waitForAnalysis();
+			while (analysing) {
+				await sleep(10);
 			}
 			last_uploaded_img = img_filenames[i];
 			const el_img = document.getElementById('ai-img');
