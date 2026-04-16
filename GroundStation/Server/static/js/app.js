@@ -684,14 +684,16 @@ function disableCalimaRing(selector) {
 }
 
 function showAnalysisLoader() {
-    document.getElementById('ai-loader').classList.remove('hide');
+    // document.getElementById('ai-loader').classList.remove('hide');
     // document.querySelector('.ai-text-container').classList.add('hide');
     document.querySelector('.ai-warning').classList.add('hide');
+	document.querySelector('.scan-card').classList.add('scanning');
 }
 
 function hideAnalysisLoader() {
-    document.getElementById('ai-loader').classList.add('hide');
+    // document.getElementById('ai-loader').classList.add('hide');
     // document.querySelector('.ai-text-container').classList.remove('hide');
+	document.querySelector('.scan-card').classList.remove('scanning');
 }
 
 async function renderGallery(res, gallery, delay = 80) {
@@ -726,8 +728,6 @@ async function renderGallery(res, gallery, delay = 80) {
 		if (calima === 1) {
 			r = true;
 		}
-		document.querySelector('.target-img').style.backgroundImage = `url('../static/uploads/${filename}')`;
-		document.querySelector('.target-img').classList.remove('hide');
 		updateCalimaRing(".calima-ring", parseInt(confidence*100), r);
 		// document.getElementById('ai-result').innerHTML = `
 		// 	Imagen: ${filename}<br>

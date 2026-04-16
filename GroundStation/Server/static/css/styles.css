@@ -497,6 +497,7 @@ canvas {
     inset: 0;
     pointer-events: none;
     z-index: 3;
+    opacity: 0;
 
     background: linear-gradient(
         to bottom,
@@ -511,6 +512,10 @@ canvas {
 
     transform: translateY(-100%);
     animation: scanMove 2.5s linear infinite;
+}
+
+.scan-card.scanning::after {
+    opacity: 1;
 }
 
 @keyframes scanMove {
