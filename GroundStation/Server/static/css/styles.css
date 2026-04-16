@@ -192,7 +192,7 @@ canvas {
 .battery-indicator {
     position: absolute;
     font-family: 'Inter', sans-serif;
-    font-weight: 600;
+    /*font-weight: 600;*/
     padding: 8.5px;
     font-size: 1.35rem;
 }
@@ -211,7 +211,7 @@ canvas {
   	color: #4fd1c5;
   	font-family: 'Inter', sans-serif;
   	font-size: 1.6em;
-  	font-weight: 600;
+  	/*font-weight: 600;*/
   	letter-spacing: 0.4px;
   	cursor: pointer;
   	transition: all 0.2s ease;
@@ -359,7 +359,7 @@ canvas {
 .ring-sub {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 0.72rem;
-    font-weight: 600;
+    /*font-weight: 600;*/
     letter-spacing: 1px;
     text-transform: uppercase;
     color: rgba(79, 209, 197, 0.22);
@@ -554,7 +554,7 @@ canvas {
     text-align: center;
     font-size: 1.82rem;
     font-family: Helvetica, Arial, sans-serif;
-    font-weight: 600;
+    /*font-weight: 600;*/
     color: rgb(55, 61, 63);
 }
 
@@ -616,7 +616,7 @@ canvas {
     font-family: 'Inter', sans-serif;
     /*font-size: 1.6em;*/
     font-size: 14px;
-    font-weight: 600;
+    /*font-weight: 600;*/
     letter-spacing: 0.4px;
     border: 2px solid rgba(79, 209, 197, 0.45);
     background: transparent;
@@ -847,7 +847,7 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     padding: 12px;
     font-family: 'Inter', sans-serif;
     font-size: 14px;
-    font-weight: 600;
+    /*font-weight: 600;*/
     letter-spacing: 0.4px;
     border: 2px solid rgba(79, 209, 197, 0.45);
     background: transparent;
