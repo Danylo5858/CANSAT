@@ -687,7 +687,7 @@ function showAnalysisLoader() {
     // document.getElementById('ai-loader').classList.remove('hide');
     // document.querySelector('.ai-text-container').classList.add('hide');
     document.querySelector('.ai-warning').classList.add('hide');
-	document.querySelector('.scan-card').classList.add('scanning');
+	document.querySelector('.ai-img-container').classList.add('scan-card');
 }
 
 function hideAnalysisLoader() {
