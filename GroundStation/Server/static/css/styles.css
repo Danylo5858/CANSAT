@@ -22,7 +22,7 @@ html {
     zoom: 1.7;
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 14000px) {
     html {
         font-size: 11px;
     }
