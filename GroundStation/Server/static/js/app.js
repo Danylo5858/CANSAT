@@ -708,7 +708,7 @@ socket.on('img_upload', (filename) => {
 
 socket.on('all_img_filenames', (filenames) => {
 	img_filenames = filenames;
-	autoUpdateImg(4);
+	autoUpdateImg(4000);
 });
 
 socket.on('battery', (battery) => {
