@@ -616,6 +616,7 @@ socket.on('backup_response', (res) => {
 function showAnalysisLoader() {
     document.getElementById('ai-loader').classList.remove('hide');
     document.querySelector('.ai-text-container').classList.add('hide');
+    document.querySelector('.ai-warning').classList.add('hide');
 }
 
 function hideAnalysisLoader() {
