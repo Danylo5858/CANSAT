@@ -280,8 +280,8 @@ canvas {
 
 .calima-ring {
     position: relative;
-    width: 320px;
-    height: 320px;
+    width: 340px;
+    height: 340px;
     display: flex;
     justify-content: center;
     align-items: center;
