@@ -583,6 +583,7 @@ canvas {
 
 .ai-img-container {
     position: relative;
+    overflow: hidden;
     flex: 1;
     border: 2px solid rgba(79, 209, 197, 0.45);
     transition: all 0.2s ease;
