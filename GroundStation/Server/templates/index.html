@@ -46,6 +46,29 @@
                 <div class="ai-warning">
                     <p>Ninguna imagen se está analizando<br> ahora mismo</p>
                 </div>
+                <div class="single-img-analysis-container hide">
+                    <div class="ai-single-img"></div>
+                    <div class="calima-ring detected">
+                        <svg viewBox="0 0 220 220" class="ring-svg">
+                            <defs>
+                                <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#4fd1c5"/>
+                                    <stop offset="100%" stop-color="#7ff9ef"/>
+                                </linearGradient>
+                            </defs>
+
+                            <circle class="ring-glow" cx="110" cy="110" r="88"></circle>
+                            <circle class="ring-bg" cx="110" cy="110" r="88"></circle>
+                            <circle class="ring-progress" cx="110" cy="110" r="88"></circle>
+                        </svg>
+
+                        <div class="ring-center">
+                            <span class="ring-label">CALIMA</span>
+                            <span class="ring-value">0%</span>
+                            <span class="ring-sub">confidence IA</span>
+                        </div>
+                    </div>
+                </div>
                 <div class="ai-gallery"></div>
                 <div class="ai-loader-container">
                     <div class="ai-text-container hide">

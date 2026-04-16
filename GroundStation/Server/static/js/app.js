@@ -613,15 +613,59 @@ socket.on('backup_response', (res) => {
 	}
 });
 
+function animateNumber(el, target, duration = 1200) {
+    let start = 0;
+    const stepTime = 16;
+    const totalSteps = duration / stepTime;
+    const increment = target / totalSteps;
+
+    const timer = setInterval(() => {
+        start += increment;
+
+        if (start >= target) {
+            start = target;
+            clearInterval(timer);
+        }
+
+        el.textContent = Math.round(start) + "%";
+    }, stepTime);
+}
+
+function updateCalimaRing(selector, percent, detected = true) {
+    const el = document.querySelector(selector);
+    const progress = el.querySelector('.ring-progress');
+    const value = el.querySelector('.ring-value');
+    const label = el.querySelector('.ring-label');
+
+    const radius = 88;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (percent / 100) * circumference;
+
+    /* Reiniciar animación entrada */
+    progress.style.animation = "none";
+    progress.offsetHeight;
+    progress.style.animation = "ringEnter 1.4s ease forwards";
+
+    progress.style.strokeDasharray = circumference;
+    progress.style.strokeDashoffset = offset;
+
+    label.textContent = detected ? "CALIMA" : "LIMPIO";
+
+    el.classList.toggle("detected", detected);
+    el.classList.toggle("clean", !detected);
+
+    animateNumber(value, percent);
+}
+
 function showAnalysisLoader() {
     document.getElementById('ai-loader').classList.remove('hide');
-    document.querySelector('.ai-text-container').classList.add('hide');
+    // document.querySelector('.ai-text-container').classList.add('hide');
     document.querySelector('.ai-warning').classList.add('hide');
 }
 
 function hideAnalysisLoader() {
     document.getElementById('ai-loader').classList.add('hide');
-    document.querySelector('.ai-text-container').classList.remove('hide');
+    // document.querySelector('.ai-text-container').classList.remove('hide');
 }
 
 async function renderGallery(res, gallery, delay = 80) {
@@ -652,15 +696,17 @@ async function renderGallery(res, gallery, delay = 80) {
 	  	`;
 	}
 	else {
-		let r = 'NO';
+		let r = false;
 		if (calima === 1) {
-			r = 'SÍ';
+			r = true;
 		}
-		document.getElementById('ai-result').innerHTML = `
-			Imagen: ${filename}<br>
-	  		Calima detectada: ${r}<br>
-	  		Probabilidad de acierto: ${parseInt(confidence*100)}%
-	  	`;
+		document.querySelector('.single-img-analysis-container').classList.remove('hide');
+		updateCalimaRing(".calima-ring", parseInt(confidence*100), r);
+		// document.getElementById('ai-result').innerHTML = `
+		// 	Imagen: ${filename}<br>
+	  	// 	Calima detectada: ${r}<br>
+	  	// 	Probabilidad de acierto: ${parseInt(confidence*100)}%
+	  	// `;
 	}
   	hideAnalysisLoader();
 }
