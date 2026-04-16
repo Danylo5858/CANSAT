@@ -468,11 +468,58 @@ canvas {
 }
 
 .ai-bottom-part {
-    padding-top: 13%;
     position: relative;
     width: 100%;
     display: flex;
     justify-content: center;
+}
+
+/* líneas fijas CRT */
+.scan-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+}
+
+.scan-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(79, 209, 197, 0.00) 35%,
+        rgba(79, 209, 197, 0.18) 48%,
+        rgba(79, 209, 197, 0.45) 50%,
+        rgba(79, 209, 197, 0.18) 52%,
+        rgba(79, 209, 197, 0.00) 65%,
+        transparent 100%
+    );
+
+    transform: translateY(-100%);
+    animation: scanMove 2.5s linear infinite;
+}
+
+@keyframes scanMove {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(100%);
+    }
 }
 
 .target-img {
@@ -535,6 +582,7 @@ canvas {
 }
 
 .ai-img-container {
+    position: relative;
     flex: 1;
     border: 2px solid rgba(79, 209, 197, 0.45);
     transition: all 0.2s ease;
