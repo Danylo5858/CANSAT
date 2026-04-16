@@ -460,12 +460,15 @@ canvas {
 }
 
 .ai-top-part {
+    display: flex;
+    justify-content: center;
     position: relative;
     width: 100%;
     height: 40%;
 }
 
 .ai-bottom-part {
+    padding-top: 13%;
     position: relative;
     width: 100%;
     display: flex;
@@ -473,6 +476,7 @@ canvas {
 }
 
 .target-img {
+    margin-top: 10%;
     aspect-ratio: 1 / 1;
     position: relative;
     width: 70%;
@@ -500,7 +504,7 @@ canvas {
 
 .ai-warning p {
     text-align: center;
-    font-size: 1.75rem;
+    font-size: 1.82rem;
     font-family: Helvetica, Arial, sans-serif;
     font-weight: 600;
     color: rgb(55, 61, 63);
